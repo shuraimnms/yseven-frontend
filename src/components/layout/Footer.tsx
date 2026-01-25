@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Twitter, Youtube, Mail, MapPin, Phone } from "lucide-react";
+import { Instagram, Facebook, Twitter, Youtube, Mail, MapPin, Phone, Shield, FileCheck } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -21,6 +21,8 @@ const Footer = () => {
       { name: "Contact Us", href: "/contact" },
       { name: "FAQ", href: "/faq" },
       { name: "Bulk Orders", href: "/bulk-orders" },
+      { name: "Export Services", href: "/export" },
+      { name: "Certifications", href: "/certifications" },
       { name: "Quality & Safety", href: "/quality" },
     ],
     legal: [
@@ -147,6 +149,27 @@ const Footer = () => {
                 <MapPin className="w-4 h-4" />
                 Global Headquarters
               </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* APEDA Trust Strip */}
+      <div className="border-t border-green-500/20 bg-gradient-to-r from-green-900/20 to-blue-900/20">
+        <div className="container mx-auto px-6 lg:px-12 py-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-green-500" />
+              <span className="text-green-500 font-semibold text-sm">Trusted & Registered Exporter</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-xs text-cream/60">
+              <div className="flex items-center gap-1">
+                <FileCheck className="w-4 h-4 text-green-500" />
+                <span>APEDA Registered Manufacturer Exporter</span>
+              </div>
+              <span>IEC: BQEPS7979D</span>
+              <span>RCMC No: RCMC/APEDA/24897/2025-2026</span>
+              <span className="text-green-500">Government of India Recognized Exporter</span>
             </div>
           </div>
         </div>

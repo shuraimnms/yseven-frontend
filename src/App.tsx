@@ -26,6 +26,8 @@ import BlogPost from "./pages/BlogPost";
 import Recipes from "./pages/Recipes";
 import Contact from "./pages/Contact";
 import BulkOrders from "./pages/BulkOrders";
+import Export from "./pages/Export";
+import Certifications from "./pages/Certifications";
 import Quality from "./pages/Quality";
 import FAQ from "./pages/FAQ";
 import Careers from "./pages/Careers";
@@ -104,6 +106,8 @@ const App = () => {
               <Route path="/recipes" element={<Layout><Recipes /></Layout>} />
               <Route path="/contact" element={<Layout><Contact /></Layout>} />
               <Route path="/bulk-orders" element={<Layout><BulkOrders /></Layout>} />
+              <Route path="/export" element={<Layout><Export /></Layout>} />
+              <Route path="/certifications" element={<Layout><Certifications /></Layout>} />
               <Route path="/quality" element={<Layout><Quality /></Layout>} />
               <Route path="/faq" element={<Layout><FAQ /></Layout>} />
               <Route path="/careers" element={<Layout><Careers /></Layout>} />

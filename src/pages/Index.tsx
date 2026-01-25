@@ -3,7 +3,7 @@ import { ArrowRight, Play, ChefHat, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
 import { pageSEO, seoConfig, generateFAQSchema } from "@/lib/seo";
-import heroImage from "@/assets/hero-sauce.jpg";
+import HeroVideoBackground from "@/components/HeroVideoBackground";
 import sauceClassic from "@/assets/sauce-classic.jpg";
 import sauceSpicy from "@/assets/sauce-spicy.jpg";
 import sauceInternational from "@/assets/sauce-international.jpg";
@@ -17,22 +17,16 @@ import InstagramSection from "@/components/home/InstagramSection";
 
 const HeroSection = () => (
   <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    {/* Cinematic Video Background */}
+    <HeroVideoBackground />
+
     {/* Animated Sauce Drops */}
-    <SauceDrops />
-    
-    {/* Background Image with Overlay */}
-    <div className="absolute inset-0">
-      <img
-        src={heroImage}
-        alt="Y7 Premium Sauce"
-        className="w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-obsidian/70 via-obsidian/50 to-obsidian" />
-      <div className="absolute inset-0 bg-gradient-to-r from-obsidian/80 via-transparent to-obsidian/80" />
+    <div style={{ zIndex: 5 }}>
+      <SauceDrops />
     </div>
 
     {/* Animated background elements */}
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
       <div className="absolute top-1/4 left-10 w-2 h-2 bg-gold/30 rounded-full animate-pulse" />
       <div className="absolute top-1/3 right-20 w-3 h-3 bg-gold/20 rounded-full animate-float" />
       <div className="absolute bottom-1/3 left-1/4 w-1.5 h-1.5 bg-deep-red/40 rounded-full animate-pulse" style={{ animationDelay: "1s" }} />
@@ -40,7 +34,7 @@ const HeroSection = () => (
     </div>
 
     {/* Content */}
-    <div className="relative z-10 container mx-auto px-6 lg:px-12 text-center">
+    <div className="hero-content relative container mx-auto px-6 lg:px-12 text-center" style={{ zIndex: 10 }}>
       <div className="max-w-5xl mx-auto">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold/30 bg-gold/10 mb-8 animate-slide-up">
@@ -94,11 +88,11 @@ const HeroSection = () => (
     </div>
 
     {/* Scroll Indicator */}
-    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-float">
+    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-float" style={{ zIndex: 10 }}>
       <div className="w-7 h-12 border-2 border-cream/30 rounded-full flex items-start justify-center p-2">
         <div className="w-1.5 h-3 bg-gold rounded-full animate-pulse" />
       </div>
-      <p className="text-cream/40 text-xs mt-2 tracking-widest uppercase">Scroll</p>
+      <p className="text-cream/40 text-xs mt-2 tracking-widest uppercase"></p>
     </div>
   </section>
 );
@@ -150,6 +144,78 @@ const BrandStorySection = () => (
               <span className="text-cream/60 text-xs">Unique Flavors</span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const FounderSection = () => (
+  <section className="py-24 lg:py-32 bg-obsidian relative">
+    <div className="container mx-auto px-6 lg:px-12">
+      <div className="grid lg:grid-cols-2 gap-16 items-center">
+        {/* Founder Image */}
+        <div className="relative">
+          <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/10 to-charcoal">
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-24 h-24 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <ChefHat className="w-12 h-12 text-gold" />
+                </div>
+                <p className="text-cream/40">B. Shanthi</p>
+                <p className="text-cream/30 text-sm">Founder & Managing Director</p>
+              </div>
+            </div>
+          </div>
+          {/* Floating badge */}
+          <div className="absolute -top-4 -right-4 bg-gold text-obsidian px-4 py-2 rounded-full text-sm font-semibold">
+            Visionary Leader
+          </div>
+        </div>
+
+        {/* Founder Content */}
+        <div>
+          <p className="text-gold text-sm tracking-[0.3em] uppercase mb-6">Meet Our Founder</p>
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-6 leading-tight">
+            Agricultural Heritage Meets <span className="text-gradient-gold">Modern Innovation</span>
+          </h2>
+          <p className="text-cream/60 text-lg leading-relaxed mb-6">
+            B. Shanthi is a passionate entrepreneur from an agricultural family, deeply rooted in the values 
+            of hard work, resilience, and sustainability. Raised amidst traditional farming practices, 
+            she brings rural wisdom together with modern business strategies.
+          </p>
+          <p className="text-cream/50 text-base leading-relaxed mb-8">
+            With a strong commitment to quality and ethical sourcing, she leads M/S Crush In Agro Products 
+            with a mission to deliver pure, nutritious, and eco-conscious agro products while empowering 
+            rural communities and supporting farmers.
+          </p>
+
+          {/* Core Values */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-gold rounded-full" />
+              <span className="text-cream/70 text-sm">Agricultural Heritage</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-gold rounded-full" />
+              <span className="text-cream/70 text-sm">Sustainability</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-gold rounded-full" />
+              <span className="text-cream/70 text-sm">Quality Excellence</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-gold rounded-full" />
+              <span className="text-cream/70 text-sm">Community Empowerment</span>
+            </div>
+          </div>
+
+          <Link to="/about">
+            <Button variant="gold-outline" size="lg">
+              Learn More About Our Story
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
@@ -387,6 +453,7 @@ const Index = () => {
       <ProductRangeSection />
       <TestimonialsSection />
       <RecipePreviewSection />
+      <FounderSection />
       <NewsletterSection />
       <FinalCTASection />
       <InstagramSection />

@@ -1,9 +1,70 @@
+import { useState } from 'react';
 import { Building2, Truck, HeadphonesIcon, Shield, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from 'sonner';
 
 const BulkOrders = () => {
+  const [formData, setFormData] = useState({
+    businessName: '',
+    businessType: '',
+    contactName: '',
+    email: '',
+    phone: '',
+    monthlyVolume: '',
+    details: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/v1/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: formData.contactName,
+          email: formData.email,
+          phone: formData.phone,
+          subject: `Bulk Order Inquiry - ${formData.businessName}`,
+          message: `Business Name: ${formData.businessName}\nBusiness Type: ${formData.businessType}\nEstimated Monthly Volume: ${formData.monthlyVolume}\n\nAdditional Details:\n${formData.details}`,
+          type: 'bulk'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || 'Bulk order inquiry submitted successfully! Our B2B team will contact you within 24 hours.');
+        setFormData({
+          businessName: '',
+          businessType: '',
+          contactName: '',
+          email: '',
+          phone: '',
+          monthlyVolume: '',
+          details: ''
+        });
+      } else {
+        toast.error(data.message || 'Failed to submit inquiry. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting bulk order inquiry:', error);
+      toast.error('Failed to submit inquiry. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const benefits = [
     {
       icon: Building2,
@@ -81,19 +142,25 @@ const BulkOrders = () => {
             </div>
 
             <div className="bg-charcoal border border-gold/10 rounded-lg p-8 lg:p-12">
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-cream/60 text-sm mb-2">Business Name</label>
                     <Input
+                      value={formData.businessName}
+                      onChange={(e) => handleInputChange('businessName', e.target.value)}
                       placeholder="Your Company"
+                      required
                       className="bg-obsidian border-gold/20 text-cream placeholder:text-cream/30 focus:border-gold"
                     />
                   </div>
                   <div>
                     <label className="block text-cream/60 text-sm mb-2">Business Type</label>
                     <Input
+                      value={formData.businessType}
+                      onChange={(e) => handleInputChange('businessType', e.target.value)}
                       placeholder="Restaurant, Hotel, Retailer..."
+                      required
                       className="bg-obsidian border-gold/20 text-cream placeholder:text-cream/30 focus:border-gold"
                     />
                   </div>
@@ -102,7 +169,10 @@ const BulkOrders = () => {
                   <div>
                     <label className="block text-cream/60 text-sm mb-2">Contact Name</label>
                     <Input
+                      value={formData.contactName}
+                      onChange={(e) => handleInputChange('contactName', e.target.value)}
                       placeholder="John Doe"
+                      required
                       className="bg-obsidian border-gold/20 text-cream placeholder:text-cream/30 focus:border-gold"
                     />
                   </div>
@@ -110,7 +180,10 @@ const BulkOrders = () => {
                     <label className="block text-cream/60 text-sm mb-2">Email Address</label>
                     <Input
                       type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
                       placeholder="john@company.com"
+                      required
                       className="bg-obsidian border-gold/20 text-cream placeholder:text-cream/30 focus:border-gold"
                     />
                   </div>
@@ -120,6 +193,8 @@ const BulkOrders = () => {
                     <label className="block text-cream/60 text-sm mb-2">Phone Number</label>
                     <Input
                       type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
                       placeholder="+1 (234) 567-890"
                       className="bg-obsidian border-gold/20 text-cream placeholder:text-cream/30 focus:border-gold"
                     />
@@ -127,7 +202,10 @@ const BulkOrders = () => {
                   <div>
                     <label className="block text-cream/60 text-sm mb-2">Estimated Monthly Volume</label>
                     <Input
+                      value={formData.monthlyVolume}
+                      onChange={(e) => handleInputChange('monthlyVolume', e.target.value)}
                       placeholder="e.g., 100-500 units"
+                      required
                       className="bg-obsidian border-gold/20 text-cream placeholder:text-cream/30 focus:border-gold"
                     />
                   </div>
@@ -135,13 +213,21 @@ const BulkOrders = () => {
                 <div>
                   <label className="block text-cream/60 text-sm mb-2">Additional Details</label>
                   <Textarea
+                    value={formData.details}
+                    onChange={(e) => handleInputChange('details', e.target.value)}
                     placeholder="Tell us more about your business needs..."
                     rows={4}
                     className="bg-obsidian border-gold/20 text-cream placeholder:text-cream/30 focus:border-gold resize-none"
                   />
                 </div>
-                <Button variant="gold" size="lg" className="w-full">
-                  Submit Inquiry
+                <Button 
+                  type="submit" 
+                  variant="gold" 
+                  size="lg" 
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </form>

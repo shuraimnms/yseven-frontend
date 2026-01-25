@@ -11,6 +11,7 @@ const navigation = [
   { name: "Products", href: "/products" },
   { name: "Shop", href: "/shop" },
   { name: "About", href: "/about" },
+  { name: "Export", href: "/export" },
   { name: "Recipes", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];
@@ -292,11 +293,6 @@ const Header = () => {
                 </div>
               </div>
             )}
-
-            <Button variant="gold-outline" size="sm" className="hidden lg:flex">
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              Cart (0)
-            </Button>
             
             {/* Mobile Menu Toggle */}
             <button
@@ -457,11 +453,6 @@ const Header = () => {
                 </div>
               </div>
             )}
-            
-            <Button variant="gold" size="lg" className="mt-4">
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              Cart (0)
-            </Button>
           </div>
         </div>
       </nav>

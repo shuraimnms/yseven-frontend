@@ -67,13 +67,41 @@ const Press = () => {
                 <p className="text-cream/60 mb-4">
                   For press inquiries, interviews, or media requests:
                 </p>
-                <a
-                  href="mailto:press@y7sauces.com"
-                  className="flex items-center gap-2 text-gold hover:text-gold-light transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  press@y7sauces.com
-                </a>
+                <div className="space-y-3">
+                  <a
+                    href="mailto:press@y7sauces.com"
+                    className="flex items-center gap-2 text-gold hover:text-gold-light transition-colors"
+                  >
+                    <Mail className="w-4 h-4" />
+                    press@y7sauces.com
+                  </a>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="border-gold/30 text-gold hover:bg-gold/10"
+                    onClick={() => {
+                      // Create a press inquiry
+                      const pressInquiry = {
+                        fullName: 'Press Inquiry',
+                        email: 'press@inquiry.com',
+                        subject: 'Press/Media Inquiry',
+                        message: 'I am interested in press information about Y7. Please contact me.',
+                        type: 'press'
+                      };
+                      
+                      fetch('/api/v1/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(pressInquiry)
+                      }).then(() => {
+                        alert('Press inquiry submitted! Please use our contact form for detailed media requests.');
+                        window.location.href = '/contact';
+                      });
+                    }}
+                  >
+                    Submit Press Inquiry
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

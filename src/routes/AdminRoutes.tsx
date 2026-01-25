@@ -2,11 +2,11 @@ import { Routes, Route } from 'react-router-dom';
 import AdminDashboard from '@/pages/admin/AdminDashboard';
 import OrdersPage from '@/pages/admin/Orders';
 import ProductsPage from '@/pages/admin/Products';
+import ContactRequestsPage from '@/pages/admin/ContactRequests';
 
 // Placeholder components for other admin pages
 const CategoriesPage = () => <div className="p-6 text-cream">Categories Management - Coming Soon</div>;
 const CustomersPage = () => <div className="p-6 text-cream">Customers Management - Coming Soon</div>;
-const ContactRequestsPage = () => <div className="p-6 text-cream">Contact Requests - Coming Soon</div>;
 const BlogRecipesPage = () => <div className="p-6 text-cream">Blog & Recipes Management - Coming Soon</div>;
 const HomepageContentPage = () => <div className="p-6 text-cream">Homepage Content Management - Coming Soon</div>;
 const SEOManagerPage = () => <div className="p-6 text-cream">SEO Manager - Coming Soon</div>;

@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 
 const stats = [
-  { value: 50, suffix: "+", label: "Countries Served" },
-  { value: 1, suffix: "M+", label: "Bottles Sold" },
-  { value: 25, suffix: "+", label: "Unique Flavors" },
-  { value: 98, suffix: "%", label: "Customer Satisfaction" },
+  { value: 5, suffix: "+", label: "Cities Served" },
+  { value: 1000, suffix: "+", label: "Happy Customers" },
+  { value: 30, suffix: "", label: "Signature Flavors" },
+  { value: 2026, suffix: "", label: "Founded" },
 ];
 
 const AnimatedNumber = ({ value, suffix }: { value: number; suffix: string }) => {
@@ -17,7 +17,6 @@ const AnimatedNumber = ({ value, suffix }: { value: number; suffix: string }) =>
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
-          let start = 0;
           const duration = 2000;
           const startTime = performance.now();
 

@@ -33,18 +33,42 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    toast.success('Message sent successfully! We\'ll get back to you soon.');
-    setFormData({
-      fullName: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
-    setIsSubmitting(false);
+    try {
+      const response = await fetch('/api/v1/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          type: formData.subject.toLowerCase().includes('bulk') ? 'bulk' :
+                formData.subject.toLowerCase().includes('partnership') ? 'partnership' :
+                formData.subject.toLowerCase().includes('support') ? 'support' :
+                formData.subject.toLowerCase().includes('media') ? 'media' :
+                'general'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || 'Message sent successfully! We\'ll get back to you soon.');
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        toast.error(data.message || 'Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error('Failed to send message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -200,12 +224,13 @@ export default function Contact() {
                       <div className="flex items-start gap-3">
                         <MapPin className="w-5 h-5 text-yellow-500 mt-1" />
                         <div>
-                          <p className="font-medium">Y7 Foods Headquarters</p>
+                          <p className="font-medium">Registered Office</p>
                           <p className="text-sm text-gray-400">
-                            [Office Address]<br />
-                            [City, State - PIN]<br />
-                            India
+                            Plot 120, Survey No. 6, 8B, II Stage,<br />
+                            Mundargi Industrial Estate,<br />
+                            Ballari – 583101, Karnataka, India
                           </p>
+                          <p className="text-xs text-green-500 mt-1">APEDA Registered Manufacturer Exporter</p>
                         </div>
                       </div>
                     </div>
