@@ -61,8 +61,8 @@ export default function Contact() {
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
             <img
-              src="/placeholder.svg"
-              alt="Contact Y7 Sauces"
+              src="/src/assets/hero-sauce.jpg"
+              alt="Contact Y7 Sauces - Premium Sauce Collection"
               className="w-full h-full object-cover"
             />
           </div>
