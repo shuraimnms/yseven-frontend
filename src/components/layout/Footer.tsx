@@ -1,0 +1,168 @@
+import { Link } from "react-router-dom";
+import { Instagram, Facebook, Twitter, Youtube, Mail, MapPin, Phone } from "lucide-react";
+
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
+  const footerLinks = {
+    shop: [
+      { name: "All Products", href: "/products" },
+      { name: "Classic Range", href: "/products?category=classic" },
+      { name: "Spicy Range", href: "/products?category=spicy" },
+      { name: "Best Sellers", href: "/products?filter=bestseller" },
+    ],
+    company: [
+      { name: "About Us", href: "/about" },
+      { name: "Careers", href: "/careers" },
+      { name: "Press", href: "/press" },
+      { name: "Partnerships", href: "/partnerships" },
+    ],
+    support: [
+      { name: "Contact Us", href: "/contact" },
+      { name: "FAQ", href: "/faq" },
+      { name: "Bulk Orders", href: "/bulk-orders" },
+      { name: "Quality & Safety", href: "/quality" },
+    ],
+    legal: [
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms & Conditions", href: "/terms" },
+      { name: "Refund Policy", href: "/refund" },
+      { name: "Shipping Policy", href: "/shipping" },
+    ],
+  };
+
+  const socialLinks = [
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Youtube, href: "#", label: "YouTube" },
+  ];
+
+  return (
+    <footer className="bg-charcoal border-t border-gold/10">
+      {/* Main Footer */}
+      <div className="container mx-auto px-6 lg:px-12 py-16 lg:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="inline-block mb-6">
+              <span className="text-4xl font-display font-bold text-gradient-gold">Y7</span>
+            </Link>
+            <p className="text-cream/60 text-sm leading-relaxed mb-6 max-w-xs">
+              Premium sauces crafted for bold kitchens worldwide. One Brand. Endless Flavor.
+            </p>
+            <div className="flex space-x-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center text-cream/60 hover:text-gold hover:border-gold transition-all duration-300"
+                >
+                  <social.icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Links Columns */}
+          <div>
+            <h4 className="font-display text-gold text-sm tracking-luxury uppercase mb-6">Shop</h4>
+            <ul className="space-y-3">
+              {footerLinks.shop.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-cream/60 text-sm hover:text-gold transition-colors duration-300"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-display text-gold text-sm tracking-luxury uppercase mb-6">Company</h4>
+            <ul className="space-y-3">
+              {footerLinks.company.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-cream/60 text-sm hover:text-gold transition-colors duration-300"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-display text-gold text-sm tracking-luxury uppercase mb-6">Support</h4>
+            <ul className="space-y-3">
+              {footerLinks.support.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-cream/60 text-sm hover:text-gold transition-colors duration-300"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-display text-gold text-sm tracking-luxury uppercase mb-6">Legal</h4>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-cream/60 text-sm hover:text-gold transition-colors duration-300"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Contact Info */}
+        <div className="mt-16 pt-8 border-t border-gold/10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex flex-wrap gap-8 text-sm text-cream/60">
+              <a href="mailto:hello@y7sauces.com" className="flex items-center gap-2 hover:text-gold transition-colors">
+                <Mail className="w-4 h-4" />
+                hello@y7sauces.com
+              </a>
+              <a href="tel:+1234567890" className="flex items-center gap-2 hover:text-gold transition-colors">
+                <Phone className="w-4 h-4" />
+                +1 (234) 567-890
+              </a>
+              <span className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                Global Headquarters
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-gold/10 bg-obsidian">
+        <div className="container mx-auto px-6 lg:px-12 py-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-cream/40">
+            <p>© {currentYear} Y7 Premium Sauces. All rights reserved.</p>
+            <p className="tracking-wide">Crafted with passion for flavor perfection</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
