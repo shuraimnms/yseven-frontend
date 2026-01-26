@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, MessageCircle, Minimize2 } from 'lucide-react';
+import { X, Send, Minimize2, Mic } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card } from '../ui/card';
@@ -14,10 +14,29 @@ interface Message {
   sender: 'user' | 'bot';
   timestamp: Date;
   quickReplies?: string[];
+  productCard?: {
+    id: string;
+    name: string;
+    price: string;
+    image: string;
+    stock: string;
+  };
 }
 
 interface ChatBotProps {
   className?: string;
+}
+
+interface LeadFormData {
+  name: string;
+  phone: string;
+  email: string;
+  country: string;
+  businessName: string;
+  designation: string;
+  interest: string;
+  message: string;
+  quantity: string;
 }
 
 export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
@@ -51,10 +70,10 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
       
       const welcomeMessage: Message = {
         id: Date.now().toString(),
-        text: response.data.data.welcomeMessage,
+        text: "Welcome to Y7. I can help you with products, orders, recipes, and partnerships.",
         sender: 'bot',
         timestamp: new Date(),
-        quickReplies: response.data.data.quickReplies
+        quickReplies: ['Browse Sauces', 'Track Order', 'Bulk Orders', 'Best Sellers', 'Contact Support']
       };
       
       setMessages([welcomeMessage]);
@@ -90,17 +109,32 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 
       setMessages(prev => [...prev, botMessage]);
 
-      // Show lead form for bulk orders
-      if (response.data.data.requiresData && response.data.data.intent === 'bulk_orders') {
+      // Show lead form for business inquiries
+      if (response.data.data.requiresLead) {
         setShowLeadForm(true);
+      }
+
+      // Show human support options if needed
+      if (response.data.data.fallbackToHuman) {
+        const supportMessage: Message = {
+          id: (Date.now() + 2).toString(),
+          text: "For this request, please contact our team at support@y7foods.com.",
+          sender: 'bot',
+          timestamp: new Date(),
+          quickReplies: ['Contact Support', 'Browse Products']
+        };
+        setTimeout(() => {
+          setMessages(prev => [...prev, supportMessage]);
+        }, 1000);
       }
     } catch (error) {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Sorry, I encountered an error. Please try again or contact our support team.',
+        text: 'For this request, please contact our team at support@y7foods.com.',
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date(),
+        quickReplies: ['Contact Support', 'Try Again']
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -109,16 +143,18 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
   };
 
   const handleQuickReply = (reply: string) => {
-    if (reply === '🔥 Best Sellers') {
-      sendMessage('best sellers');
-    } else if (reply === '🛒 Browse Products') {
-      sendMessage('products');
-    } else if (reply === '📦 Bulk Orders') {
+    if (reply === 'Browse Sauces') {
+      sendMessage('show me your sauces');
+    } else if (reply === 'Track Order') {
+      sendMessage('track my order');
+    } else if (reply === 'Bulk Orders') {
       sendMessage('bulk orders');
-    } else if (reply === '🚚 Shipping Info') {
-      sendMessage('shipping');
-    } else if (reply === '💬 Talk to Human') {
-      sendMessage('talk to human');
+    } else if (reply === 'Best Sellers') {
+      sendMessage('best sellers');
+    } else if (reply === 'Contact Support') {
+      sendMessage('contact support');
+    } else {
+      sendMessage(reply.toLowerCase());
     }
   };
 
@@ -129,45 +165,61 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
     }
   };
 
+  const handleLeadSubmit = (data: LeadFormData) => {
+    setShowLeadForm(false);
+    const confirmationMessage: Message = {
+      id: Date.now().toString(),
+      text: `Thank you ${data.name}! Your business inquiry has been submitted successfully. Our team will contact you within 24 hours with customized pricing and solutions.`,
+      sender: 'bot',
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, confirmationMessage]);
+  };
+
   if (!isOpen) {
     return (
       <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full bg-black border-2 border-yellow-500 hover:bg-gray-900 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-yellow-500/20 chat-fab-pulse"
-          title="Chat with Y7"
-        >
-          <MessageCircle className="h-6 w-6 text-yellow-500" />
-        </Button>
+        <div className="relative group">
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="luxury-chat-fab"
+            title="Chat with Y7 Assistant"
+          >
+            <div className="y7-monogram">Y7</div>
+          </Button>
+          {/* Tooltip */}
+          <div className="luxury-tooltip">
+            Chat with Y7 Assistant
+            <div className="tooltip-arrow"></div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
-      <Card className={`w-80 bg-black border-yellow-500/30 shadow-2xl transition-all duration-300 ${
-        isMinimized ? 'h-16' : 'h-96'
+      <Card className={`luxury-chat-window ${
+        isMinimized ? 'minimized' : 'expanded'
       }`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-yellow-500/20">
+        <div className="luxury-header">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-              <span className="text-black font-bold text-sm">Y7</span>
-            </div>
+            <div className="y7-icon">Y7</div>
             <div>
-              <h3 className="text-white font-semibold text-sm">Y7 Support</h3>
-              <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-gray-400 text-xs">Online</span>
+              <h3 className="luxury-title">Y7 Assistant</h3>
+              <div className="luxury-status">
+                <div className="status-dot"></div>
+                <span>Always Online</span>
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-1">
+          <div className="header-controls">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMinimized(!isMinimized)}
-              className="text-gray-400 hover:text-white h-8 w-8 p-0"
+              className="luxury-control-btn"
             >
               <Minimize2 className="h-4 w-4" />
             </Button>
@@ -175,7 +227,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(false)}
-              className="text-gray-400 hover:text-white h-8 w-8 p-0"
+              className="luxury-control-btn"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -185,52 +237,62 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
         {!isMinimized && (
           <>
             {/* Messages */}
-            <ScrollArea className="flex-1 p-4 h-64 chat-scrollbar">
-              <div className="space-y-4 chat-messages-container">
+            <ScrollArea className="luxury-messages-area">
+              <div className="messages-container">
                 {messages.map((message) => (
-                  <div key={message.id} className="chat-bubble-enter">
-                    <div
-                      className={`flex ${
-                        message.sender === 'user' ? 'justify-end' : 'justify-start'
-                      }`}
-                    >
-                      <div
-                        className={`max-w-[80%] p-3 rounded-lg text-sm ${
-                          message.sender === 'user'
-                            ? 'bg-yellow-500 text-black'
-                            : 'bg-gray-800 text-white border border-gray-700'
-                        }`}
-                      >
-                        <div className="whitespace-pre-wrap">{message.text}</div>
+                  <div key={message.id} className="message-wrapper">
+                    <div className={`message-bubble ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
+                      <div className="message-content">
+                        {message.text}
                       </div>
                     </div>
                     
                     {/* Quick Replies */}
                     {message.quickReplies && message.quickReplies.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="quick-replies">
                         {message.quickReplies.map((reply, index) => (
-                          <Badge
+                          <Button
                             key={index}
                             variant="outline"
-                            className="cursor-pointer hover:bg-yellow-500 hover:text-black border-yellow-500/50 text-yellow-500 text-xs chat-quick-reply-enter"
+                            className="luxury-quick-reply"
                             onClick={() => handleQuickReply(reply)}
                             style={{ animationDelay: `${index * 0.1}s` }}
                           >
                             {reply}
-                          </Badge>
+                          </Button>
                         ))}
+                      </div>
+                    )}
+
+                    {/* Product Card */}
+                    {message.productCard && (
+                      <div className="luxury-product-card">
+                        <img 
+                          src={message.productCard.image} 
+                          alt={message.productCard.name}
+                          className="product-image"
+                        />
+                        <div className="product-info">
+                          <h4 className="product-name">{message.productCard.name}</h4>
+                          <div className="product-price">{message.productCard.price}</div>
+                          <Badge className="stock-badge">{message.productCard.stock}</Badge>
+                          <div className="product-actions">
+                            <Button className="luxury-btn-secondary">View Product</Button>
+                            <Button className="luxury-btn-primary">Add to Cart</Button>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
                 ))}
                 
                 {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-gray-800 text-white p-3 rounded-lg border border-gray-700">
-                      <div className="chat-typing-indicator">
-                        <div className="chat-typing-dot"></div>
-                        <div className="chat-typing-dot"></div>
-                        <div className="chat-typing-dot"></div>
+                  <div className="message-wrapper">
+                    <div className="bot-message typing-message">
+                      <div className="luxury-typing-indicator">
+                        <div className="typing-dot"></div>
+                        <div className="typing-dot"></div>
+                        <div className="typing-dot"></div>
                       </div>
                     </div>
                   </div>
@@ -240,22 +302,22 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
             </ScrollArea>
 
             {/* Input */}
-            <div className="p-4 border-t border-yellow-500/20">
-              <div className="flex space-x-2">
+            <div className="luxury-input-bar">
+              <div className="input-container">
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
-                  className="flex-1 bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-yellow-500"
+                  placeholder="Ask about Y7 products, orders, or recipes…"
+                  className="luxury-input"
                   disabled={isLoading}
                 />
                 <Button
                   onClick={() => sendMessage(inputValue)}
                   disabled={isLoading || !inputValue.trim()}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-black h-10 w-10 p-0"
+                  className="luxury-send-btn"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -268,17 +330,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
         <LeadForm
           sessionId={sessionId}
           onClose={() => setShowLeadForm(false)}
-          onSubmit={(leadData) => {
-            // Handle lead submission
-            setShowLeadForm(false);
-            const confirmMessage: Message = {
-              id: Date.now().toString(),
-              text: 'Thank you! Your details have been submitted. Our team will contact you within 24 hours.',
-              sender: 'bot',
-              timestamp: new Date()
-            };
-            setMessages(prev => [...prev, confirmMessage]);
-          }}
+          onSubmit={handleLeadSubmit}
         />
       )}
     </div>
@@ -289,17 +341,20 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 interface LeadFormProps {
   sessionId: string;
   onClose: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: LeadFormData) => void;
 }
 
 const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LeadFormData>({
     name: '',
     phone: '',
     email: '',
     country: '',
+    businessName: '',
+    designation: '',
     interest: 'bulk_orders',
-    message: ''
+    message: '',
+    quantity: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -318,61 +373,87 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <Card className="w-96 bg-black border-yellow-500/30 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold">Bulk Order Inquiry</h3>
+    <div className="luxury-modal-backdrop">
+      <Card className="luxury-lead-form">
+        <div className="form-header">
+          <div>
+            <h3 className="form-title">Business Inquiry</h3>
+            <p className="form-subtitle">Connect with our B2B team</p>
+          </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-gray-400 hover:text-white h-8 w-8 p-0"
+            className="luxury-close-btn"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="form-content">
           <Input
             placeholder="Your Name *"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+            className="luxury-form-input"
             required
           />
           <Input
-            placeholder="Phone Number"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+            placeholder="Business/Company Name"
+            value={formData.businessName}
+            onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+            className="luxury-form-input"
           />
           <Input
-            placeholder="Email Address"
+            placeholder="Designation"
+            value={formData.designation}
+            onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+            className="luxury-form-input"
+          />
+          <Input
+            placeholder="Phone Number *"
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            className="luxury-form-input"
+            required
+          />
+          <Input
+            placeholder="Email Address *"
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+            className="luxury-form-input"
+            required
           />
           <Input
-            placeholder="Country"
+            placeholder="Location/City"
             value={formData.country}
             onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-            className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+            className="luxury-form-input"
+          />
+          <Input
+            placeholder="Estimated Quantity (e.g., 100 units)"
+            value={formData.quantity}
+            onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+            className="luxury-form-input"
           />
           <textarea
-            placeholder="Tell us about your requirements *"
+            placeholder="Product Requirements & Details *"
             value={formData.message}
             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            className="w-full p-3 bg-gray-800 border border-gray-700 text-white placeholder-gray-400 rounded-md resize-none h-20"
+            className="luxury-form-textarea"
             required
           />
           <Button
             type="submit"
-            disabled={isSubmitting || !formData.name || !formData.message}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
+            disabled={isSubmitting || !formData.name || !formData.phone || !formData.email || !formData.message}
+            className="luxury-submit-btn"
           >
-            {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
+            {isSubmitting ? 'Submitting...' : 'Submit Business Inquiry'}
           </Button>
+          <p className="form-disclaimer">
+            Our team will contact you within 24 hours with customized pricing and solutions.
+          </p>
         </form>
       </Card>
     </div>

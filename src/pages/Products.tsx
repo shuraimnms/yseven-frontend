@@ -4,6 +4,7 @@ import { ArrowRight, Star, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SEOHead from "@/components/SEOHead";
+import ProductVideo from "@/components/ProductVideo";
 import sauceClassic from "@/assets/sauce-classic.jpg";
 import sauceSpicy from "@/assets/sauce-spicy.jpg";
 import sauceInternational from "@/assets/sauce-international.jpg";
@@ -397,7 +398,8 @@ const Products = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {categories.slice(1).map((category) => {
                 const categoryProducts = allProducts.filter(p => p.category === category);
-                const categoryImage = categoryProducts[0]?.image;
+                const firstProduct = categoryProducts[0];
+                const categoryImage = firstProduct?.image;
                 
                 return (
                   <div
@@ -412,11 +414,20 @@ const Products = () => {
                     `}
                   >
                     <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={categoryImage}
-                        alt={category}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
+                      {firstProduct?.name === "Tomato Ketchup" ? (
+                        <ProductVideo
+                          videoSrc="/Tomato-Ketchup.mp4"
+                          fallbackImage={categoryImage}
+                          alt={category}
+                          className="w-full h-full"
+                        />
+                      ) : (
+                        <img
+                          src={categoryImage}
+                          alt={category}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-obsidian/20 to-transparent" />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -485,15 +496,24 @@ const Products = () => {
                     index % 2 === 1 ? "lg:flex-row-reverse" : ""
                   }`}
                 >
-                  {/* Product Image */}
+                  {/* Product Image/Video */}
                   <div className={index % 2 === 1 ? "lg:order-2" : ""}>
                     <div className="relative group">
                       <div className="aspect-square overflow-hidden rounded-lg border border-gold/20">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
+                        {product.name === "Tomato Ketchup" ? (
+                          <ProductVideo
+                            videoSrc="/Tomato-Ketchup.mp4"
+                            fallbackImage={product.image}
+                            alt={product.name}
+                            className="w-full h-full"
+                          />
+                        ) : (
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        )}
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-obsidian/60 via-transparent to-transparent rounded-lg" />
                     </div>
