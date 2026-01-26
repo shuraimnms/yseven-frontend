@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useGlobalSettings } from '@/hooks/useGlobalSettings';
 import { SEOData } from '@/types';
 
 interface SEOProps extends SEOData {
@@ -20,6 +21,17 @@ const SEO: React.FC<SEOProps> = ({
 }) => {
   const siteUrl = 'https://y7sauces.com';
   const defaultImage = `${siteUrl}/og-image.jpg`;
+  const { siteTitle, supportPhone, socialMedia } = useGlobalSettings();
+
+  // Provide fallback values
+  const safeSiteTitle = siteTitle || 'Y7 Sauces';
+  const safeSupportPhone = supportPhone || '+91 9876543210';
+  const safeSocialMedia = socialMedia || {
+    facebook: 'https://facebook.com/y7sauces',
+    instagram: 'https://instagram.com/y7sauces',
+    twitter: 'https://twitter.com/y7sauces',
+    youtube: 'https://youtube.com/@y7sauces'
+  };
 
   return (
     <Helmet>
@@ -54,20 +66,21 @@ const SEO: React.FC<SEOProps> = ({
         {JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          "name": "Y7 Sauces",
+          "name": safeSiteTitle,
           "description": "Premium sauces and condiments - One Brand. Endless Flavor.",
           "url": siteUrl,
           "logo": `${siteUrl}/logo.png`,
           "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+91-XXXXXXXXXX",
+            "telephone": safeSupportPhone,
             "contactType": "customer service"
           },
           "sameAs": [
-            "https://facebook.com/y7sauces",
-            "https://instagram.com/y7sauces",
-            "https://twitter.com/y7sauces"
-          ]
+            safeSocialMedia.facebook,
+            safeSocialMedia.instagram,
+            safeSocialMedia.twitter,
+            safeSocialMedia.youtube
+          ].filter(Boolean) // Remove empty URLs
         })}
       </script>
 

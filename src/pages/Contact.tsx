@@ -18,8 +18,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import SEO from '@/components/SEO';
 import { pageSEO } from '@/lib/seo';
+import { useGlobalSettings } from '@/hooks/useGlobalSettings';
 
 export default function Contact() {
+  const { 
+    supportEmail, 
+    supportPhone, 
+    officeAddress, 
+    contactPageContent,
+    siteTitle 
+  } = useGlobalSettings();
+  
+  // Provide fallback values
+  const safeContactContent = contactPageContent || 'Ready to elevate your culinary experience? Whether you\'re a home chef, restaurant owner, or looking for bulk orders, we\'re here to help.';
+  const safeOfficeAddress = officeAddress || 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India';
+  
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -195,8 +208,7 @@ export default function Contact() {
                 <div>
                   <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
                   <p className="text-gray-300 text-lg leading-relaxed">
-                    Ready to elevate your culinary experience? Whether you're a home chef, 
-                    restaurant owner, or looking for bulk orders, we're here to help.
+                    {safeContactContent}
                   </p>
                 </div>
 
@@ -208,7 +220,7 @@ export default function Contact() {
                       <div className="flex items-center gap-3">
                         <Mail className="w-5 h-5 text-yellow-500" />
                         <div>
-                          <p className="font-medium">support@y7foods.com</p>
+                          <p className="font-medium">{supportEmail}</p>
                           <p className="text-sm text-gray-400">General inquiries & support</p>
                         </div>
                       </div>
@@ -216,7 +228,7 @@ export default function Contact() {
                       <div className="flex items-center gap-3">
                         <Phone className="w-5 h-5 text-yellow-500" />
                         <div>
-                          <p className="font-medium">+91-XXXXXXXXXX</p>
+                          <p className="font-medium">{supportPhone}</p>
                           <p className="text-sm text-gray-400">Customer service hotline</p>
                         </div>
                       </div>
@@ -226,9 +238,12 @@ export default function Contact() {
                         <div>
                           <p className="font-medium">Registered Office</p>
                           <p className="text-sm text-gray-400">
-                            Plot 120, Survey No. 6, 8B, II Stage,<br />
-                            Mundargi Industrial Estate,<br />
-                            Ballari – 583101, Karnataka, India
+                            {safeOfficeAddress.split(',').map((line, index) => (
+                              <span key={index}>
+                                {line.trim()}
+                                {index < safeOfficeAddress.split(',').length - 1 && <br />}
+                              </span>
+                            ))}
                           </p>
                           <p className="text-xs text-green-500 mt-1">APEDA Registered Manufacturer Exporter</p>
                         </div>

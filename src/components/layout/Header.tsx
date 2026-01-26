@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingBag, ChevronDown, User, LogOut, Package, Heart, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Menu, X, ChevronDown, User, LogOut, Package, Heart, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getScrollBehavior } from "@/hooks/use-scroll-to-top";
 import { useAuthStore } from "@/store/authStore";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -26,8 +26,9 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   
-  // Get auth state
+  // Get auth state and global settings
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { siteTitle } = useGlobalSettings();
 
   // Handle navigation with proper scroll behavior
   const handleNavigation = (href: string) => {
@@ -98,10 +99,10 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        "fixed top-0 left-0 right-0 z-[100] transition-all duration-500",
         isScrolled
           ? "bg-obsidian/95 backdrop-blur-md border-b border-gold/10"
-          : "bg-transparent"
+          : "bg-obsidian/90 backdrop-blur-sm"
       )}
     >
       <nav className="container mx-auto px-6 lg:px-12">
@@ -112,7 +113,7 @@ const Header = () => {
             className="flex items-center space-x-2 group cursor-pointer"
           >
             <span className="text-3xl lg:text-4xl font-display font-bold text-gradient-gold">
-              Y7
+              {siteTitle.split(' ')[0] || 'Y7'}
             </span>
             <span className="hidden sm:block text-cream/60 text-xs tracking-luxury uppercase">
               Premium Sauces
@@ -139,6 +140,20 @@ const Header = () => {
 
           {/* Right Actions */}
           <div className="flex items-center space-x-4">
+            {/* Mobile Menu Toggle */}
+            <button
+              className="lg:hidden text-white bg-gold/50 hover:bg-gold/70 p-4 transition-all duration-300 relative z-[60] rounded-lg border-2 border-gold shadow-xl"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+              style={{ minWidth: '52px', minHeight: '52px' }}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-7 h-7 mx-auto text-white" />
+              ) : (
+                <Menu className="w-7 h-7 mx-auto text-white" />
+              )}
+            </button>
+
             {/* Conditional Auth/Profile Section - Desktop */}
             {isAuthenticated && user ? (
               // Profile Dropdown for Authenticated Users
@@ -293,25 +308,13 @@ const Header = () => {
                 </div>
               </div>
             )}
-            
-            {/* Mobile Menu Toggle */}
-            <button
-              className="lg:hidden text-cream p-2"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         <div
           className={cn(
-            "lg:hidden overflow-hidden transition-all duration-500",
+            "lg:hidden overflow-hidden transition-all duration-500 bg-obsidian/95 backdrop-blur-md border-t border-gold/20",
             isMobileMenuOpen ? "max-h-96 pb-6" : "max-h-0"
           )}
         >

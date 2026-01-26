@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { 
   Package,
   Search,
@@ -99,15 +98,15 @@ const ProductsPage = () => {
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase())
+        (product.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (product.sku || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (product.category || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Category filter
     if (categoryFilter !== 'all') {
-      filtered = filtered.filter(product => product.category.toLowerCase() === categoryFilter.toLowerCase());
+      filtered = filtered.filter(product => (product.category || '').toLowerCase() === categoryFilter.toLowerCase());
     }
 
     // Stock filter
@@ -117,10 +116,10 @@ const ProductsPage = () => {
           filtered = filtered.filter(product => product.stock > 10);
           break;
         case 'low-stock':
-          filtered = filtered.filter(product => product.stock > 0 && product.stock <= 10);
+          filtered = filtered.filter(product => (product.stock || 0) > 0 && (product.stock || 0) <= 10);
           break;
         case 'out-of-stock':
-          filtered = filtered.filter(product => product.stock === 0);
+          filtered = filtered.filter(product => (product.stock || 0) === 0);
           break;
       }
     }
@@ -224,15 +223,15 @@ const ProductsPage = () => {
   };
 
   const getCategories = () => {
-    const categories = [...new Set(products.map(product => product.category))];
+    const categories = [...new Set(products.map(product => product.category || 'Uncategorized'))];
     return categories.sort();
   };
 
   // Calculate stats
   const totalProducts = products.length;
-  const inStockProducts = products.filter(p => p.stock > 10).length;
-  const lowStockProducts = products.filter(p => p.stock > 0 && p.stock <= 10).length;
-  const outOfStockProducts = products.filter(p => p.stock === 0).length;
+  const inStockProducts = products.filter(p => (p.stock || 0) > 10).length;
+  const lowStockProducts = products.filter(p => (p.stock || 0) > 0 && (p.stock || 0) <= 10).length;
+  const outOfStockProducts = products.filter(p => (p.stock || 0) === 0).length;
   const bestSellers = products.filter(p => p.isBestSeller).length;
 
   // Pagination
@@ -421,8 +420,8 @@ const ProductsPage = () => {
                 </TableHeader>
                 <TableBody>
                   {currentProducts.map((product) => {
-                    const stockStatus = getStockStatus(product.stock);
-                    const discount = product.mrp > product.sellingPrice 
+                    const stockStatus = getStockStatus(product.stock || 0);
+                    const discount = (product.mrp || 0) > (product.sellingPrice || 0) 
                       ? Math.round(((product.mrp - product.sellingPrice) / product.mrp) * 100)
                       : 0;
 
@@ -434,25 +433,25 @@ const ProductsPage = () => {
                               <Package className="w-6 h-6 text-gold" />
                             </div>
                             <div>
-                              <p className="text-cream font-medium">{product.name}</p>
-                              <p className="text-cream/60 text-sm">{product.description.slice(0, 50)}...</p>
+                              <p className="text-cream font-medium">{product.name || 'Unnamed Product'}</p>
+                              <p className="text-cream/60 text-sm">{(product.description || 'No description').slice(0, 50)}...</p>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className="text-cream font-mono">
-                          {product.sku}
+                          {product.sku || 'N/A'}
                         </TableCell>
                         <TableCell>
                           <Badge variant="secondary" className="bg-gold/20 text-gold">
-                            {product.category}
+                            {product.category || 'Uncategorized'}
                           </Badge>
                         </TableCell>
                         <TableCell>
                           <div>
-                            <p className="text-cream font-medium">{formatCurrency(product.sellingPrice)}</p>
+                            <p className="text-cream font-medium">{formatCurrency(product.sellingPrice || 0)}</p>
                             {discount > 0 && (
                               <div className="flex items-center space-x-2">
-                                <p className="text-cream/60 text-sm line-through">{formatCurrency(product.mrp)}</p>
+                                <p className="text-cream/60 text-sm line-through">{formatCurrency(product.mrp || 0)}</p>
                                 <Badge variant="destructive" className="text-xs">
                                   {discount}% OFF
                                 </Badge>
@@ -462,7 +461,7 @@ const ProductsPage = () => {
                         </TableCell>
                         <TableCell>
                           <div>
-                            <p className="text-cream font-medium">{product.stock}</p>
+                            <p className="text-cream font-medium">{product.stock || 0}</p>
                             <Badge className={cn("text-xs", stockStatus.color)}>
                               {stockStatus.label}
                             </Badge>
@@ -471,11 +470,11 @@ const ProductsPage = () => {
                         <TableCell>
                           <Badge className={cn(
                             "text-xs",
-                            product.stock > 0 
+                            (product.stock || 0) > 0 
                               ? "bg-green-500/20 text-green-400 border-green-500/30"
                               : "bg-red-500/20 text-red-400 border-red-500/30"
                           )}>
-                            {product.stock > 0 ? 'Active' : 'Inactive'}
+                            {(product.stock || 0) > 0 ? 'Active' : 'Inactive'}
                           </Badge>
                         </TableCell>
                         <TableCell>

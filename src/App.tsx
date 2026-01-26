@@ -11,7 +11,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import ScrollRestoration from "./components/ScrollRestoration";
 import SEOAnalytics from "./components/SEOAnalytics";
+import { SettingsProvider } from "./components/providers/SettingsProvider";
 import { useAuthStore } from "./store/authStore";
+import { ChatBot } from "./components/chat/ChatBot";
 
 // Development helper (remove in production)
 import './utils/adminHelper';
@@ -80,9 +82,11 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+          <SettingsProvider>
+            <div className="prevent-zoom">
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
             <SEOAnalytics 
               trackingId="G-XXXXXXXXXX" 
               enableGoogleAnalytics={true}
@@ -90,6 +94,7 @@ const App = () => {
             />
             <ScrollToTop />
             <ScrollRestoration />
+            <ChatBot />
             <Routes>
               {/* Auth Routes (No Layout) */}
               <Route path="/auth/login" element={<Login />} />
@@ -179,9 +184,11 @@ const App = () => {
               <Route path="*" element={<Layout><NotFound /></Layout>} />
             </Routes>
           </BrowserRouter>
-        </TooltipProvider>
-      </HelmetProvider>
-    </QueryClientProvider>
+        </div>
+        </SettingsProvider>
+      </TooltipProvider>
+    </HelmetProvider>
+  </QueryClientProvider>
   );
 };
 

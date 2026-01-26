@@ -1,8 +1,24 @@
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, Youtube, Mail, MapPin, Phone, Shield, FileCheck } from "lucide-react";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { 
+    siteTitle, 
+    supportEmail, 
+    supportPhone, 
+    officeAddress, 
+    socialMedia 
+  } = useGlobalSettings();
+
+  // Provide fallback values to prevent undefined errors
+  const safeSocialMedia = socialMedia || {
+    facebook: 'https://facebook.com/y7sauces',
+    instagram: 'https://instagram.com/y7sauces',
+    twitter: 'https://twitter.com/y7sauces',
+    youtube: 'https://youtube.com/@y7sauces'
+  };
 
   const footerLinks = {
     shop: [
@@ -34,10 +50,10 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Youtube, href: "#", label: "YouTube" },
+    { icon: Instagram, href: safeSocialMedia.instagram, label: "Instagram" },
+    { icon: Facebook, href: safeSocialMedia.facebook, label: "Facebook" },
+    { icon: Twitter, href: safeSocialMedia.twitter, label: "Twitter" },
+    { icon: Youtube, href: safeSocialMedia.youtube, label: "YouTube" },
   ];
 
   return (
@@ -137,17 +153,17 @@ const Footer = () => {
         <div className="mt-16 pt-8 border-t border-gold/10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex flex-wrap gap-8 text-sm text-cream/60">
-              <a href="mailto:hello@y7sauces.com" className="flex items-center gap-2 hover:text-gold transition-colors">
+              <a href={`mailto:${supportEmail}`} className="flex items-center gap-2 hover:text-gold transition-colors">
                 <Mail className="w-4 h-4" />
-                hello@y7sauces.com
+                {supportEmail}
               </a>
-              <a href="tel:+1234567890" className="flex items-center gap-2 hover:text-gold transition-colors">
+              <a href={`tel:${supportPhone}`} className="flex items-center gap-2 hover:text-gold transition-colors">
                 <Phone className="w-4 h-4" />
-                +1 (234) 567-890
+                {supportPhone}
               </a>
               <span className="flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
-                Global Headquarters
+                {officeAddress.split(',')[0]}
               </span>
             </div>
           </div>
@@ -179,7 +195,7 @@ const Footer = () => {
       <div className="border-t border-gold/10 bg-obsidian">
         <div className="container mx-auto px-6 lg:px-12 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-xs text-cream/40">
-            <p>© {currentYear} Y7 Premium Sauces. All rights reserved.</p>
+            <p>© {currentYear} {siteTitle}. All rights reserved.</p>
             <p className="tracking-wide">Crafted with passion for flavor perfection</p>
           </div>
         </div>

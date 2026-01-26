@@ -5,24 +5,16 @@ import {
   LayoutDashboard, 
   ShoppingCart, 
   Package, 
-  FolderOpen, 
   Users, 
-  MessageSquare, 
-  BookOpen, 
-  Home, 
-  Search, 
-  Tag, 
-  Warehouse, 
   CreditCard, 
   Settings, 
-  UserCog, 
-  FileText, 
   Bell, 
   Menu, 
   X, 
   LogOut,
   User,
-  Shield
+  Shield,
+  MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,13 +30,6 @@ const sidebarItems = [
     badge: null
   },
   { 
-    id: 'orders', 
-    label: 'Orders', 
-    icon: ShoppingCart, 
-    path: '/admin/orders',
-    badge: '12'
-  },
-  { 
     id: 'products', 
     label: 'Products', 
     icon: Package, 
@@ -52,60 +37,18 @@ const sidebarItems = [
     badge: null
   },
   { 
-    id: 'categories', 
-    label: 'Categories', 
-    icon: FolderOpen, 
-    path: '/admin/categories',
+    id: 'orders', 
+    label: 'Orders', 
+    icon: ShoppingCart, 
+    path: '/admin/orders',
     badge: null
   },
   { 
-    id: 'customers', 
-    label: 'Customers', 
+    id: 'users', 
+    label: 'Users', 
     icon: Users, 
-    path: '/admin/customers',
+    path: '/admin/users',
     badge: null
-  },
-  { 
-    id: 'contact-requests', 
-    label: 'Contact Requests', 
-    icon: MessageSquare, 
-    path: '/admin/contact-requests',
-    badge: '5'
-  },
-  { 
-    id: 'blog-recipes', 
-    label: 'Blog & Recipes', 
-    icon: BookOpen, 
-    path: '/admin/blog-recipes',
-    badge: null
-  },
-  { 
-    id: 'homepage-content', 
-    label: 'Homepage Content', 
-    icon: Home, 
-    path: '/admin/homepage-content',
-    badge: null
-  },
-  { 
-    id: 'seo-manager', 
-    label: 'SEO Manager', 
-    icon: Search, 
-    path: '/admin/seo-manager',
-    badge: null
-  },
-  { 
-    id: 'coupons', 
-    label: 'Coupons', 
-    icon: Tag, 
-    path: '/admin/coupons',
-    badge: null
-  },
-  { 
-    id: 'inventory', 
-    label: 'Inventory', 
-    icon: Warehouse, 
-    path: '/admin/inventory',
-    badge: '3'
   },
   { 
     id: 'payments', 
@@ -115,24 +58,24 @@ const sidebarItems = [
     badge: null
   },
   { 
+    id: 'contact-requests', 
+    label: 'Contact Requests', 
+    icon: Bell, 
+    path: '/admin/contact-requests',
+    badge: null
+  },
+  { 
+    id: 'chat-leads', 
+    label: 'Chat Leads', 
+    icon: MessageSquare, 
+    path: '/admin/chat-leads',
+    badge: null
+  },
+  { 
     id: 'settings', 
     label: 'Settings', 
     icon: Settings, 
     path: '/admin/settings',
-    badge: null
-  },
-  { 
-    id: 'admin-users', 
-    label: 'Admin Users', 
-    icon: UserCog, 
-    path: '/admin/admin-users',
-    badge: null
-  },
-  { 
-    id: 'logs', 
-    label: 'Logs & Security', 
-    icon: FileText, 
-    path: '/admin/logs',
     badge: null
   }
 ];

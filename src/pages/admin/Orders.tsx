@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { 
   ShoppingCart,
   Search,
-  Filter,
   Download,
   Eye,
   Edit,
@@ -108,15 +106,15 @@ const OrdersPage = () => {
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(order =>
-        order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customer.name.toLowerCase().includes(searchTerm.toLowerCase())
+        (order.orderId || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (order.customer?.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (order.customer?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Status filter
     if (statusFilter !== 'all') {
-      filtered = filtered.filter(order => order.status.toLowerCase() === statusFilter.toLowerCase());
+      filtered = filtered.filter(order => (order.status || '').toLowerCase() === statusFilter.toLowerCase());
     }
 
     // Date filter
@@ -290,7 +288,7 @@ const OrdersPage = () => {
                 <div>
                   <p className="text-cream/60 text-sm font-medium">Pending</p>
                   <p className="text-2xl font-bold text-orange-400">
-                    {orders.filter(o => o.status.toLowerCase() === 'pending').length}
+                    {orders.filter(o => (o.status || '').toLowerCase() === 'pending').length}
                   </p>
                 </div>
                 <Clock className="w-8 h-8 text-orange-400" />
@@ -304,7 +302,7 @@ const OrdersPage = () => {
                 <div>
                   <p className="text-cream/60 text-sm font-medium">Processing</p>
                   <p className="text-2xl font-bold text-yellow-400">
-                    {orders.filter(o => o.status.toLowerCase() === 'processing').length}
+                    {orders.filter(o => (o.status || '').toLowerCase() === 'processing').length}
                   </p>
                 </div>
                 <Package className="w-8 h-8 text-yellow-400" />
@@ -318,7 +316,7 @@ const OrdersPage = () => {
                 <div>
                   <p className="text-cream/60 text-sm font-medium">Delivered</p>
                   <p className="text-2xl font-bold text-green-400">
-                    {orders.filter(o => o.status.toLowerCase() === 'delivered').length}
+                    {orders.filter(o => (o.status || '').toLowerCase() === 'delivered').length}
                   </p>
                 </div>
                 <CheckCircle className="w-8 h-8 text-green-400" />
@@ -398,30 +396,30 @@ const OrdersPage = () => {
                   {currentOrders.map((order) => (
                     <TableRow key={order._id} className="border-gold/10 hover:bg-gold/5">
                       <TableCell className="font-medium text-cream">
-                        {order.orderId}
+                        {order.orderId || 'N/A'}
                       </TableCell>
                       <TableCell>
                         <div>
-                          <p className="text-cream font-medium">{order.customer.name}</p>
-                          <p className="text-cream/60 text-sm">{order.customer.email}</p>
+                          <p className="text-cream font-medium">{order.customer?.name || 'N/A'}</p>
+                          <p className="text-cream/60 text-sm">{order.customer?.email || 'N/A'}</p>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div>
-                          <p className="text-cream">{order.items.length} item(s)</p>
+                          <p className="text-cream">{order.items?.length || 0} item(s)</p>
                           <p className="text-cream/60 text-sm">
-                            {order.items.slice(0, 2).map(item => item.name).join(', ')}
-                            {order.items.length > 2 && '...'}
+                            {order.items?.slice(0, 2).map(item => item?.name || 'Unknown').join(', ')}
+                            {(order.items?.length || 0) > 2 && '...'}
                           </p>
                         </div>
                       </TableCell>
                       <TableCell className="text-cream font-medium">
-                        {formatCurrency(order.pricing.total)}
+                        {formatCurrency(order.pricing?.total || 0)}
                       </TableCell>
                       <TableCell>
-                        <Badge className={cn("flex items-center gap-1 w-fit", getStatusColor(order.status))}>
-                          {getStatusIcon(order.status)}
-                          {order.status}
+                        <Badge className={cn("flex items-center gap-1 w-fit", getStatusColor(order.status || 'pending'))}>
+                          {getStatusIcon(order.status || 'pending')}
+                          {order.status || 'pending'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-cream/80">

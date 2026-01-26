@@ -1,0 +1,99 @@
+/* Chatbot specific animations and styles */
+.chat-bubble-enter {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: chatBubbleEnter 0.3s ease-out forwards;
+}
+
+@keyframes chatBubbleEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #D4AF37;
+  animation: chatTyping 1.4s infinite ease-in-out;
+}
+
+.chat-typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.chat-typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes chatTyping {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.chat-fab-pulse {
+  animation: chatFabPulse 2s infinite;
+}
+
+@keyframes chatFabPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+}
+
+.chat-quick-reply-enter {
+  opacity: 0;
+  transform: scale(0.8);
+  animation: chatQuickReplyEnter 0.2s ease-out forwards;
+}
+
+@keyframes chatQuickReplyEnter {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Smooth scrolling for chat messages */
+.chat-messages-container {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for chat */
+.chat-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.5);
+  border-radius: 2px;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.7);
+}

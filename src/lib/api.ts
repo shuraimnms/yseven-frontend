@@ -108,6 +108,15 @@ export const userAPI = {
   removeFromWishlist: (productId: string) => api.delete(`/user/wishlist/${productId}`),
 };
 
+export const chatAPI = {
+  initialize: () => api.get('/chat/init'),
+  sendMessage: (sessionId: string, message: string, userId?: string) => 
+    api.post('/chat/message', { sessionId, message, userId }),
+  submitLead: (leadData: any) => api.post('/chat/lead', leadData),
+  getChatHistory: (sessionId: string, limit?: number) => 
+    api.get(`/chat/history/${sessionId}`, { params: { limit } }),
+};
+
 export const adminAPI = {
   // Products Management
   products: {
@@ -160,6 +169,15 @@ export const adminAPI = {
     getStats: () => api.get('/admin/system/stats'),
     getLogs: (type?: string) => api.get(`/admin/system/logs${type ? `?type=${type}` : ''}`),
     getHealth: () => api.get('/admin/system/health'),
+  },
+
+  // Chat Management
+  chat: {
+    getLeads: (params?: any) => api.get('/admin/chat/leads', { params }),
+    getLeadDetails: (id: string) => api.get(`/admin/chat/leads/${id}`),
+    updateLeadStatus: (id: string, status: string) => api.put(`/admin/chat/leads/${id}/status`, { status }),
+    getAnalytics: (days?: number) => api.get('/admin/chat/analytics', { params: { days } }),
+    exportLeads: (params?: any) => api.get('/admin/chat/export', { params, responseType: 'blob' }),
   },
 };
 

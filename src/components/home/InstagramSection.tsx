@@ -1,4 +1,5 @@
 import { Instagram } from "lucide-react";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 const instagramPosts = [
   "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=400&fit=crop",
@@ -10,13 +11,19 @@ const instagramPosts = [
 ];
 
 const InstagramSection = () => {
+  const { socialMedia, socialMediaHandles } = useGlobalSettings();
+
+  // Provide fallback values to prevent undefined errors
+  const instagramHandle = socialMediaHandles?.instagram || 'y7sauces';
+  const instagramUrl = socialMedia?.instagram || 'https://instagram.com/y7sauces';
+
   return (
     <section className="py-16 bg-obsidian">
       <div className="container mx-auto px-6 lg:px-12 mb-10">
         <div className="flex items-center justify-center gap-4">
           <Instagram className="w-6 h-6 text-gold" />
           <p className="text-cream text-lg">
-            Follow us <span className="text-gold font-semibold">@y7sauces</span>
+            Follow us <span className="text-gold font-semibold">@{instagramHandle}</span>
           </p>
         </div>
       </div>
@@ -25,7 +32,7 @@ const InstagramSection = () => {
         {instagramPosts.map((post, index) => (
           <a
             key={index}
-            href="https://instagram.com"
+            href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative aspect-square overflow-hidden"
