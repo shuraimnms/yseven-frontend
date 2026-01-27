@@ -8,13 +8,18 @@ import {
   CheckCircle,
   Calendar,
   MapPin,
-  Factory
+  Factory,
+  Download
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
+import { useSettings } from '@/hooks/useSettings';
 
 export default function Certifications() {
+  const { settings } = useSettings();
+  
   const seoData = {
     title: "Certifications & Export Registrations - APEDA Registered | Y7",
     description: "M/S Crush In Agro Products is APEDA registered with Government of India authorization for exporting processed fruits and vegetables. View our complete certifications and registrations.",
@@ -110,6 +115,18 @@ export default function Certifications() {
                 M/S Crush In Agro Products is officially registered and certified by the Government of India 
                 for manufacturing and exporting processed agricultural products worldwide.
               </p>
+              
+              {settings.downloadLinks.certificatesUrl && (
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-green-500/30 text-green-500 hover:bg-green-500/10"
+                  onClick={() => window.open(settings.downloadLinks.certificatesUrl, '_blank')}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Certificates
+                </Button>
+              )}
             </motion.div>
           </div>
         </section>

@@ -23,10 +23,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import SEOHead from '@/components/SEOHead';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useSettings } from '@/hooks/useSettings';
 
 export default function Export() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({
     companyName: '',
     contactName: '',
@@ -47,7 +49,7 @@ export default function Export() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/v1/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -182,9 +184,16 @@ export default function Export() {
                 >
                   Request Export Quote
                 </Button>
-                <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
-                  Download Catalog
-                </Button>
+                {settings.downloadLinks.catalogUrl && (
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-gray-600 text-white hover:bg-gray-800"
+                    onClick={() => window.open(settings.downloadLinks.catalogUrl, '_blank')}
+                  >
+                    Download Catalog
+                  </Button>
+                )}
               </div>
             </motion.div>
           </div>
@@ -442,9 +451,16 @@ export default function Export() {
                 >
                   Request Export Quote
                 </Button>
-                <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800 w-full">
-                  Download Product Catalog
-                </Button>
+                {settings.downloadLinks.catalogUrl && (
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-gray-600 text-white hover:bg-gray-800 w-full"
+                    onClick={() => window.open(settings.downloadLinks.catalogUrl, '_blank')}
+                  >
+                    Download Product Catalog
+                  </Button>
+                )}
                 <Link to="/contact">
                   <Button size="lg" variant="outline" className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 w-full">
                     Contact Export Team

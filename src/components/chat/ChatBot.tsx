@@ -47,7 +47,39 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
   const [showLeadForm, setShowLeadForm] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Prevent body scroll when chat is open on mobile
+  useEffect(() => {
+    if (isMobile && isOpen && !isMinimized) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [isMobile, isOpen, isMinimized]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -62,6 +94,15 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
       initializeChat();
     }
   }, [isOpen]);
+
+  // Auto-focus input on desktop, avoid on mobile to prevent keyboard issues
+  useEffect(() => {
+    if (isOpen && !isMinimized && !isMobile && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
+  }, [isOpen, isMinimized, isMobile]);
 
   const initializeChat = async () => {
     try {
@@ -95,6 +136,11 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
+
+    // Blur input on mobile to hide keyboard
+    if (isMobile && inputRef.current) {
+      inputRef.current.blur();
+    }
 
     try {
       const response = await chatAPI.sendMessage(sessionId, text);
@@ -176,6 +222,19 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
     setMessages(prev => [...prev, confirmationMessage]);
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setIsMinimized(false);
+  };
+
+  const handleMinimize = () => {
+    setIsMinimized(!isMinimized);
+    // On mobile, minimizing should close the chat
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
+
   if (!isOpen) {
     return (
       <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
@@ -183,15 +242,17 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
           <Button
             onClick={() => setIsOpen(true)}
             className="luxury-chat-fab"
-            title="Chat with Y7 Assistant"
+            title={!isMobile ? "Chat with Y7 Assistant" : undefined}
           >
             <div className="y7-monogram">Y7</div>
           </Button>
-          {/* Tooltip */}
-          <div className="luxury-tooltip">
-            Chat with Y7 Assistant
-            <div className="tooltip-arrow"></div>
-          </div>
+          {/* Tooltip - Hidden on mobile */}
+          {!isMobile && (
+            <div className="luxury-tooltip">
+              Chat with Y7 Assistant
+              <div className="tooltip-arrow"></div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -215,19 +276,23 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
             </div>
           </div>
           <div className="header-controls">
+            {!isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleMinimize}
+                className="luxury-control-btn"
+                title="Minimize"
+              >
+                <Minimize2 className="h-4 w-4" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsMinimized(!isMinimized)}
+              onClick={handleClose}
               className="luxury-control-btn"
-            >
-              <Minimize2 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              className="luxury-control-btn"
+              title="Close"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -305,17 +370,23 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
             <div className="luxury-input-bar">
               <div className="input-container">
                 <Input
+                  ref={inputRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Ask about Y7 products, orders, or recipes…"
                   className="luxury-input"
                   disabled={isLoading}
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
                 />
                 <Button
                   onClick={() => sendMessage(inputValue)}
                   disabled={isLoading || !inputValue.trim()}
                   className="luxury-send-btn"
+                  title="Send message"
                 >
                   <Send className="h-5 w-5" />
                 </Button>
@@ -331,6 +402,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
           sessionId={sessionId}
           onClose={() => setShowLeadForm(false)}
           onSubmit={handleLeadSubmit}
+          isMobile={isMobile}
         />
       )}
     </div>
@@ -342,9 +414,10 @@ interface LeadFormProps {
   sessionId: string;
   onClose: () => void;
   onSubmit: (data: LeadFormData) => void;
+  isMobile?: boolean;
 }
 
-const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => {
+const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit, isMobile = false }) => {
   const [formData, setFormData] = useState<LeadFormData>({
     name: '',
     phone: '',
@@ -357,6 +430,23 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
     quantity: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Prevent body scroll on mobile when form is open
+  useEffect(() => {
+    if (isMobile) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    }
+
+    return () => {
+      if (isMobile) {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+      }
+    };
+  }, [isMobile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -372,9 +462,22 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
     }
   };
 
+  const handleClose = () => {
+    // Restore body scroll before closing
+    if (isMobile) {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+    onClose();
+  };
+
   return (
-    <div className="luxury-modal-backdrop">
-      <Card className="luxury-lead-form">
+    <div className="luxury-modal-backdrop" onClick={handleClose}>
+      <Card 
+        className="luxury-lead-form" 
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="form-header">
           <div>
             <h3 className="form-title">Business Inquiry</h3>
@@ -383,8 +486,9 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
           <Button
             variant="ghost"
             size="sm"
-            onClick={onClose}
+            onClick={handleClose}
             className="luxury-close-btn"
+            title="Close"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -397,18 +501,27 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="luxury-form-input"
             required
+            autoComplete="name"
+            autoCorrect="off"
+            autoCapitalize="words"
           />
           <Input
             placeholder="Business/Company Name"
             value={formData.businessName}
             onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
             className="luxury-form-input"
+            autoComplete="organization"
+            autoCorrect="off"
+            autoCapitalize="words"
           />
           <Input
             placeholder="Designation"
             value={formData.designation}
             onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
             className="luxury-form-input"
+            autoComplete="organization-title"
+            autoCorrect="off"
+            autoCapitalize="words"
           />
           <Input
             placeholder="Phone Number *"
@@ -416,6 +529,8 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             className="luxury-form-input"
             required
+            type="tel"
+            autoComplete="tel"
           />
           <Input
             placeholder="Email Address *"
@@ -424,18 +539,25 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="luxury-form-input"
             required
+            autoComplete="email"
+            autoCorrect="off"
+            autoCapitalize="off"
           />
           <Input
             placeholder="Location/City"
             value={formData.country}
             onChange={(e) => setFormData({ ...formData, country: e.target.value })}
             className="luxury-form-input"
+            autoComplete="address-level2"
+            autoCorrect="off"
+            autoCapitalize="words"
           />
           <Input
             placeholder="Estimated Quantity (e.g., 100 units)"
             value={formData.quantity}
             onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
             className="luxury-form-input"
+            autoCorrect="off"
           />
           <textarea
             placeholder="Product Requirements & Details *"
@@ -443,6 +565,8 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit }) => 
             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
             className="luxury-form-textarea"
             required
+            autoCorrect="on"
+            autoCapitalize="sentences"
           />
           <Button
             type="submit"

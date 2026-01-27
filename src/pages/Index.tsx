@@ -57,18 +57,13 @@ const HeroSection = () => (
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "0.3s" }}>
-          <Link to="/shop">
+          <Link to="/products">
             <Button variant="hero" size="hero" className="group relative overflow-hidden">
               <span className="relative z-10 flex items-center">
-                Shop Now
+                Explore Range
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-gold to-gold-light opacity-0 group-hover:opacity-100 transition-opacity" />
-            </Button>
-          </Link>
-          <Link to="/products">
-            <Button variant="hero-outline" size="hero">
-              Explore Our Range
             </Button>
           </Link>
         </div>
@@ -400,9 +395,9 @@ const FinalCTASection = () => (
           Premium flavor awaits.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link to="/shop">
+          <Link to="/products">
             <Button variant="hero" size="hero" className="glow-gold">
-              Shop Now
+              Explore Range
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>

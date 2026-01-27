@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { ArrowRight, Star, Filter } from "lucide-react";
+import { ArrowRight, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SEOHead from "@/components/SEOHead";
@@ -26,12 +26,15 @@ import cheeseBlend from "@/assets/Cheese-Blend.png";
 import periPeriSauce from "@/assets/Peri-Peri-Sauce.png";
 import romescoSauce from "@/assets/Romesco-Sauce.png";
 import sambalSauce from "@/assets/Sambal-Sauce.png";
-import greenChilliFlakes from "@/assets/Green-Chilli-Flakes.png";
+import greenChilliFlakesVideo from "@/assets/Green-Chilli-Flakes.mp4";
+import greenChilliFlakesFallback from "@/assets/Green-Chilli-Flakes.png";
 import greenChilliPowder from "@/assets/Green-Chilli-Powder.png";
-import yelkahiBananaPowder from "@/assets/Yelkahi-Banana-Powde.png";
+import yelkahiBananaPowderVideo from "@/assets/Yelkahi-Banana-Powde.mp4";
+import yelkahiBananaPowderFallback from "@/assets/Yelkahi-Banana-Powde.png";
 import rasabaleBananaPowder from "@/assets/Rasabale-Banana-Powder.png";
 import g9BananaPowder from "@/assets/G9-Banana-Powder.png";
-import rawPapayaPowder from "@/assets/Raw-Papaya-Powder.png";
+import rawPapayaPowderVideo from "@/assets/Raw-Papaya-Powder.mp4";
+import rawPapayaPowderFallback from "@/assets/Raw-Papaya-Powder.png";
 import mangoPowder from "@/assets/Mango-Powder.png";
 import guavaPowder from "@/assets/Guava-Powder.png";
 import sweetPotatoPowder from "@/assets/Sweet-Potato-Powder.png";
@@ -47,7 +50,6 @@ const allProducts = [
     uses: "Burgers, fries, sandwiches, snacks, wraps",
     category: "Sauces & Condiments",
     image: tomatoKetchup,
-    rating: 4.8,
     inStock: true
   },
   {
@@ -58,7 +60,6 @@ const allProducts = [
     uses: "Pasta, pizzas, sandwiches, gravies",
     category: "Sauces & Condiments",
     image: tomatoSauce,
-    rating: 4.7,
     inStock: true
   },
   {
@@ -69,7 +70,6 @@ const allProducts = [
     uses: "Samosa, pakora, chaat, fries",
     category: "Sauces & Condiments",
     image: snackSauce,
-    rating: 4.6,
     inStock: true
   },
   {
@@ -80,7 +80,6 @@ const allProducts = [
     uses: "Noodles, momos, stir-fry, marinades",
     category: "Sauces & Condiments",
     image: greenChilliSauce,
-    rating: 4.5,
     inStock: true
   },
   {
@@ -91,7 +90,6 @@ const allProducts = [
     uses: "Chinese dishes, snacks, dips",
     category: "Sauces & Condiments",
     image: redChilliSauce,
-    rating: 4.5,
     inStock: true
   },
   {
@@ -102,7 +100,6 @@ const allProducts = [
     uses: "Fried rice, noodles, marinades",
     category: "Sauces & Condiments",
     image: soyaSauce,
-    rating: 4.7,
     inStock: true
   },
   {
@@ -113,7 +110,6 @@ const allProducts = [
     uses: "Salads, pickling, marinades",
     category: "Sauces & Condiments",
     image: vinegar,
-    rating: 4.4,
     inStock: true
   },
   {
@@ -124,7 +120,6 @@ const allProducts = [
     uses: "Grills, wraps, burgers",
     category: "Sauces & Condiments",
     image: hotSpicySauce,
-    rating: 4.6,
     inStock: true
   },
   {
@@ -135,7 +130,6 @@ const allProducts = [
     uses: "Shawarma, wraps, dips",
     category: "Sauces & Condiments",
     image: garlicSauce,
-    rating: 4.5,
     inStock: true
   },
   {
@@ -146,7 +140,6 @@ const allProducts = [
     uses: "Fried rice, noodles, momos",
     category: "Sauces & Condiments",
     image: schezwanSauce,
-    rating: 4.7,
     inStock: true
   },
   {
@@ -157,7 +150,6 @@ const allProducts = [
     uses: "Sandwiches, burgers, dips",
     category: "Sauces & Condiments",
     image: liteMayonnaise,
-    rating: 4.6,
     inStock: true
   },
   {
@@ -168,7 +160,6 @@ const allProducts = [
     uses: "Wraps, burgers, salads",
     category: "Sauces & Condiments",
     image: classicMayonnaise,
-    rating: 4.8,
     inStock: true
   },
   {
@@ -179,7 +170,6 @@ const allProducts = [
     uses: "Nachos, fries, pasta",
     category: "Sauces & Condiments",
     image: cheeseBlend,
-    rating: 4.5,
     inStock: true
   },
   {
@@ -190,7 +180,6 @@ const allProducts = [
     uses: "Grilled chicken, fries",
     category: "Sauces & Condiments",
     image: periPeriSauce,
-    rating: 4.7,
     inStock: true
   },
   {
@@ -201,7 +190,6 @@ const allProducts = [
     uses: "Grilled vegetables, pasta",
     category: "Sauces & Condiments",
     image: romescoSauce,
-    rating: 4.6,
     inStock: true
   },
   {
@@ -212,7 +200,6 @@ const allProducts = [
     uses: "Rice, noodles, stir-fries",
     category: "Sauces & Condiments",
     image: sambalSauce,
-    rating: 4.5,
     inStock: true
   },
   // Flakes & Powders
@@ -223,8 +210,7 @@ const allProducts = [
     benefits: ["Boosts metabolism", "Rich in Vitamin C", "Improves digestion"],
     uses: "Pizza topping, spice blends",
     category: "Flakes & Powders (Agro Products)",
-    image: greenChilliFlakes,
-    rating: 4.4,
+    image: greenChilliFlakesFallback,
     inStock: true
   },
   {
@@ -235,7 +221,6 @@ const allProducts = [
     uses: "Curries, marinades",
     category: "Flakes & Powders (Agro Products)",
     image: greenChilliPowder,
-    rating: 4.5,
     inStock: true
   },
   // Raw Banana Powders
@@ -246,8 +231,7 @@ const allProducts = [
     benefits: ["Resistant starch", "Gut health support", "Low glycemic index"],
     uses: "Smoothies, porridge",
     category: "Raw Banana Powders",
-    image: yelkahiBananaPowder,
-    rating: 4.8,
+    image: yelkahiBananaPowderFallback,
     inStock: true
   },
   {
@@ -258,7 +242,6 @@ const allProducts = [
     uses: "Milkshakes, desserts",
     category: "Raw Banana Powders",
     image: rasabaleBananaPowder,
-    rating: 4.7,
     inStock: true
   },
   {
@@ -269,7 +252,6 @@ const allProducts = [
     uses: "Smoothies, baking",
     category: "Raw Banana Powders",
     image: g9BananaPowder,
-    rating: 4.9,
     inStock: true
   },
   // Fruit & Vegetable Powders
@@ -280,8 +262,7 @@ const allProducts = [
     benefits: ["Improves digestion", "Anti-inflammatory", "Detox support"],
     uses: "Health drinks, cooking",
     category: "Fruit & Vegetable Powders",
-    image: rawPapayaPowder,
-    rating: 4.6,
+    image: rawPapayaPowderFallback,
     inStock: true
   },
   {
@@ -292,7 +273,6 @@ const allProducts = [
     uses: "Smoothies, desserts",
     category: "Fruit & Vegetable Powders",
     image: mangoPowder,
-    rating: 4.7,
     inStock: true
   },
   {
@@ -303,7 +283,6 @@ const allProducts = [
     uses: "Health drinks, baking",
     category: "Fruit & Vegetable Powders",
     image: guavaPowder,
-    rating: 4.5,
     inStock: true
   },
   {
@@ -314,7 +293,6 @@ const allProducts = [
     uses: "Porridge, baking",
     category: "Fruit & Vegetable Powders",
     image: sweetPotatoPowder,
-    rating: 4.4,
     inStock: true
   },
   {
@@ -325,7 +303,6 @@ const allProducts = [
     uses: "Milkshakes, desserts",
     category: "Fruit & Vegetable Powders",
     image: chikooSapotaPowder,
-    rating: 4.6,
     inStock: true
   }
 ];
@@ -360,11 +337,11 @@ const Products = () => {
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-24">
         <div className="absolute inset-0 bg-gradient-to-b from-charcoal to-obsidian" />
         <div className="relative z-10 container mx-auto px-6 lg:px-12 text-center">
-          <p className="text-gold text-sm tracking-[0.3em] uppercase mb-6">Y7 Premium Sauces</p>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-cream mb-6">
+          <p className="text-caption mb-6">Y7 Premium Sauces</p>
+          <h1 className="text-hero text-gradient-gold mb-6">
             One Brand. <span className="text-gradient-gold">Endless Flavor.</span>
           </h1>
-          <p className="text-cream/70 text-lg max-w-2xl mx-auto">
+          <p className="text-hero-sub max-w-2xl mx-auto">
             Discover our comprehensive range of sauces, condiments, and agro products 
             crafted with premium ingredients for exceptional taste and nutrition.
           </p>
@@ -375,13 +352,13 @@ const Products = () => {
       <section className="py-24 lg:py-32 bg-obsidian">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
-            <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">
+            <p className="text-caption mb-4">
               Y7 / M/S CRUSH IN AGRO PRODUCTS
             </p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-cream mb-6">
+            <h2 className="text-section-title mb-6">
               Master <span className="text-gradient-gold">Product Catalog</span>
             </h2>
-            <p className="text-cream/60 text-lg max-w-3xl mx-auto">
+            <p className="text-body-large max-w-3xl mx-auto">
               From premium sauces to nutritious agro products - Y7 brings you quality, 
               taste, and health benefits in every product we craft.
             </p>
@@ -391,7 +368,7 @@ const Products = () => {
           <div className="mb-16">
             <div className="flex items-center justify-center mb-8">
               <Filter className="w-5 h-5 text-gold mr-2" />
-              <h3 className="text-xl font-semibold text-cream">Filter by Category</h3>
+              <h3 className="text-nav font-body-semibold text-cream">Filter by Category</h3>
             </div>
             
             {/* Category Cards */}
@@ -421,6 +398,27 @@ const Products = () => {
                           alt={category}
                           className="w-full h-full"
                         />
+                      ) : firstProduct?.name === "Green Chilli Flakes" ? (
+                        <ProductVideo
+                          videoSrc="/Green-Chilli-Flakes.mp4"
+                          fallbackImage={categoryImage}
+                          alt={category}
+                          className="w-full h-full"
+                        />
+                      ) : firstProduct?.name === "Yelkahi Banana Powder" ? (
+                        <ProductVideo
+                          videoSrc="/Yelkahi-Banana-Powde.mp4"
+                          fallbackImage={categoryImage}
+                          alt={category}
+                          className="w-full h-full"
+                        />
+                      ) : firstProduct?.name === "Raw Papaya Powder" ? (
+                        <ProductVideo
+                          videoSrc="/Raw-Papaya-Powder.mp4"
+                          fallbackImage={categoryImage}
+                          alt={category}
+                          className="w-full h-full"
+                        />
                       ) : (
                         <img
                           src={categoryImage}
@@ -431,7 +429,7 @@ const Products = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-obsidian/20 to-transparent" />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h4 className="font-semibold text-cream text-sm mb-1">{category}</h4>
+                      <h4 className="font-body-semibold text-cream text-sm mb-1">{category}</h4>
                       <p className="text-cream/60 text-xs">
                         {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
                       </p>
@@ -507,6 +505,27 @@ const Products = () => {
                             alt={product.name}
                             className="w-full h-full"
                           />
+                        ) : product.name === "Green Chilli Flakes" ? (
+                          <ProductVideo
+                            videoSrc="/Green-Chilli-Flakes.mp4"
+                            fallbackImage={product.image}
+                            alt={product.name}
+                            className="w-full h-full"
+                          />
+                        ) : product.name === "Yelkahi Banana Powder" ? (
+                          <ProductVideo
+                            videoSrc="/Yelkahi-Banana-Powde.mp4"
+                            fallbackImage={product.image}
+                            alt={product.name}
+                            className="w-full h-full"
+                          />
+                        ) : product.name === "Raw Papaya Powder" ? (
+                          <ProductVideo
+                            videoSrc="/Raw-Papaya-Powder.mp4"
+                            fallbackImage={product.image}
+                            alt={product.name}
+                            className="w-full h-full"
+                          />
                         ) : (
                           <img
                             src={product.image}
@@ -525,30 +544,11 @@ const Products = () => {
                       {product.category}
                     </Badge>
                     
-                    <h3 className="font-display text-3xl sm:text-4xl font-bold text-cream mb-4">
+                    <h3 className="text-product-title mb-4">
                       {product.name}
                     </h3>
 
-                    {/* Rating */}
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.floor(product.rating)
-                                ? "fill-gold text-gold"
-                                : "text-cream/30"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-cream/60 text-sm">
-                        {product.rating} rating
-                      </span>
-                    </div>
-
-                    <p className="text-cream/70 text-lg leading-relaxed mb-6">
+                    <p className="text-body-premium mb-6">
                       {product.description}
                     </p>
 
@@ -567,7 +567,7 @@ const Products = () => {
 
                     {/* Key Benefits */}
                     <div className="mb-6">
-                      <h4 className="font-semibold text-cream mb-3">Key Benefits:</h4>
+                      <h4 className="font-body-semibold text-cream mb-3">Key Benefits:</h4>
                       <div className="flex flex-wrap gap-2">
                         {product.benefits.map((benefit, benefitIndex) => (
                           <Badge
@@ -583,8 +583,8 @@ const Products = () => {
 
                     {/* Uses */}
                     <div>
-                      <h4 className="font-semibold text-cream mb-2">Perfect For:</h4>
-                      <p className="text-cream/70">{product.uses}</p>
+                      <h4 className="font-body-semibold text-cream mb-2">Perfect For:</h4>
+                      <p className="text-body-premium">{product.uses}</p>
                     </div>
                   </div>
                 </div>
@@ -594,10 +594,10 @@ const Products = () => {
             <div className="text-center py-16">
               <div className="max-w-md mx-auto">
                 <Filter className="w-16 h-16 text-gold/30 mx-auto mb-6" />
-                <h3 className="text-2xl font-semibold text-cream mb-4">
+                <h3 className="text-section-title mb-4">
                   No Products Found
                 </h3>
-                <p className="text-cream/60 mb-6">
+                <p className="text-body-large mb-6">
                   No products available in the "{selectedCategory}" category at the moment.
                 </p>
                 <Button
@@ -616,10 +616,10 @@ const Products = () => {
       {/* CTA Section */}
       <section className="py-24 lg:py-32 bg-gradient-section">
         <div className="container mx-auto px-6 lg:px-12 text-center">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-cream mb-6">
+          <h2 className="text-section-title mb-6">
             Interested in <span className="text-gradient-gold">Bulk Orders?</span>
           </h2>
-          <p className="text-cream/60 text-lg max-w-2xl mx-auto mb-10">
+          <p className="text-body-large max-w-2xl mx-auto mb-10">
             Partner with Y7 for your restaurant, hotel, or retail business. 
             Premium pricing for premium partners.
           </p>

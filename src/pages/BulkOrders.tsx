@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Building2, Truck, HeadphonesIcon, Shield, ArrowRight } from "lucide-react";
+import { Building2, Truck, HeadphonesIcon, Shield, ArrowRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from 'sonner';
+import { useSettings } from '@/hooks/useSettings';
 
 const BulkOrders = () => {
+  const { settings } = useSettings();
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -26,7 +28,7 @@ const BulkOrders = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/v1/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,10 +100,35 @@ const BulkOrders = () => {
           <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-cream mb-6">
             Bulk <span className="text-gradient-gold">Orders</span>
           </h1>
-          <p className="text-cream/70 text-lg max-w-2xl mx-auto">
+          <p className="text-cream/70 text-lg max-w-2xl mx-auto mb-8">
             Partner with Y7 for your business. Premium sauces at wholesale pricing 
             for restaurants, hotels, caterers, and retailers.
           </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {settings.downloadLinks.priceListUrl && (
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => window.open(settings.downloadLinks.priceListUrl, '_blank')}
+                className="border-gold/30 text-gold hover:bg-gold/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download Price List
+              </Button>
+            )}
+            {settings.downloadLinks.catalogUrl && (
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => window.open(settings.downloadLinks.catalogUrl, '_blank')}
+                className="border-gold/30 text-gold hover:bg-gold/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download Catalog
+              </Button>
+            )}
+          </div>
         </div>
       </section>
 

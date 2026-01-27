@@ -11,18 +11,42 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
-    proxy: {
+    proxy: mode === 'development' ? {
       '/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
         secure: false,
       }
-    }
+    } : undefined
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  build: {
+    outDir: 'dist',
+    sourcemap: mode === 'development',
+    minify: mode === 'production' ? 'esbuild' : false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+          utils: ['axios', 'zustand', 'zod']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
+  },
+  plugins: [
+    react(), 
+    mode === "development" && componentTagger()
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'axios', 'zustand']
+  }
 }));

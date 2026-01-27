@@ -24,6 +24,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
 import { pageSEO, generateFAQSchema, generateBreadcrumbSchema } from '@/lib/seo';
+import { Link } from 'react-router-dom';
 import aboutImage from '@/assets/about.png';
 import heroSauce from '@/assets/hero-sauce.jpg';
 import sauceClassic from '@/assets/sauce-classic.jpg';
@@ -181,12 +182,16 @@ export default function About() {
                 Delivering nature's finest agro-crushed products with purity, sustainability, and traditional wisdom.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
-                  Explore Products
-                </Button>
-                <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
-                  Contact Us
-                </Button>
+                <Link to="/products">
+                  <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
+                    Explore Products
+                  </Button>
+                </Link>
+                <Link to="/contact">
+                  <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                    Contact Us
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           </div>
@@ -850,15 +855,21 @@ export default function About() {
               className="text-center"
             >
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
-                  Explore Products
-                </Button>
-                <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
-                  Contact Us
-                </Button>
-                <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
-                  Partner With Us
-                </Button>
+                <Link to="/products">
+                  <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
+                    Explore Products
+                  </Button>
+                </Link>
+                <Link to="/contact">
+                  <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                    Contact Us
+                  </Button>
+                </Link>
+                <Link to="/partnerships">
+                  <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
+                    Partner With Us
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           </div>

@@ -1,7 +1,10 @@
 import { Download, Mail, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSettings } from '@/hooks/useSettings';
 
 const Press = () => {
+  const { settings } = useSettings();
+  
   const pressReleases = [
     { title: "Y7 Announces Global Expansion Plans", date: "January 2026" },
     { title: "New Premium Sauce Line Coming Soon", date: "December 2025" },
@@ -54,10 +57,16 @@ const Press = () => {
                 <p className="text-cream/60 mb-6">
                   Download our brand assets, logos, and product images for media use.
                 </p>
-                <Button variant="gold" size="lg">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Media Kit
-                </Button>
+                {settings.downloadLinks.brochureUrl && (
+                  <Button 
+                    variant="gold" 
+                    size="lg"
+                    onClick={() => window.open(settings.downloadLinks.brochureUrl, '_blank')}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Media Kit
+                  </Button>
+                )}
               </div>
 
               <div className="mt-8 p-8 bg-charcoal/50 border border-gold/10 rounded-lg">

@@ -1,7 +1,8 @@
-import { Handshake, Store, Truck, Globe, ArrowRight } from "lucide-react";
+import { Handshake, Store, Truck, Globe, ArrowRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSettings } from '@/hooks/useSettings';
 
 const partnerTypes = [
   { icon: Store, title: "Retail Partners", desc: "Stock Y7 in your stores" },
@@ -11,6 +12,8 @@ const partnerTypes = [
 ];
 
 const Partnerships = () => {
+  const { settings } = useSettings();
+  
   return (
     <>
       <section className="relative py-32 lg:py-40 overflow-hidden pt-24">
@@ -20,10 +23,35 @@ const Partnerships = () => {
           <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-cream mb-6">
             <span className="text-gradient-gold">Partnerships</span>
           </h1>
-          <p className="text-cream/70 text-lg max-w-2xl mx-auto">
+          <p className="text-cream/70 text-lg max-w-2xl mx-auto mb-8">
             Join forces with Y7. We're seeking strategic partners to bring 
             premium flavor to more kitchens worldwide.
           </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {settings.downloadLinks.brochureUrl && (
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => window.open(settings.downloadLinks.brochureUrl, '_blank')}
+                className="border-gold/30 text-gold hover:bg-gold/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download Brochure
+              </Button>
+            )}
+            {settings.downloadLinks.catalogUrl && (
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => window.open(settings.downloadLinks.catalogUrl, '_blank')}
+                className="border-gold/30 text-gold hover:bg-gold/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download Catalog
+              </Button>
+            )}
+          </div>
         </div>
       </section>
 

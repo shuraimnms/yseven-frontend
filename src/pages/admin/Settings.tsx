@@ -16,7 +16,10 @@ import {
   Truck,
   ToggleLeft,
   ToggleRight,
-  AlertTriangle
+  AlertTriangle,
+  Download,
+  FileText,
+  Link as LinkIcon
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -56,6 +59,12 @@ interface SiteSettings {
   };
   maintenanceMode: boolean;
   contactPageContent: string;
+  downloadLinks: {
+    catalogUrl: string;
+    brochureUrl: string;
+    priceListUrl: string;
+    certificatesUrl: string;
+  };
 }
 
 const SettingsPage = () => {
@@ -83,7 +92,13 @@ const SettingsPage = () => {
       expressShippingRate: 100
     },
     maintenanceMode: false,
-    contactPageContent: 'Get in touch with us for any queries or support. We are here to help you!'
+    contactPageContent: 'Get in touch with us for any queries or support. We are here to help you!',
+    downloadLinks: {
+      catalogUrl: '',
+      brochureUrl: '',
+      priceListUrl: '',
+      certificatesUrl: ''
+    }
   });
   
   const [isLoading, setIsLoading] = useState(true);
@@ -96,7 +111,7 @@ const SettingsPage = () => {
     try {
       setIsLoading(true);
       
-      const response = await fetch('/api/v1/admin/settings', {
+      const response = await fetch('/api/admin/settings', {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +161,7 @@ const SettingsPage = () => {
 
       setIsSaving(true);
       
-      const response = await fetch('/api/v1/admin/settings', {
+      const response = await fetch('/api/admin/settings', {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -572,6 +587,101 @@ const SettingsPage = () => {
                 rows={4}
                 placeholder="Enter the content that will be displayed on the contact page..."
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Download Links Management */}
+        <Card className="bg-charcoal border-gold/20">
+          <CardHeader>
+            <CardTitle className="text-cream flex items-center">
+              <Download className="w-5 h-5 mr-2" />
+              Download Links Management
+            </CardTitle>
+            <CardDescription>Manage downloadable resources URLs (Google Drive, Dropbox, etc.)</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="catalogUrl" className="text-cream/80 flex items-center">
+                <FileText className="w-4 h-4 mr-2" />
+                Product Catalog URL
+              </Label>
+              <Input
+                id="catalogUrl"
+                value={settings.downloadLinks.catalogUrl}
+                onChange={(e) => handleNestedInputChange('downloadLinks', 'catalogUrl', e.target.value)}
+                className="bg-obsidian border-gold/20 text-cream mt-1"
+                placeholder="https://drive.google.com/file/d/..."
+              />
+              <p className="text-xs text-cream/40 mt-1">
+                {settings.downloadLinks.catalogUrl ? 'Download button will be visible' : 'Download button will be hidden'}
+              </p>
+            </div>
+            
+            <div>
+              <Label htmlFor="brochureUrl" className="text-cream/80 flex items-center">
+                <FileText className="w-4 h-4 mr-2" />
+                Company Brochure URL
+              </Label>
+              <Input
+                id="brochureUrl"
+                value={settings.downloadLinks.brochureUrl}
+                onChange={(e) => handleNestedInputChange('downloadLinks', 'brochureUrl', e.target.value)}
+                className="bg-obsidian border-gold/20 text-cream mt-1"
+                placeholder="https://drive.google.com/file/d/..."
+              />
+              <p className="text-xs text-cream/40 mt-1">
+                {settings.downloadLinks.brochureUrl ? 'Download button will be visible' : 'Download button will be hidden'}
+              </p>
+            </div>
+            
+            <div>
+              <Label htmlFor="priceListUrl" className="text-cream/80 flex items-center">
+                <FileText className="w-4 h-4 mr-2" />
+                Price List URL
+              </Label>
+              <Input
+                id="priceListUrl"
+                value={settings.downloadLinks.priceListUrl}
+                onChange={(e) => handleNestedInputChange('downloadLinks', 'priceListUrl', e.target.value)}
+                className="bg-obsidian border-gold/20 text-cream mt-1"
+                placeholder="https://drive.google.com/file/d/..."
+              />
+              <p className="text-xs text-cream/40 mt-1">
+                {settings.downloadLinks.priceListUrl ? 'Download button will be visible' : 'Download button will be hidden'}
+              </p>
+            </div>
+            
+            <div>
+              <Label htmlFor="certificatesUrl" className="text-cream/80 flex items-center">
+                <FileText className="w-4 h-4 mr-2" />
+                Certificates & Compliance URL
+              </Label>
+              <Input
+                id="certificatesUrl"
+                value={settings.downloadLinks.certificatesUrl}
+                onChange={(e) => handleNestedInputChange('downloadLinks', 'certificatesUrl', e.target.value)}
+                className="bg-obsidian border-gold/20 text-cream mt-1"
+                placeholder="https://drive.google.com/file/d/..."
+              />
+              <p className="text-xs text-cream/40 mt-1">
+                {settings.downloadLinks.certificatesUrl ? 'Download button will be visible' : 'Download button will be hidden'}
+              </p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <LinkIcon className="w-5 h-5 text-blue-600 mt-0.5" />
+                <div className="text-sm text-blue-800">
+                  <p className="font-semibold mb-1">URL Guidelines</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>Use direct download links from Google Drive, Dropbox, or similar services</li>
+                    <li>For Google Drive: Use the direct download format or shareable link</li>
+                    <li>Empty URLs will hide the corresponding download buttons</li>
+                    <li>Test URLs before saving to ensure they work correctly</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

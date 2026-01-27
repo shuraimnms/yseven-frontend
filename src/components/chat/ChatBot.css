@@ -655,25 +655,523 @@
   background: #b8941f;
 }
 
-/* Responsive Design */
-@media (max-width: 640px) {
+/* Mobile-First Responsive Design */
+@media (max-width: 768px) {
+  /* Full-screen mobile experience */
   .luxury-chat-window.expanded {
-    width: calc(100vw - 2rem);
-    height: calc(100vh - 2rem);
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    left: 1rem;
+    width: 100vw !important;
+    height: 100vh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    z-index: 9999 !important;
+  }
+  
+  /* Mobile FAB positioning with safe area */
+  .luxury-chat-fab {
+    bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem)) !important;
+    right: 1.5rem !important;
+    width: 60px !important;
+    height: 60px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.2) !important;
+  }
+  
+  .y7-monogram {
+    font-size: 20px !important;
+  }
+  
+  /* Mobile header adjustments */
+  .luxury-header {
+    padding: max(16px, env(safe-area-inset-top, 16px)) 20px 16px !important;
+    height: auto !important;
+    min-height: 60px !important;
+    background: linear-gradient(135deg, var(--luxury-black), #1a1a1f) !important;
+  }
+  
+  .luxury-title {
+    font-size: 18px !important;
+  }
+  
+  .header-controls {
+    gap: 8px !important;
+  }
+  
+  .luxury-control-btn {
+    width: 36px !important;
+    height: 36px !important;
+    min-height: 44px !important; /* Touch-friendly minimum */
+    min-width: 44px !important;
+  }
+  
+  /* Mobile messages area - full height calculation */
+  .luxury-messages-area {
+    height: calc(100vh - 140px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+  
+  .messages-container {
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+  
+  /* Mobile message bubbles */
+  .message-bubble {
+    max-width: 90% !important;
+    padding: 14px 18px !important;
+    font-size: 16px !important; /* Better readability on mobile */
+    line-height: 1.6 !important;
+  }
+  
+  .bot-message {
+    padding-left: 18px !important;
+    border-left-width: 4px !important;
+  }
+  
+  /* Mobile quick replies - touch-friendly */
+  .quick-replies {
+    gap: 10px !important;
+    margin-left: 22px !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .luxury-quick-reply {
+    min-height: 44px !important; /* Touch-friendly */
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    border-radius: 22px !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Mobile product cards */
+  .luxury-product-card {
+    margin-left: 22px !important;
+    max-width: calc(100% - 22px) !important;
+    padding: 20px !important;
+  }
+  
+  .product-image {
+    height: 160px !important;
+  }
+  
+  .product-name {
+    font-size: 18px !important;
+  }
+  
+  .product-price {
+    font-size: 20px !important;
+  }
+  
+  .product-actions {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  
+  .luxury-btn-secondary,
+  .luxury-btn-primary {
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Mobile input bar with safe area */
+  .luxury-input-bar {
+    padding: 16px 20px max(16px, env(safe-area-inset-bottom, 16px)) !important;
+    background: var(--luxury-black) !important;
+    border-top: 2px solid var(--luxury-border) !important;
+  }
+  
+  .input-container {
+    gap: 16px !important;
+  }
+  
+  .luxury-input {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 16px 20px !important;
+    border-radius: 28px !important;
+    min-height: 56px !important;
+  }
+  
+  .luxury-send-btn {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+    flex-shrink: 0 !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Mobile lead form - full screen */
+  .luxury-lead-form {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+  }
+  
+  .form-header {
+    padding: max(24px, env(safe-area-inset-top, 24px)) 24px 20px !important;
+  }
+  
+  .form-title {
+    font-size: 22px !important;
+  }
+  
+  .luxury-close-btn {
+    width: 40px !important;
+    height: 40px !important;
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  .form-content {
+    padding: 20px 24px max(24px, env(safe-area-inset-bottom, 24px)) !important;
+    height: calc(100vh - 100px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    overflow-y: auto !important;
+  }
+  
+  .luxury-form-input,
+  .luxury-form-textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 16px 20px !important;
+    min-height: 56px !important;
+    border-radius: 12px !important;
+  }
+  
+  .luxury-form-textarea {
+    height: 120px !important;
+    resize: none !important;
+  }
+  
+  .luxury-submit-btn {
+    min-height: 56px !important;
+    padding: 16px 24px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Mobile tooltip adjustments */
+  .luxury-tooltip {
+    display: none !important; /* Hide tooltips on mobile */
+  }
+  
+  /* Mobile typing indicator */
+  .luxury-typing-indicator {
+    gap: 8px !important;
+  }
+  
+  .typing-dot {
+    width: 8px !important;
+    height: 8px !important;
+  }
+  
+  /* Mobile scrollbar */
+  .luxury-messages-area::-webkit-scrollbar {
+    width: 6px !important;
+  }
+  
+  .luxury-messages-area::-webkit-scrollbar-thumb {
+    border-radius: 3px !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .luxury-chat-window.expanded {
+    width: 420px !important;
+    height: 600px !important;
   }
   
   .luxury-chat-fab {
-    bottom: 1.5rem;
-    right: 1.5rem;
+    bottom: 2rem !important;
+    right: 2rem !important;
   }
   
   .luxury-lead-form {
-    width: calc(100vw - 2rem);
-    margin: 1rem;
+    width: 480px !important;
+    max-width: calc(100vw - 4rem) !important;
+  }
+}
+
+/* Large mobile devices */
+@media (max-width: 480px) {
+  .messages-container {
+    padding: 12px !important;
+  }
+  
+  .message-bubble {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+  }
+  
+  .luxury-input-bar {
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom, 12px)) !important;
+  }
+  
+  .luxury-input {
+    padding: 14px 18px !important;
+    min-height: 52px !important;
+  }
+  
+  .luxury-send-btn {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  
+  .form-content {
+    padding: 16px 20px max(20px, env(safe-area-inset-bottom, 20px)) !important;
+  }
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .luxury-messages-area {
+    height: calc(100vh - 120px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+  }
+  
+  .luxury-header {
+    padding: max(12px, env(safe-area-inset-top, 12px)) 20px 12px !important;
+    min-height: 50px !important;
+  }
+  
+  .luxury-input-bar {
+    padding: 12px 20px max(12px, env(safe-area-inset-bottom, 12px)) !important;
+  }
+}
+
+/* iOS specific adjustments */
+@supports (-webkit-touch-callout: none) {
+  .luxury-chat-window.expanded {
+    height: 100vh !important;
+    height: -webkit-fill-available !important;
+  }
+  
+  .luxury-messages-area {
+    height: calc(100vh - 140px) !important;
+    height: calc(-webkit-fill-available - 140px) !important;
+  }
+  
+  .luxury-input {
+    -webkit-appearance: none !important;
+    border-radius: 28px !important;
+  }
+  
+  .luxury-form-input,
+  .luxury-form-textarea {
+    -webkit-appearance: none !important;
+  }
+}
+
+/* Android specific adjustments */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+  .luxury-input,
+  .luxury-form-input,
+  .luxury-form-textarea {
+    background-clip: padding-box !important;
+  }
+}
+
+/* Additional Mobile Enhancements */
+@media (max-width: 768px) {
+  /* Prevent text selection on touch elements */
+  .luxury-quick-reply,
+  .luxury-btn-primary,
+  .luxury-btn-secondary,
+  .luxury-send-btn,
+  .luxury-control-btn,
+  .luxury-chat-fab {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  /* Improve touch feedback */
+  .luxury-quick-reply:active,
+  .luxury-btn-primary:active,
+  .luxury-btn-secondary:active {
+    transform: scale(0.95) !important;
+    transition: transform 0.1s ease !important;
+  }
+  
+  .luxury-send-btn:active {
+    transform: scale(0.9) !important;
+  }
+  
+  .luxury-chat-fab:active {
+    transform: scale(0.95) !important;
+  }
+  
+  /* Mobile-specific animations */
+  .luxury-chat-window.expanded {
+    animation: mobileSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  
+  @keyframes mobileSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Mobile lead form animation */
+  .luxury-lead-form {
+    animation: mobileFormSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  
+  @keyframes mobileFormSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Better mobile scrolling */
+  .luxury-messages-area {
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+  }
+  
+  .form-content {
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+  }
+  
+  /* Mobile keyboard handling */
+  .luxury-input:focus,
+  .luxury-form-input:focus,
+  .luxury-form-textarea:focus {
+    transform: none !important; /* Prevent transform on focus for mobile */
+  }
+  
+  /* Mobile status bar color */
+  .luxury-chat-window.expanded {
+    background: var(--luxury-black) !important;
+  }
+  
+  /* Mobile safe area adjustments for newer devices */
+  @supports (padding: max(0px)) {
+    .luxury-header {
+      padding-top: max(16px, env(safe-area-inset-top, 16px)) !important;
+    }
+    
+    .luxury-input-bar {
+      padding-bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
+    }
+    
+    .luxury-chat-fab {
+      bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem)) !important;
+      right: max(1.5rem, env(safe-area-inset-right, 1.5rem)) !important;
+    }
+    
+    .form-header {
+      padding-top: max(24px, env(safe-area-inset-top, 24px)) !important;
+    }
+    
+    .form-content {
+      padding-bottom: max(24px, env(safe-area-inset-bottom, 24px)) !important;
+    }
+  }
+  
+  /* Mobile dark mode adjustments */
+  @media (prefers-color-scheme: dark) {
+    .luxury-chat-window,
+    .luxury-lead-form {
+      background: var(--luxury-black) !important;
+    }
+  }
+  
+  /* Mobile focus states */
+  .luxury-input:focus,
+  .luxury-form-input:focus,
+  .luxury-form-textarea:focus {
+    border-color: var(--luxury-gold) !important;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2) !important;
+    outline: none !important;
+  }
+  
+  /* Mobile message bubble improvements */
+  .message-bubble {
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  
+  /* Mobile product card touch improvements */
+  .luxury-product-card {
+    border-radius: 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .product-image {
+    border-radius: 12px !important;
+  }
+  
+  /* Mobile typing indicator */
+  .typing-message {
+    padding: 16px 20px !important;
+  }
+  
+  /* Mobile backdrop blur */
+  .luxury-modal-backdrop {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  .luxury-header {
+    padding: max(12px, env(safe-area-inset-top, 12px)) 16px 12px !important;
+  }
+  
+  .luxury-title {
+    font-size: 16px !important;
+  }
+  
+  .messages-container {
+    padding: 10px !important;
+  }
+  
+  .luxury-input-bar {
+    padding: 10px 16px max(10px, env(safe-area-inset-bottom, 10px)) !important;
+  }
+  
+  .form-content {
+    padding: 16px 20px max(20px, env(safe-area-inset-bottom, 20px)) !important;
+  }
+}
+
+/* Mobile hover states (for devices that support hover) */
+@media (hover: hover) and (max-width: 768px) {
+  .luxury-quick-reply:hover,
+  .luxury-btn-primary:hover,
+  .luxury-btn-secondary:hover {
+    transform: translateY(-1px) !important;
   }
 }
 

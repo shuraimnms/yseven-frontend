@@ -1,37 +1,59 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = 'http://localhost:4000/api/v1';
+// Get API base URL from environment or default to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
 
-// Create axios instance
+// Create axios instance with production-ready configuration
 export const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
+  timeout: 30000, // 30 second timeout
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token and logging
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Log API requests in development
+    if (import.meta.env.DEV) {
+      console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    }
+    
     return config;
   },
   (error) => {
+    console.error('API Request Error:', error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor to handle token refresh
+// Response interceptor to handle token refresh and errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Log successful responses in development
+    if (import.meta.env.DEV) {
+      console.log(`API Response: ${response.status} ${response.config.url}`);
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network Error:', error.message);
+      return Promise.reject(new Error('Network error. Please check your connection.'));
+    }
+
+    // Handle 401 errors with token refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -41,7 +63,10 @@ api.interceptors.response.use(
           const response = await axios.post(
             `${API_BASE_URL}/auth/refresh`,
             {},
-            { withCredentials: true }
+            { 
+              withCredentials: true,
+              timeout: 10000 // 10 second timeout for refresh
+            }
           );
 
           if (response.data.success) {
@@ -49,13 +74,22 @@ api.interceptors.response.use(
           }
         }
       } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
         // Refresh failed, redirect to login
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
-        window.location.href = '/auth/login';
+        
+        // Only redirect if we're not already on the login page
+        if (window.location.pathname !== '/auth/login') {
+          window.location.href = '/auth/login';
+        }
       }
     }
 
+    // Handle other errors
+    const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
+    console.error('API Error:', errorMessage);
+    
     return Promise.reject(error);
   }
 );

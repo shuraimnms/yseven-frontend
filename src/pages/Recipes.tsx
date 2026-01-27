@@ -4,7 +4,6 @@ import {
   Clock, 
   Users, 
   ChefHat, 
-  Star, 
   Search,
   Filter,
   Flame,
@@ -31,7 +30,6 @@ const recipes = [
     servings: 4,
     category: 'Main Course',
     sauce: 'Peri-Peri',
-    rating: 4.9,
     reviews: 847,
     featured: true,
     tags: ['Grilled', 'Spicy', 'Portuguese']
@@ -46,7 +44,6 @@ const recipes = [
     servings: 2,
     category: 'Rice & Noodles',
     sauce: 'Sambal',
-    rating: 4.7,
     reviews: 623,
     featured: true,
     tags: ['Indonesian', 'Quick', 'Vegetarian']
@@ -61,7 +58,6 @@ const recipes = [
     servings: 6,
     category: 'Appetizers',
     sauce: 'Truffle Mayo',
-    rating: 4.8,
     reviews: 456,
     featured: false,
     tags: ['Appetizer', 'Luxury', 'Party']
@@ -76,7 +72,6 @@ const recipes = [
     servings: 4,
     category: 'Main Course',
     sauce: 'BBQ',
-    rating: 4.9,
     reviews: 1234,
     featured: true,
     tags: ['BBQ', 'Ribs', 'American']
@@ -91,7 +86,6 @@ const recipes = [
     servings: 4,
     category: 'Sides',
     sauce: 'Harissa',
-    rating: 4.6,
     reviews: 389,
     featured: false,
     tags: ['Vegetarian', 'Healthy', 'Mediterranean']
@@ -106,7 +100,6 @@ const recipes = [
     servings: 2,
     category: 'Seafood',
     sauce: 'Sriracha Mayo',
-    rating: 4.8,
     reviews: 567,
     featured: false,
     tags: ['Healthy', 'Fresh', 'Asian Fusion']
@@ -201,17 +194,17 @@ export default function Recipes() {
               transition={{ duration: 0.8 }}
               className="text-center max-w-4xl mx-auto"
             >
-              <Badge className="bg-yellow-500 text-black mb-6 text-sm px-4 py-2">
+              <Badge className="bg-yellow-500 text-black mb-6 text-sm px-4 py-2 font-body-semibold tracking-refined">
                 GOURMET RECIPE COLLECTION
               </Badge>
               
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-hero mb-6">
                 Master Gourmet Cooking
                 <br />
-                <span className="text-yellow-500">with Y7 Sauces</span>
+                <span className="text-gradient-gold">with Y7 Sauces</span>
               </h1>
               
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <p className="text-hero-sub mb-8 max-w-2xl mx-auto">
                 Discover chef-crafted recipes that showcase the full potential of Y7's premium 
                 sauce collection. From quick weeknight dinners to impressive dinner party dishes.
               </p>
@@ -241,10 +234,10 @@ export default function Recipes() {
               viewport={{ once: true }}
               className="text-center mb-12"
             >
-              <h2 className="text-3xl font-bold mb-4">
+              <h2 className="text-section-title mb-4">
                 Featured Recipes
               </h2>
-              <p className="text-gray-300 max-w-2xl mx-auto">
+              <p className="text-body-large max-w-2xl mx-auto">
                 Chef-approved recipes that showcase the versatility and flavor depth 
                 of Y7's premium sauce collection.
               </p>
@@ -291,19 +284,15 @@ export default function Recipes() {
                     </div>
 
                     <CardContent className="p-4">
-                      <h3 className="font-semibold mb-2 group-hover:text-yellow-500 transition-colors line-clamp-1">
+                      <h3 className="font-body-semibold mb-2 group-hover:text-yellow-500 transition-colors line-clamp-1">
                         {recipe.title}
                       </h3>
-                      <p className="text-gray-300 text-sm mb-3 line-clamp-2">{recipe.description}</p>
+                      <p className="text-gray-300 text-sm mb-3 line-clamp-2 font-body">{recipe.description}</p>
                       
                       <div className="flex items-center justify-between text-sm text-gray-400">
                         <div className="flex items-center gap-1">
                           <Users className="w-3 h-3" />
                           <span>{recipe.servings}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-3 h-3 text-yellow-500" />
-                          <span>{recipe.rating}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -323,7 +312,7 @@ export default function Recipes() {
                 <div className="sticky top-8 space-y-6">
                   {/* Category Filter */}
                   <div>
-                    <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <h3 className="text-nav font-body-semibold mb-4 flex items-center">
                       <Filter className="w-5 h-5 mr-2 text-yellow-500" />
                       Category
                     </h3>
@@ -472,10 +461,6 @@ export default function Recipes() {
                               <div className="flex items-center gap-1">
                                 <Users className="w-3 h-3" />
                                 <span>{recipe.servings}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Star className="w-3 h-3 text-yellow-500" />
-                                <span>{recipe.rating}</span>
                               </div>
                             </div>
                             <span className="text-xs">{recipe.reviews} reviews</span>

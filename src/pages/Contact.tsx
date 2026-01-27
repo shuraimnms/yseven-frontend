@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 import SEO from '@/components/SEO';
 import { pageSEO } from '@/lib/seo';
 import { useGlobalSettings } from '@/hooks/useGlobalSettings';
+import { useSettings } from '@/hooks/useSettings';
 
 export default function Contact() {
   const { 
@@ -28,6 +29,7 @@ export default function Contact() {
     contactPageContent,
     siteTitle 
   } = useGlobalSettings();
+  const { settings } = useSettings();
   
   // Provide fallback values
   const safeContactContent = contactPageContent || 'Ready to elevate your culinary experience? Whether you\'re a home chef, restaurant owner, or looking for bulk orders, we\'re here to help.';
@@ -47,7 +49,7 @@ export default function Contact() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/v1/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -310,9 +312,16 @@ export default function Contact() {
                 <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
                   Request a Call Back
                 </Button>
-                <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-gray-800">
-                  Download Catalog
-                </Button>
+                {settings.downloadLinks.catalogUrl && (
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-gray-600 text-white hover:bg-gray-800"
+                    onClick={() => window.open(settings.downloadLinks.catalogUrl, '_blank')}
+                  >
+                    Download Catalog
+                  </Button>
+                )}
               </div>
             </div>
           </div>

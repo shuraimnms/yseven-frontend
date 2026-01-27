@@ -9,7 +9,6 @@ import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
-  { name: "Shop", href: "/shop" },
   { name: "About", href: "/about" },
   { name: "Export", href: "/export" },
   { name: "Recipes", href: "/blog" },
@@ -19,11 +18,9 @@ const navigation = [
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAccessDropdownOpen, setIsAccessDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   
   // Get auth state and global settings
@@ -36,7 +33,6 @@ const Header = () => {
     
     // Close all menus
     setIsMobileMenuOpen(false);
-    setIsAccessDropdownOpen(false);
     setIsProfileDropdownOpen(false);
     
     // Navigate to the route
@@ -84,9 +80,6 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsAccessDropdownOpen(false);
-      }
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
         setIsProfileDropdownOpen(false);
       }
@@ -155,7 +148,7 @@ const Header = () => {
             </button>
 
             {/* Conditional Auth/Profile Section - Desktop */}
-            {isAuthenticated && user ? (
+            {isAuthenticated && user && (
               // Profile Dropdown for Authenticated Users
               <div className="hidden lg:block relative" ref={profileDropdownRef}>
                 <button
@@ -245,68 +238,6 @@ const Header = () => {
                   </div>
                 </div>
               </div>
-            ) : (
-              // Access Y7 Dropdown for Non-Authenticated Users
-              <div className="hidden lg:block relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setIsAccessDropdownOpen(!isAccessDropdownOpen)}
-                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-cream/80 hover:text-gold transition-all duration-300 border border-gold/30 rounded-lg bg-obsidian/50 hover:bg-gold/10"
-                >
-                  <span>Access Y7</span>
-                  <ChevronDown className={cn(
-                    "w-4 h-4 transition-transform duration-300",
-                    isAccessDropdownOpen ? "rotate-180" : ""
-                  )} />
-                </button>
-
-                {/* Dropdown Menu */}
-                <div className={cn(
-                  "absolute right-0 mt-2 w-64 bg-obsidian/95 backdrop-blur-xl border border-gold/20 rounded-lg shadow-2xl transition-all duration-300 z-50",
-                  isAccessDropdownOpen 
-                    ? "opacity-100 visible transform translate-y-0" 
-                    : "opacity-0 invisible transform -translate-y-2"
-                )}>
-                  <div className="p-4 space-y-3">
-                    <div className="text-xs text-gold font-medium tracking-wide uppercase mb-3">
-                      Choose Your Access
-                    </div>
-                    
-                    {/* Sign In Card */}
-                    <button
-                      onClick={() => {
-                        setIsAccessDropdownOpen(false);
-                        handleNavigation("/auth/login");
-                      }}
-                      className="flex items-center space-x-3 p-3 border border-gold/20 rounded-lg bg-obsidian/30 hover:bg-gold/10 transition-all duration-300 group w-full text-left"
-                    >
-                      <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-                        <span className="text-gold text-sm">👤</span>
-                      </div>
-                      <div>
-                        <div className="font-medium text-cream group-hover:text-gold transition-colors">Sign In</div>
-                        <div className="text-xs text-cream/60">Access your account</div>
-                      </div>
-                    </button>
-                    
-                    {/* Sign Up Card */}
-                    <button
-                      onClick={() => {
-                        setIsAccessDropdownOpen(false);
-                        handleNavigation("/auth/register");
-                      }}
-                      className="flex items-center space-x-3 p-3 border border-gold/20 rounded-lg bg-gold/10 hover:bg-gold/20 transition-all duration-300 group w-full text-left"
-                    >
-                      <div className="w-8 h-8 rounded-full bg-gold/30 flex items-center justify-center">
-                        <span className="text-gold text-sm">✨</span>
-                      </div>
-                      <div>
-                        <div className="font-medium text-cream group-hover:text-gold transition-colors">Sign Up</div>
-                        <div className="text-xs text-cream/60">Create new account</div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
             )}
           </div>
         </div>
@@ -335,7 +266,7 @@ const Header = () => {
             ))}
             
             {/* Mobile Auth/Profile Section */}
-            {isAuthenticated && user ? (
+            {isAuthenticated && user && (
               // Profile Section for Authenticated Users - Mobile
               <div className="border-t border-gold/10 pt-4 mt-4">
                 <div className="flex items-center space-x-3 p-4 border border-gold/20 rounded-lg bg-obsidian/30 mb-4">
@@ -391,68 +322,6 @@ const Header = () => {
                     <LogOut className="w-4 h-4 text-cream/60" />
                     <span className="text-cream">Sign Out</span>
                   </button>
-                </div>
-              </div>
-            ) : (
-              // Access Y7 Dropdown for Non-Authenticated Users - Mobile
-              <div className="border-t border-gold/10 pt-4 mt-4">
-                <button
-                  onClick={() => setIsAccessDropdownOpen(!isAccessDropdownOpen)}
-                  className="flex items-center justify-between w-full p-3 text-gold font-medium text-sm tracking-wide border border-gold/30 rounded-lg bg-obsidian/50 hover:bg-gold/10 transition-all duration-300"
-                >
-                  <span>Access Y7</span>
-                  <ChevronDown className={cn(
-                    "w-4 h-4 transition-transform duration-300",
-                    isAccessDropdownOpen ? "rotate-180" : ""
-                  )} />
-                </button>
-                
-                {/* Mobile Dropdown Content */}
-                <div className={cn(
-                  "overflow-hidden transition-all duration-300",
-                  isAccessDropdownOpen ? "max-h-48 mt-3" : "max-h-0"
-                )}>
-                  <div className="space-y-3">
-                    {/* Sign In Card */}
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        setIsAccessDropdownOpen(false);
-                        handleNavigation("/auth/login");
-                      }}
-                      className="block p-4 border border-gold/20 rounded-lg bg-obsidian/30 hover:bg-gold/10 transition-all duration-300 w-full text-left"
-                    >
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center mr-3">
-                          <span className="text-gold text-sm">👤</span>
-                        </div>
-                        <div>
-                          <div className="font-medium text-cream">Sign In</div>
-                          <div className="text-xs text-cream/60">Access your account</div>
-                        </div>
-                      </div>
-                    </button>
-                    
-                    {/* Sign Up Card */}
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        setIsAccessDropdownOpen(false);
-                        handleNavigation("/auth/register");
-                      }}
-                      className="block p-4 border border-gold/20 rounded-lg bg-gold/10 hover:bg-gold/20 transition-all duration-300 w-full text-left"
-                    >
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-gold/30 flex items-center justify-center mr-3">
-                          <span className="text-gold text-sm">✨</span>
-                        </div>
-                        <div>
-                          <div className="font-medium text-cream">Sign Up</div>
-                          <div className="text-xs text-cream/60">Create new account</div>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
                 </div>
               </div>
             )}
