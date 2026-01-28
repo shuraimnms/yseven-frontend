@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { getScrollBehavior } from "@/hooks/use-scroll-to-top";
 import { useAuthStore } from "@/store/authStore";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import Logo from "@/components/ui/Logo";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -103,11 +104,9 @@ const Header = () => {
           {/* Logo */}
           <button 
             onClick={() => handleNavigation("/")} 
-            className="flex items-center space-x-2 group cursor-pointer"
+            className="flex items-center space-x-3 group cursor-pointer"
           >
-            <span className="text-3xl lg:text-4xl font-display font-bold text-gradient-gold">
-              {siteTitle.split(' ')[0] || 'Y7'}
-            </span>
+            <Logo size="3xl" />
             <span className="hidden sm:block text-cream/60 text-xs tracking-luxury uppercase">
               Premium Sauces
             </span>

@@ -63,7 +63,7 @@ At Y7, our peri-peri sauce is crafted using authentic African bird's eye chilies
 ## How to Use Peri-Peri Sauce
 
 ### As a Marinade
-Marinate chicken, beef, or seafood for 2-4 hours before grilling.
+Marinate chicken, , or seafood for 2-4 hours before grilling.
 
 ### As a Condiment
 Drizzle over finished dishes for an instant flavor boost.
@@ -149,7 +149,7 @@ Crispy wings with a sticky sambal glaze that's addictively delicious.
 
 A vibrant, healthy dish that proves sambal works beautifully with vegetables.
 
-### 6. Sambal Beef Rendang
+### 6. Sambal  Rendang
 **Prep Time:** 30 minutes | **Cook Time:** 2 hours
 
 A slow-cooked Indonesian classic elevated with premium sambal.
@@ -227,13 +227,13 @@ The foundation of great burger sauces, premium mayonnaise provides richness and 
 ### 2. Ketchup
 The all-American classic that adds sweetness and acidity.
 
-**Best For:** Beef burgers, especially with cheese
+**Best For:**  burgers, especially with cheese
 **Pro Tip:** Try gourmet ketchup with reduced sugar for adult palates
 
 ### 3. Mustard
 Adds tangy sharpness that cuts through rich meats.
 
-**Best For:** Beef and pork burgers
+**Best For:**  and pork burgers
 **Varieties:** Dijon, whole grain, honey mustard
 
 ## Gourmet Sauce Combinations
@@ -243,7 +243,7 @@ Adds tangy sharpness that cuts through rich meats.
 - Pickled jalapeños
 - Crispy onions
 
-**Perfect For:** Chicken or beef burgers with pepper jack cheese
+**Perfect For:** Chicken or  burgers with pepper jack cheese
 
 ### The Mediterranean
 - Y7 Harissa Mayo
@@ -261,7 +261,7 @@ Adds tangy sharpness that cuts through rich meats.
 
 ## Sauce Pairing by Protein
 
-### Beef Burgers
+###  Burgers
 - **Classic:** Mayo, ketchup, mustard
 - **Gourmet:** Truffle aioli, caramelized onion sauce
 - **Spicy:** Chipotle mayo, jalapeño ranch

@@ -126,7 +126,7 @@ export default function BBQSauces() {
     },
     {
       question: "How do I choose the right BBQ sauce for different meats?",
-      answer: "Kansas City works great with ribs and chicken, Carolina Gold pairs perfectly with pork, Texas style complements beef brisket, Memphis suits all meats, Alabama White is ideal for chicken and fish, Korean glaze enhances any grilled protein."
+      answer: "Kansas City works great with ribs and chicken, Carolina Gold pairs perfectly with pork, Texas style complements  brisket, Memphis suits all meats, Alabama White is ideal for chicken and fish, Korean glaze enhances any grilled protein."
     },
     {
       question: "Can Y7 BBQ sauces be used for cooking or just as finishing sauces?",
@@ -257,7 +257,7 @@ export default function BBQSauces() {
                   base: 'Tomato & Spices', 
                   flavor: 'Smoky & Bold', 
                   color: 'bg-orange-500',
-                  description: 'Low-sweet sauce for beef brisket'
+                  description: 'Low-sweet sauce for  brisket'
                 },
                 { 
                   style: 'Memphis', 
@@ -552,7 +552,7 @@ export default function BBQSauces() {
               {[
                 { meat: 'Ribs', sauce: 'Kansas City', reason: 'Sweet glaze complements rich pork' },
                 { meat: 'Pulled Pork', sauce: 'Carolina Gold', reason: 'Mustard cuts through fatty pork' },
-                { meat: 'Brisket', sauce: 'Texas Style', reason: 'Smoky flavors enhance beef' },
+                { meat: 'Brisket', sauce: 'Texas Style', reason: 'Smoky flavors enhance ' },
                 { meat: 'Chicken', sauce: 'Alabama White', reason: 'Creamy sauce perfect for poultry' }
               ].map((pairing, index) => (
                 <motion.div

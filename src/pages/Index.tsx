@@ -6,6 +6,7 @@ import { pageSEO, seoConfig, generateFAQSchema } from "@/lib/seo";
 import HeroVideoBackground from "@/components/HeroVideoBackground";
 import sauceClassic from "@/assets/sauce-classic.jpg";
 import sauceSpicy from "@/assets/sauce-spicy.jpg";
+import allprod from  "@/assets/all-prod.jpg";
 import sauceInternational from "@/assets/sauce-international.jpg";
 import sauceCreamy from "@/assets/sauce-creamy.jpg";
 import SauceDrops from "@/components/home/SauceDrops";
@@ -126,7 +127,7 @@ const BrandStorySection = () => (
         <div className="relative">
           <div className="aspect-square rounded-2xl overflow-hidden border border-gold/20">
             <img
-              src={sauceClassic}
+              src={allprod}
               alt="Y7 Premium Sauce"
               className="w-full h-full object-cover"
             />

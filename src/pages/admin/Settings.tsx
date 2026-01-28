@@ -111,7 +111,7 @@ const SettingsPage = () => {
     try {
       setIsLoading(true);
       
-      const response = await fetch('/api/admin/settings', {
+      const response = await fetch('/api/v1/admin/settings', {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ const SettingsPage = () => {
 
       setIsSaving(true);
       
-      const response = await fetch('/api/admin/settings', {
+      const response = await fetch('/api/v1/admin/settings', {
         method: 'PUT',
         credentials: 'include',
         headers: {

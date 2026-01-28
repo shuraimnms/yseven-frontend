@@ -24,7 +24,7 @@ const featuredRecipes = [
   },
   {
     id: 2,
-    name: "Sambal Beef Rendang",
+    name: "Sambal  Rendang",
     image: sauceInternational,
     cookingTime: "2h 30min",
     spiceLevel: "hot",

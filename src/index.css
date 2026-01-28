@@ -131,6 +131,49 @@ select {
     font-weight: 400;
     line-height: 1.7;
     letter-spacing: 0.005em;
+    position: relative;
+  }
+
+  /* Global Watermark Background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background-image: var(--watermark-image);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Logo Styling - Removed max-height constraints to allow Tailwind classes to work */
+  .logo-image {
+    width: auto;
+    object-fit: contain;
+    transition: all 0.3s ease;
+  }
+
+  .logo-image:hover {
+    transform: scale(1.05);
+  }
+
+  /* Watermark Control Classes */
+  .no-watermark::before {
+    display: none !important;
+  }
+
+  .watermark-subtle::before {
+    opacity: 0.02 !important;
+  }
+
+  .watermark-visible::before {
+    opacity: 0.06 !important;
   }
 
   /* Ultra-Premium Typography Hierarchy */

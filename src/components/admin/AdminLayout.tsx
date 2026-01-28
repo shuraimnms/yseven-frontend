@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
+import Logo from '@/components/ui/Logo';
 
 const sidebarItems = [
   { 
@@ -113,9 +114,11 @@ const AdminLayout = () => {
         {/* Sidebar Header */}
         <div className="flex items-center justify-between h-20 px-6 border-b border-gold/20">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-gold to-yellow-600 rounded-lg flex items-center justify-center">
-              <span className="text-obsidian font-bold text-lg">Y7</span>
-            </div>
+            <img 
+              src="/src/assets/logo.png" 
+              alt="Y7 Admin Panel" 
+              className="h-8 w-auto object-contain"
+            />
             <div>
               <h1 className="text-lg font-semibold text-cream">Admin Panel</h1>
               <p className="text-xs text-cream/60">Enterprise Dashboard</p>

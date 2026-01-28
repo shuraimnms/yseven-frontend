@@ -15,6 +15,9 @@ import { SettingsProvider } from "./components/providers/SettingsProvider";
 import { useAuthStore } from "./store/authStore";
 import { ChatBot } from "./components/chat/ChatBot";
 
+// Import watermark image
+import watermarkImage from "./assets/y7-watermark.png";
+
 // Development helper (remove in production)
 import './utils/adminHelper';
 
@@ -76,6 +79,9 @@ const App = () => {
 
   useEffect(() => {
     checkAuth();
+    
+    // Set watermark image as CSS custom property
+    document.documentElement.style.setProperty('--watermark-image', `url(${watermarkImage})`);
   }, [checkAuth]);
 
   return (

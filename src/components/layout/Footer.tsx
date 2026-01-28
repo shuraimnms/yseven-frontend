@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Instagram, Facebook, Twitter, Youtube, Mail, MapPin, Phone, Shield, FileCheck } from "lucide-react";
 import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+import { useManufacturerInfo, useManufacturerAddress } from "@/hooks/useManufacturerInfo";
+import Logo from "@/components/ui/Logo";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -11,6 +13,9 @@ const Footer = () => {
     officeAddress, 
     socialMedia 
   } = useGlobalSettings();
+  
+  const manufacturerInfo = useManufacturerInfo();
+  const manufacturerAddress = useManufacturerAddress();
 
   // Provide fallback values to prevent undefined errors
   const safeSocialMedia = socialMedia || {
@@ -63,8 +68,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link to="/" className="inline-block mb-6">
-              <span className="text-4xl font-display font-bold text-gradient-gold">Y7</span>
+            <Link to="/" className="inline-block mb-6 group">
+              <Logo size="lg" />
             </Link>
             <p className="text-cream/60 text-sm leading-relaxed mb-6 max-w-xs">
               Premium sauces crafted for bold kitchens worldwide. One Brand. Endless Flavor.
@@ -165,6 +170,23 @@ const Footer = () => {
                 <MapPin className="w-4 h-4" />
                 {officeAddress.split(',')[0]}
               </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Manufacturer Details */}
+        <div className="mt-8 pt-6 border-t border-gold/5">
+          <div className="text-xs text-cream/50 leading-relaxed">
+            <p className="mb-2">
+              <span className="text-cream/60">Manufactured & Packed By:</span> {manufacturerInfo.manufacturer}
+            </p>
+            <p className="mb-2">
+              {manufacturerAddress.full}
+            </p>
+            <div className="flex flex-wrap gap-4 text-cream/40">
+              <span>FSSAI No: {manufacturerInfo.fssaiNo}</span>
+              <span>GSTIN: {manufacturerInfo.gstinNo}</span>
+              <span>Country of Origin: {manufacturerInfo.countryOfOrigin}</span>
             </div>
           </div>
         </div>

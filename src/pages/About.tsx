@@ -246,6 +246,10 @@ export default function About() {
                   wisdom enhanced by modern processing techniques. We believe in community upliftment 
                   and creating nutrition-focused products that benefit both consumers and farmers.
                 </p>
+                <p className="text-base text-gray-400 mb-6 leading-relaxed border-l-2 border-gold/30 pl-4">
+                  Y-Seven is a registered trademark brand manufactured and packed by Crush In Agro Products, 
+                  a food manufacturing company committed to quality, safety, and consistent taste standards.
+                </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-green-500" />

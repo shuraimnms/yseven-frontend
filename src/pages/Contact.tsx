@@ -49,7 +49,7 @@ export default function Contact() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('/api/v1/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -248,6 +248,17 @@ export default function Contact() {
                             ))}
                           </p>
                           <p className="text-xs text-green-500 mt-1">APEDA Registered Manufacturer Exporter</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 pt-4 border-t border-gray-800">
+                        <MapPin className="w-4 h-4 text-gray-500 mt-1" />
+                        <div>
+                          <p className="text-sm text-gray-500">Manufacturing Unit:</p>
+                          <p className="text-xs text-gray-400">
+                            Crush In Agro Products<br />
+                            Chandigarh, Punjab, India
+                          </p>
                         </div>
                       </div>
                     </div>
