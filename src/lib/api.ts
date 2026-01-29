@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// Get API base URL from environment or default to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+// Get API base URL from environment or default to production for deployment
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://yseven-backend.onrender.com/api/v1';
 
 // Create axios instance with production-ready configuration
 export const api = axios.create({

@@ -2,16 +2,29 @@ import { useState } from "react";
 import { ArrowRight, Mail, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useFormSubmission } from '@/hooks/useFormSubmission';
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const { submitForm, isSubmitting } = useFormSubmission();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (email) {
-      setIsSubscribed(true);
-      setEmail("");
+      const result = await submitForm({
+        fullName: 'Newsletter Subscriber',
+        email: email,
+        subject: 'Newsletter Subscription',
+        message: 'User subscribed to newsletter',
+        type: 'general'
+      });
+
+      if (result.success) {
+        setIsSubscribed(true);
+        setEmail('');
+      }
     }
   };
 
@@ -56,8 +69,8 @@ const NewsletterSection = () => {
                 className="flex-1 h-14 bg-obsidian/50 border-gold/30 text-cream placeholder:text-cream/40 focus:border-gold"
                 required
               />
-              <Button type="submit" variant="gold" size="lg" className="h-14 px-8">
-                Subscribe
+              <Button type="submit" variant="gold" size="lg" className="h-14 px-8" disabled={isSubmitting}>
+                {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </form>

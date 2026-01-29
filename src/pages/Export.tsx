@@ -22,13 +22,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import SEOHead from '@/components/SEOHead';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 import { useSettings } from '@/hooks/useSettings';
+import { useFormSubmission } from '@/hooks/useFormSubmission';
 
 export default function Export() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { settings } = useSettings();
+  const { submitForm, isSubmitting } = useFormSubmission();
+  
   const [formData, setFormData] = useState({
     companyName: '',
     contactName: '',
@@ -46,47 +47,29 @@ export default function Export() {
 
   const handleSubmitQuote = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     
-    try {
-      const response = await fetch('/api/v1/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fullName: formData.contactName,
-          email: formData.email,
-          phone: formData.phone,
-          subject: `Export Quote Request - ${formData.companyName}`,
-          message: `Company: ${formData.companyName}\nCountry: ${formData.country}\nProduct Interest: ${formData.productInterest}\nQuantity Required: ${formData.quantity}\n\nMessage:\n${formData.message}`,
-          type: 'export'
-        }),
+    const result = await submitForm({
+      fullName: formData.contactName,
+      email: formData.email,
+      phone: formData.phone,
+      subject: `Export Quote Request - ${formData.companyName}`,
+      message: `Company: ${formData.companyName}\nCountry: ${formData.country}\nProduct Interest: ${formData.productInterest}\nQuantity Required: ${formData.quantity}\n\nMessage:\n${formData.message}`,
+      type: 'export'
+    });
+
+    if (result.success) {
+      // Reset form and close modal on success
+      setFormData({
+        companyName: '',
+        contactName: '',
+        email: '',
+        phone: '',
+        country: '',
+        productInterest: '',
+        quantity: '',
+        message: ''
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message || 'Export quote request submitted successfully! Our export team will contact you within 24 hours.');
-        setFormData({
-          companyName: '',
-          contactName: '',
-          email: '',
-          phone: '',
-          country: '',
-          productInterest: '',
-          quantity: '',
-          message: ''
-        });
-        setIsQuoteModalOpen(false);
-      } else {
-        toast.error(data.message || 'Failed to submit quote request. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting export quote:', error);
-      toast.error('Failed to submit quote request. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
+      setIsQuoteModalOpen(false);
     }
   };
   const seoData = {
@@ -582,11 +565,11 @@ export default function Export() {
                 />
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                  <div className="text-sm text-green-800">
-                    <p className="font-semibold mb-1">APEDA Registered Exporter</p>
+                  <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
+                  <div className="text-sm text-green-100">
+                    <p className="font-semibold mb-1 text-green-300">APEDA Registered Exporter</p>
                     <p>We are officially authorized by the Government of India to export processed fruits and vegetables worldwide. All our products meet international quality standards.</p>
                   </div>
                 </div>

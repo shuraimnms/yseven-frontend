@@ -41,7 +41,7 @@ interface Contact {
   phone?: string;
   subject: string;
   message: string;
-  type: 'general' | 'bulk' | 'partnership' | 'support' | 'media' | 'export' | 'press';
+  type: 'general' | 'bulk' | 'partnership' | 'support' | 'media' | 'export' | 'press' | 'chat';
   status: 'new' | 'in-progress' | 'resolved' | 'closed';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   assignedTo?: {
@@ -101,7 +101,8 @@ export default function ContactRequests() {
     support: AlertCircle,
     media: Newspaper,
     export: Globe,
-    press: FileText
+    press: FileText,
+    chat: MessageSquare
   };
 
   const statusColors = {

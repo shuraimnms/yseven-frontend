@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import heroImage from '@/assets/hero-sauce.jpg';
+import heroVideo from '@/assets/hero-sauce.mp4';
 
 interface HeroVideoBackgroundProps {
   className?: string;
@@ -59,7 +60,7 @@ const HeroVideoBackground = ({ className = '' }: HeroVideoBackgroundProps) => {
           transition: 'opacity 1s ease-in-out'
         }}
       >
-        <source src="/hero-sauce.mp4" type="video/mp4" />
+        <source src={heroVideo} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 

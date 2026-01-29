@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, Minimize2, Mic } from 'lucide-react';
+import { X, Send, Minimize2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
 import { chatAPI } from '../../lib/api';
+import { useFormSubmission } from '../../hooks/useFormSubmission';
 import './ChatBot.css';
 
 interface Message {
@@ -62,19 +63,12 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Prevent body scroll when chat is open on mobile
+  // Prevent body scroll when chat is open on mobile - REMOVED for better UX
+  // Chat now stays in content area and doesn't need body scroll lock
   useEffect(() => {
-    if (isMobile && isOpen && !isMinimized) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    }
-
+    // No body scroll manipulation needed
     return () => {
+      // Cleanup any existing styles
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.width = '';
@@ -204,7 +198,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage(inputValue);
@@ -237,7 +231,11 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 
   if (!isOpen) {
     return (
-      <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+      <div className={`fixed z-50 ${className}`} style={{
+        bottom: isMobile ? '20px' : '24px',
+        right: '24px',
+        zIndex: 999
+      }}>
         <div className="relative group">
           <Button
             onClick={() => setIsOpen(true)}
@@ -259,7 +257,11 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
   }
 
   return (
-    <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+    <div className={`fixed z-50 ${className}`} style={{
+      bottom: isMobile ? '20px' : '24px',
+      right: isMobile ? '20px' : '24px',
+      zIndex: 999
+    }}>
       <Card className={`luxury-chat-window ${
         isMinimized ? 'minimized' : 'expanded'
       }`}>
@@ -373,7 +375,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
                   ref={inputRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyDown}
                   placeholder="Ask about Y7 products, orders, or recipes…"
                   className="luxury-input"
                   disabled={isLoading}
@@ -398,12 +400,20 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 
       {/* Lead Form Modal */}
       {showLeadForm && (
-        <LeadForm
-          sessionId={sessionId}
-          onClose={() => setShowLeadForm(false)}
-          onSubmit={handleLeadSubmit}
-          isMobile={isMobile}
-        />
+        <div className="fixed inset-0 z-50" style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <LeadForm
+            sessionId={sessionId}
+            onClose={() => setShowLeadForm(false)}
+            onSubmit={handleLeadSubmit}
+            isMobile={isMobile}
+          />
+        </div>
       )}
     </div>
   );
@@ -429,55 +439,57 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit, isMob
     message: '',
     quantity: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { submitForm, isSubmitting } = useFormSubmission();
 
-  // Prevent body scroll on mobile when form is open
+  // No body scroll manipulation needed - form stays in content area
   useEffect(() => {
-    if (isMobile) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    }
-
+    // Cleanup any existing styles
     return () => {
-      if (isMobile) {
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-      }
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
   }, [isMobile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     try {
+      // Submit to chat API first
       await chatAPI.submitLead({ ...formData, sessionId });
-      onSubmit(formData);
+      
+      // Then submit through the form submission system
+      const result = await submitForm({
+        fullName: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: `Business Inquiry - ${formData.businessName || 'Chat Lead'}`,
+        message: `Business Name: ${formData.businessName}\nDesignation: ${formData.designation}\nCountry: ${formData.country}\nQuantity: ${formData.quantity}\nInterest: ${formData.interest}\n\nMessage:\n${formData.message}`,
+        type: 'chat'
+      });
+
+      if (result.success) {
+        onSubmit(formData);
+      }
     } catch (error) {
       console.error('Failed to submit lead:', error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    // Restore body scroll before closing
-    if (isMobile) {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    }
+    // No body scroll restoration needed
     onClose();
   };
 
   return (
-    <div className="luxury-modal-backdrop" onClick={handleClose}>
-      <Card 
-        className="luxury-lead-form" 
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Card 
+      className="luxury-lead-form" 
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        position: 'relative',
+        zIndex: 1001
+      }}
+    >
         <div className="form-header">
           <div>
             <h3 className="form-title">Business Inquiry</h3>
@@ -580,6 +592,6 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit, isMob
           </p>
         </form>
       </Card>
-    </div>
   );
 };
+export default ChatBot;

@@ -1,4 +1,4 @@
-/* Y7 Luxury Chatbot Styles - Apple × Michelin × Stripe × Netflix UI */
+/* Y7 Luxury Chatbot Styles - Redesigned for Middle Content Area */
 
 /* Import luxury fonts */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
@@ -13,12 +13,19 @@
   --luxury-user-bubble: #1C1C1F;
   --luxury-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   --luxury-glow: 0 0 20px rgba(212, 175, 55, 0.3);
+  
+  /* Safe area calculations to avoid header/footer */
+  --header-height: 80px; /* Mobile header height */
+  --header-height-lg: 96px; /* Desktop header height */
+  --footer-height: 200px; /* Approximate footer height */
+  --safe-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+  --safe-top: max(24px, env(safe-area-inset-top, 24px));
 }
 
-/* Floating Action Button - Luxury Design */
+/* Floating Action Button - Larger size */
 .luxury-chat-fab {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: var(--luxury-black);
   border: 2px solid var(--luxury-gold);
@@ -50,7 +57,7 @@
 .y7-monogram {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--luxury-gold);
   letter-spacing: -0.5px;
 }
@@ -94,7 +101,7 @@
   border-top: 4px solid var(--luxury-gold);
 }
 
-/* Chat Window - Luxury Container */
+/* Chat Window - Larger dimensions */
 .luxury-chat-window {
   background: var(--luxury-black);
   border: 1px solid var(--luxury-gold);
@@ -106,12 +113,14 @@
 }
 
 .luxury-chat-window.expanded {
-  width: 380px;
-  height: 520px;
+  width: 420px;
+  height: 580px;
+  /* Ensure it never goes above header or below footer */
+  max-height: calc(100vh - var(--header-height-lg) - var(--footer-height) - 48px);
 }
 
 .luxury-chat-window.minimized {
-  width: 320px;
+  width: 420px;
   height: 60px;
 }
 
@@ -199,9 +208,9 @@
   border-color: var(--luxury-gold);
 }
 
-/* Messages Area */
+/* Messages Area - Larger height */
 .luxury-messages-area {
-  height: 380px;
+  height: 440px;
   background: var(--luxury-black);
 }
 
@@ -469,7 +478,7 @@
   cursor: not-allowed;
 }
 
-/* Lead Form Modal */
+/* Lead Form Modal - Larger size */
 .luxury-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -488,7 +497,7 @@
 }
 
 .luxury-lead-form {
-  width: 400px;
+  width: 450px;
   max-height: 80vh;
   background: var(--luxury-black);
   border: 1px solid var(--luxury-gold);
@@ -655,28 +664,39 @@
   background: #b8941f;
 }
 
-/* Mobile-First Responsive Design */
+/* Mobile-First Responsive Design - Fixed positioning */
 @media (max-width: 768px) {
-  /* Full-screen mobile experience */
-  .luxury-chat-window.expanded {
-    width: 100vw !important;
-    height: 100vh !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    border-radius: 0 !important;
-    border: none !important;
-    z-index: 9999 !important;
+  :root {
+    --header-height: 80px;
+    --footer-height: 150px;
   }
   
-  /* Mobile FAB positioning with safe area */
+  /* Mobile chat window - fixed to stay on screen */
+  .luxury-chat-window.expanded {
+    width: calc(100vw - 24px) !important;
+    max-width: 380px !important;
+    height: calc(100vh - 160px) !important;
+    max-height: 500px !important;
+    position: fixed !important;
+    top: 80px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+    bottom: auto !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--luxury-gold) !important;
+    z-index: 1000 !important;
+    margin: 0 12px !important;
+  }
+  
+  /* Mobile FAB positioning - fixed to stay visible */
   .luxury-chat-fab {
-    bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem)) !important;
-    right: 1.5rem !important;
-    width: 60px !important;
-    height: 60px !important;
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 56px !important;
+    height: 56px !important;
+    z-index: 999 !important;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.2) !important;
   }
   
@@ -686,8 +706,8 @@
   
   /* Mobile header adjustments */
   .luxury-header {
-    padding: max(16px, env(safe-area-inset-top, 16px)) 20px 16px !important;
-    height: auto !important;
+    padding: 16px 20px !important;
+    height: 60px !important;
     min-height: 60px !important;
     background: linear-gradient(135deg, var(--luxury-black), #1a1a1f) !important;
   }
@@ -703,14 +723,14 @@
   .luxury-control-btn {
     width: 36px !important;
     height: 36px !important;
-    min-height: 44px !important; /* Touch-friendly minimum */
+    min-height: 44px !important;
     min-width: 44px !important;
   }
   
-  /* Mobile messages area - full height calculation */
+  /* Mobile messages area - adjusted for fixed positioning */
   .luxury-messages-area {
-    height: calc(100vh - 140px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
-    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    height: calc(100% - 140px) !important;
+    max-height: 360px !important;
   }
   
   .messages-container {
@@ -722,7 +742,7 @@
   .message-bubble {
     max-width: 90% !important;
     padding: 14px 18px !important;
-    font-size: 16px !important; /* Better readability on mobile */
+    font-size: 16px !important;
     line-height: 1.6 !important;
   }
   
@@ -739,7 +759,7 @@
   }
   
   .luxury-quick-reply {
-    min-height: 44px !important; /* Touch-friendly */
+    min-height: 44px !important;
     padding: 12px 16px !important;
     font-size: 14px !important;
     border-radius: 22px !important;
@@ -779,9 +799,9 @@
     touch-action: manipulation !important;
   }
   
-  /* Mobile input bar with safe area */
+  /* Mobile input bar */
   .luxury-input-bar {
-    padding: 16px 20px max(16px, env(safe-area-inset-bottom, 16px)) !important;
+    padding: 16px 20px !important;
     background: var(--luxury-black) !important;
     border-top: 2px solid var(--luxury-border) !important;
   }
@@ -791,7 +811,7 @@
   }
   
   .luxury-input {
-    font-size: 16px !important; /* Prevents zoom on iOS */
+    font-size: 16px !important;
     padding: 16px 20px !important;
     border-radius: 28px !important;
     min-height: 56px !important;
@@ -806,23 +826,26 @@
     touch-action: manipulation !important;
   }
   
-  /* Mobile lead form - full screen */
+  /* Mobile lead form - fixed positioning */
   .luxury-lead-form {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
+    width: calc(100vw - 24px) !important;
+    max-width: 380px !important;
+    height: calc(100vh - 160px) !important;
+    max-height: 500px !important;
     margin: 0 !important;
-    border-radius: 0 !important;
-    border: none !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--luxury-gold) !important;
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+    top: 80px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+    bottom: auto !important;
+    overflow-y: auto !important;
   }
   
   .form-header {
-    padding: max(24px, env(safe-area-inset-top, 24px)) 24px 20px !important;
+    padding: 24px 24px 20px !important;
   }
   
   .form-title {
@@ -837,14 +860,14 @@
   }
   
   .form-content {
-    padding: 20px 24px max(24px, env(safe-area-inset-bottom, 24px)) !important;
-    height: calc(100vh - 100px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
-    overflow-y: auto !important;
+    padding: 20px 24px 24px !important;
+    height: auto !important;
+    overflow-y: visible !important;
   }
   
   .luxury-form-input,
   .luxury-form-textarea {
-    font-size: 16px !important; /* Prevents zoom on iOS */
+    font-size: 16px !important;
     padding: 16px 20px !important;
     min-height: 56px !important;
     border-radius: 12px !important;
@@ -863,45 +886,30 @@
     touch-action: manipulation !important;
   }
   
-  /* Mobile tooltip adjustments */
-  .luxury-tooltip {
-    display: none !important; /* Hide tooltips on mobile */
-  }
-  
-  /* Mobile typing indicator */
-  .luxury-typing-indicator {
-    gap: 8px !important;
-  }
-  
-  .typing-dot {
-    width: 8px !important;
-    height: 8px !important;
-  }
-  
-  /* Mobile scrollbar */
-  .luxury-messages-area::-webkit-scrollbar {
-    width: 6px !important;
-  }
-  
-  .luxury-messages-area::-webkit-scrollbar-thumb {
-    border-radius: 3px !important;
+  /* Remove body scroll lock on mobile - let it scroll naturally */
+  body.chat-open {
+    overflow: auto !important;
+    position: static !important;
+    width: auto !important;
   }
 }
 
-/* Tablet adjustments */
+/* Tablet adjustments - larger sizes */
 @media (min-width: 769px) and (max-width: 1024px) {
   .luxury-chat-window.expanded {
     width: 420px !important;
-    height: 600px !important;
+    height: 580px !important;
   }
   
   .luxury-chat-fab {
     bottom: 2rem !important;
     right: 2rem !important;
+    width: 64px !important;
+    height: 64px !important;
   }
   
   .luxury-lead-form {
-    width: 480px !important;
+    width: 450px !important;
     max-width: calc(100vw - 4rem) !important;
   }
 }

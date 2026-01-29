@@ -3,11 +3,13 @@ import { Building2, Truck, HeadphonesIcon, Shield, ArrowRight, Download } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from 'sonner';
 import { useSettings } from '@/hooks/useSettings';
+import { useFormSubmission } from '@/hooks/useFormSubmission';
 
 const BulkOrders = () => {
   const { settings } = useSettings();
+  const { submitForm, isSubmitting } = useFormSubmission();
+  
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -17,7 +19,6 @@ const BulkOrders = () => {
     monthlyVolume: '',
     details: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -25,45 +26,27 @@ const BulkOrders = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     
-    try {
-      const response = await fetch('/api/v1/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fullName: formData.contactName,
-          email: formData.email,
-          phone: formData.phone,
-          subject: `Bulk Order Inquiry - ${formData.businessName}`,
-          message: `Business Name: ${formData.businessName}\nBusiness Type: ${formData.businessType}\nEstimated Monthly Volume: ${formData.monthlyVolume}\n\nAdditional Details:\n${formData.details}`,
-          type: 'bulk'
-        }),
+    const result = await submitForm({
+      fullName: formData.contactName,
+      email: formData.email,
+      phone: formData.phone,
+      subject: `Bulk Order Inquiry - ${formData.businessName}`,
+      message: `Business Name: ${formData.businessName}\nBusiness Type: ${formData.businessType}\nEstimated Monthly Volume: ${formData.monthlyVolume}\n\nAdditional Details:\n${formData.details}`,
+      type: 'bulk'
+    });
+
+    if (result.success) {
+      // Reset form on success
+      setFormData({
+        businessName: '',
+        businessType: '',
+        contactName: '',
+        email: '',
+        phone: '',
+        monthlyVolume: '',
+        details: ''
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message || 'Bulk order inquiry submitted successfully! Our B2B team will contact you within 24 hours.');
-        setFormData({
-          businessName: '',
-          businessType: '',
-          contactName: '',
-          email: '',
-          phone: '',
-          monthlyVolume: '',
-          details: ''
-        });
-      } else {
-        toast.error(data.message || 'Failed to submit inquiry. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting bulk order inquiry:', error);
-      toast.error('Failed to submit inquiry. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

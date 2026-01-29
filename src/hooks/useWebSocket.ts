@@ -21,7 +21,7 @@ interface UseWebSocketOptions {
 
 export const useWebSocket = (options: UseWebSocketOptions = {}) => {
   const {
-    url = 'http://localhost:4000',
+    url = import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') || 'https://yseven-backend.onrender.com',
     reconnectInterval = 5000,
     maxReconnectAttempts = 5,
     onMessage,

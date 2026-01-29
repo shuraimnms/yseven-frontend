@@ -15,21 +15,21 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { toast } from 'sonner';
 import SEO from '@/components/SEO';
 import { pageSEO } from '@/lib/seo';
 import { useGlobalSettings } from '@/hooks/useGlobalSettings';
 import { useSettings } from '@/hooks/useSettings';
+import { useFormSubmission } from '@/hooks/useFormSubmission';
 
 export default function Contact() {
   const { 
     supportEmail, 
     supportPhone, 
     officeAddress, 
-    contactPageContent,
-    siteTitle 
+    contactPageContent
   } = useGlobalSettings();
   const { settings } = useSettings();
+  const { submitForm, isSubmitting } = useFormSubmission();
   
   // Provide fallback values
   const safeContactContent = contactPageContent || 'Ready to elevate your culinary experience? Whether you\'re a home chef, restaurant owner, or looking for bulk orders, we\'re here to help.';
@@ -42,52 +42,33 @@ export default function Contact() {
     subject: '',
     message: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      const response = await fetch('/api/v1/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          type: formData.subject.toLowerCase().includes('bulk') ? 'bulk' :
-                formData.subject.toLowerCase().includes('partnership') ? 'partnership' :
-                formData.subject.toLowerCase().includes('support') ? 'support' :
-                formData.subject.toLowerCase().includes('media') ? 'media' :
-                'general'
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message || 'Message sent successfully! We\'ll get back to you soon.');
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: ''
-        });
-      } else {
-        toast.error(data.message || 'Failed to send message. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
-      toast.error('Failed to send message. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const result = await submitForm({
+      ...formData,
+      type: formData.subject.toLowerCase().includes('bulk') ? 'bulk' :
+            formData.subject.toLowerCase().includes('partnership') ? 'partnership' :
+            formData.subject.toLowerCase().includes('support') ? 'support' :
+            formData.subject.toLowerCase().includes('media') ? 'media' :
+            'general'
+    });
+
+    if (result.success) {
+      // Reset form on success
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    }
   };
 
   return (

@@ -28,12 +28,13 @@ import romescoSauce from "@/assets/Romesco-Sauce.png";
 import sambalSauce from "@/assets/Sambal-Sauce.png";
 import greenChilliFlakesVideo from "@/assets/Green-Chilli-Flakes.mp4";
 import greenChilliFlakesFallback from "@/assets/Green-Chilli-Flakes.png";
+import tomatoKetchupVideo from "@/assets/Tomato-Ketchup.mp4";
 import greenChilliPowder from "@/assets/Green-Chilli-Powder.png";
 import yelkahiBananaPowderVideo from "@/assets/Yelkahi-Banana-Powde.mp4";
 import yelkahiBananaPowderFallback from "@/assets/Yelkahi-Banana-Powde.png";
+import rawPapayaPowderVideo from "@/assets/Raw-Papaya-Powder.mp4";
 import rasabaleBananaPowder from "@/assets/Rasabale-Banana-Powder.png";
 import g9BananaPowder from "@/assets/G9-Banana-Powder.png";
-import rawPapayaPowderVideo from "@/assets/Raw-Papaya-Powder.mp4";
 import rawPapayaPowderFallback from "@/assets/Raw-Papaya-Powder.png";
 import mangoPowder from "@/assets/Mango-Powder.png";
 import guavaPowder from "@/assets/Guava-Powder.png";
@@ -393,28 +394,28 @@ const Products = () => {
                     <div className="aspect-[4/3] overflow-hidden">
                       {firstProduct?.name === "Tomato Ketchup" ? (
                         <ProductVideo
-                          videoSrc="/Tomato-Ketchup.mp4"
+                          videoSrc={tomatoKetchupVideo}
                           fallbackImage={categoryImage}
                           alt={category}
                           className="w-full h-full"
                         />
                       ) : firstProduct?.name === "Green Chilli Flakes" ? (
                         <ProductVideo
-                          videoSrc="/Green-Chilli-Flakes.mp4"
+                          videoSrc={greenChilliFlakesVideo}
                           fallbackImage={categoryImage}
                           alt={category}
                           className="w-full h-full"
                         />
                       ) : firstProduct?.name === "Yelkahi Banana Powder" ? (
                         <ProductVideo
-                          videoSrc="/Yelkahi-Banana-Powde.mp4"
+                          videoSrc={yelkahiBananaPowderVideo}
                           fallbackImage={categoryImage}
                           alt={category}
                           className="w-full h-full"
                         />
                       ) : firstProduct?.name === "Raw Papaya Powder" ? (
                         <ProductVideo
-                          videoSrc="/Raw-Papaya-Powder.mp4"
+                          videoSrc={rawPapayaPowderVideo}
                           fallbackImage={categoryImage}
                           alt={category}
                           className="w-full h-full"
@@ -500,28 +501,28 @@ const Products = () => {
                       <div className="aspect-square overflow-hidden rounded-lg border border-gold/20">
                         {product.name === "Tomato Ketchup" ? (
                           <ProductVideo
-                            videoSrc="/Tomato-Ketchup.mp4"
+                            videoSrc={tomatoKetchupVideo}
                             fallbackImage={product.image}
                             alt={product.name}
                             className="w-full h-full"
                           />
                         ) : product.name === "Green Chilli Flakes" ? (
                           <ProductVideo
-                            videoSrc="/Green-Chilli-Flakes.mp4"
+                            videoSrc={greenChilliFlakesVideo}
                             fallbackImage={product.image}
                             alt={product.name}
                             className="w-full h-full"
                           />
                         ) : product.name === "Yelkahi Banana Powder" ? (
                           <ProductVideo
-                            videoSrc="/Yelkahi-Banana-Powde.mp4"
+                            videoSrc={yelkahiBananaPowderVideo}
                             fallbackImage={product.image}
                             alt={product.name}
                             className="w-full h-full"
                           />
                         ) : product.name === "Raw Papaya Powder" ? (
                           <ProductVideo
-                            videoSrc="/Raw-Papaya-Powder.mp4"
+                            videoSrc={rawPapayaPowderVideo}
                             fallbackImage={product.image}
                             alt={product.name}
                             className="w-full h-full"
