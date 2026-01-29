@@ -18,11 +18,11 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { getApiBaseUrl } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
-import { authApiFetch, healthCheck } from '@/utils/apiUtils';
 
 interface DashboardStats {
   totalOrders: number;
@@ -76,7 +76,24 @@ const AdminDashboard = () => {
 
   // Health check function
   const checkServerHealth = async (): Promise<boolean> => {
-    return await healthCheck();
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch('/health', {
+        method: 'GET',
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      clearTimeout(timeoutId);
+      return response.ok && response.status === 200;
+    } catch (error) {
+      console.error('Health check failed:', error);
+      return false;
+    }
   };
 
   // Fetch real dashboard data
@@ -98,7 +115,13 @@ const AdminDashboard = () => {
       }
 
       // Fetch real analytics data from the backend
-      const analyticsResponse = await authApiFetch('/admin/analytics/dashboard');
+      const analyticsResponse = await fetch('/api/v1/admin/analytics/dashboard', { 
+        credentials: 'include',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
       if (!analyticsResponse.ok) {
         throw new Error('Failed to fetch analytics data');
@@ -108,7 +131,13 @@ const AdminDashboard = () => {
       const analytics = analyticsData.data;
 
       // Fetch recent orders
-      const ordersResponse = await authApiFetch('/admin/orders?limit=5&sort=-createdAt');
+      const ordersResponse = await fetch('/api/v1/admin/orders?limit=5&sort=-createdAt', { 
+        credentials: 'include',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
       let recentOrders = [];
       let lastOrderTime = null;
@@ -123,7 +152,13 @@ const AdminDashboard = () => {
       }
 
       // Fetch low stock products
-      const productsResponse = await authApiFetch('/admin/products?stock_lt=10&limit=5');
+      const productsResponse = await fetch('/api/v1/admin/products?stock_lt=10&limit=5', { 
+        credentials: 'include',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
       let lowStockProducts = [];
       

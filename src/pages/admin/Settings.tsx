@@ -33,7 +33,6 @@ import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
 import { validateSettings, ValidationError } from '@/utils/settingsValidation';
 import { useSettingsStore } from '@/store/settingsStore';
-import { authApiFetch } from '@/utils/apiUtils';
 
 interface SiteSettings {
   siteTitle: string;
@@ -112,7 +111,13 @@ const SettingsPage = () => {
     try {
       setIsLoading(true);
       
-      const response = await authApiFetch('/admin/settings');
+      const response = await fetch('/api/v1/admin/settings', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -156,8 +161,13 @@ const SettingsPage = () => {
 
       setIsSaving(true);
       
-      const response = await authApiFetch('/admin/settings', {
+      const response = await fetch('/api/v1/admin/settings', {
         method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify(settings)
       });
 

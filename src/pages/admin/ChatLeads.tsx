@@ -21,7 +21,6 @@ import {
   BarChart3
 } from 'lucide-react';
 import { toast } from '../../components/ui/use-toast';
-import { authApiFetch } from '../../utils/apiUtils';
 
 interface ChatLead {
   _id: string;
@@ -103,7 +102,9 @@ const ChatLeads: React.FC = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await authApiFetch('/admin/chat/analytics');
+      const response = await fetch('/api/v1/admin/chat/analytics', {
+        credentials: 'include'
+      });
       
       if (!response.ok) throw new Error('Failed to fetch analytics');
       

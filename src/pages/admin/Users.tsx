@@ -39,7 +39,6 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
-import { authApiFetch } from '@/utils/apiUtils';
 
 interface User {
   _id: string;
@@ -99,7 +98,13 @@ const UsersPage = () => {
     try {
       setIsLoading(true);
       
-      const response = await authApiFetch('/admin/customers');
+      const response = await fetch('/api/v1/admin/customers', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -133,8 +138,13 @@ const UsersPage = () => {
 
   const toggleUserStatus = async (userId: string, currentStatus: boolean) => {
     try {
-      const response = await authApiFetch(`/admin/customers/${userId}/status`, {
+      const response = await fetch(`/api/v1/admin/customers/${userId}/status`, {
         method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify({ isBlocked: !currentStatus })
       });
 
@@ -168,8 +178,13 @@ const UsersPage = () => {
     try {
       setIsChangingRole(true);
       
-      const response = await authApiFetch(`/admin/customers/${userId}/role`, {
+      const response = await fetch(`/api/v1/admin/customers/${userId}/role`, {
         method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify({ role: newRole })
       });
 
@@ -214,7 +229,13 @@ const UsersPage = () => {
     try {
       setIsLoadingDetails(true);
       
-      const response = await authApiFetch(`/admin/customers/${userId}`);
+      const response = await fetch(`/api/v1/admin/customers/${userId}`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch user details');
@@ -245,8 +266,13 @@ const UsersPage = () => {
     try {
       setIsResettingPassword(true);
       
-      const response = await authApiFetch(`/admin/customers/${userId}/password`, {
+      const response = await fetch(`/api/v1/admin/customers/${userId}/password`, {
         method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify({ newPassword: password })
       });
 
