@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // Get API base URL from environment or default to production for deployment
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://yseven-backend.onrender.com/api/v1';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL || 'https://yseven-backend.onrender.com'}/api/v1`;
 
 // Export the base URL for use in other files
 export const getApiBaseUrl = () => API_BASE_URL;

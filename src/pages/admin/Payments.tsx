@@ -21,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
+import { authApiFetch } from '@/utils/apiUtils';
 
 interface Payment {
   _id: string;
@@ -50,13 +51,7 @@ const PaymentsPage = () => {
     try {
       setIsLoading(true);
       
-      const response = await fetch('/api/v1/admin/payments', {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const response = await authApiFetch('/admin/payments');
 
       if (!response.ok) {
         throw new Error('Failed to fetch payments');

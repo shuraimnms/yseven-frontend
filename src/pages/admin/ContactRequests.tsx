@@ -33,6 +33,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
+import { authApiFetch } from '@/utils/apiUtils';
 
 interface Contact {
   _id: string;
@@ -166,13 +167,7 @@ export default function ContactRequests() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/v1/contact/stats', {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const response = await authApiFetch('/contact/stats');
 
       if (response.ok) {
         const data = await response.json();

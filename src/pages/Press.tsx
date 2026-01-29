@@ -1,6 +1,7 @@
 import { Download, Mail, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSettings } from '@/hooks/useSettings';
+import { apiFetch } from '@/utils/apiUtils';
 
 const Press = () => {
   const { settings } = useSettings();
@@ -98,9 +99,8 @@ const Press = () => {
                         type: 'press'
                       };
                       
-                      fetch('/api/v1/contact', {
+                      apiFetch('/contact', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(pressInquiry)
                       }).then(() => {
                         alert('Press inquiry submitted! Please use our contact form for detailed media requests.');
