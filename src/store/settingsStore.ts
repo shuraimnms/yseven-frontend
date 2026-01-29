@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { apiFetch } from '@/utils/apiUtils';
 
 export interface GlobalSettings {
   siteTitle: string;
@@ -102,12 +103,7 @@ export const useSettingsStore = create<SettingsStore>()(
 
           setLoading(true);
 
-          const response = await fetch('/api/v1/settings/public', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
+          const response = await apiFetch('/settings/public');
 
           if (response.ok) {
             const data = await response.json();

@@ -4,6 +4,9 @@ import Cookies from 'js-cookie';
 // Get API base URL from environment or default to production for deployment
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://yseven-backend.onrender.com/api/v1';
 
+// Export the base URL for use in other files
+export const getApiBaseUrl = () => API_BASE_URL;
+
 // Create axios instance with production-ready configuration
 export const api = axios.create({
   baseURL: API_BASE_URL,

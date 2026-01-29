@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { apiFetch } from '@/utils/apiUtils';
 
 interface DownloadLinks {
   catalogUrl: string;
@@ -78,7 +79,7 @@ export const useSettings = () => {
       setIsLoading(true);
       setError(null);
       
-      const response = await fetch('/api/v1/admin/settings/public');
+      const response = await apiFetch('/admin/settings/public');
       
       if (response.ok) {
         const data = await response.json();
