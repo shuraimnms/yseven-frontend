@@ -18,11 +18,12 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { getApiBaseUrl } from '@/lib/api';
+import { adminAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
+import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
 import SEO from '@/components/SEO';
-import { generateSEO } from '@/lib/seo';
+import DebugPanel from '@/components/admin/DebugPanel';
 
 interface DashboardStats {
   totalOrders: number;
@@ -73,23 +74,25 @@ const AdminDashboard = () => {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [serverHealth, setServerHealth] = useState<'online' | 'offline' | 'checking'>('checking');
   const { toast } = useToast();
+  const { isAuthenticated, user } = useAuthStore();
 
   // Health check function
   const checkServerHealth = async (): Promise<boolean> => {
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-      
-      const response = await fetch('/health', {
+      // Use the simple health endpoint that doesn't require auth
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://yseven-backend.onrender.com';
+      const response = await fetch(`${baseUrl.replace('/api/v1', '')}/health`, {
         method: 'GET',
-        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json'
         }
       });
       
-      clearTimeout(timeoutId);
-      return response.ok && response.status === 200;
+      if (response.ok) {
+        const data = await response.json();
+        return data.status === 'ok';
+      }
+      return false;
     } catch (error) {
       console.error('Health check failed:', error);
       return false;
@@ -114,59 +117,33 @@ const AdminDashboard = () => {
         throw new Error('Server is not responding');
       }
 
-      // Fetch real analytics data from the backend
-      const analyticsResponse = await fetch('/api/v1/admin/analytics/dashboard', { 
-        credentials: 'include',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      console.log('Dashboard: Starting data fetch...');
 
-      if (!analyticsResponse.ok) {
-        throw new Error('Failed to fetch analytics data');
-      }
+      // Fetch real analytics data from the backend using proper API
+      console.log('Dashboard: Fetching analytics...');
+      const analyticsResponse = await adminAPI.analytics.getDashboard();
+      console.log('Dashboard: Analytics response:', analyticsResponse.data);
+      const analytics = analyticsResponse.data.data;
 
-      const analyticsData = await analyticsResponse.json();
-      const analytics = analyticsData.data;
-
-      // Fetch recent orders
-      const ordersResponse = await fetch('/api/v1/admin/orders?limit=5&sort=-createdAt', { 
-        credentials: 'include',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      let recentOrders = [];
-      let lastOrderTime = null;
+      // Fetch recent orders using proper API
+      console.log('Dashboard: Fetching orders...');
+      const ordersResponse = await adminAPI.orders.getAll();
+      console.log('Dashboard: Orders response:', ordersResponse.data);
+      const allOrders = ordersResponse.data.data?.orders || ordersResponse.data.data || [];
+      const recentOrders = allOrders
+        .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 5);
       
-      if (ordersResponse.ok) {
-        const ordersData = await ordersResponse.json();
-        recentOrders = ordersData.data?.orders || ordersData.data || [];
-        
-        if (recentOrders.length > 0) {
-          lastOrderTime = recentOrders[0].createdAt;
-        }
-      }
+      const lastOrderTime = recentOrders.length > 0 ? recentOrders[0].createdAt : null;
 
-      // Fetch low stock products
-      const productsResponse = await fetch('/api/v1/admin/products?stock_lt=10&limit=5', { 
-        credentials: 'include',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      let lowStockProducts = [];
-      
-      if (productsResponse.ok) {
-        const productsData = await productsResponse.json();
-        const allProducts = productsData.data?.products || productsData.data || [];
-        lowStockProducts = allProducts.filter((product: any) => (product.stock || 0) < 10).slice(0, 5);
-      }
+      // Fetch low stock products using proper API
+      console.log('Dashboard: Fetching products...');
+      const productsResponse = await adminAPI.products.getAll();
+      console.log('Dashboard: Products response:', productsResponse.data);
+      const allProducts = productsResponse.data.data?.products || productsResponse.data.data || [];
+      const lowStockProducts = allProducts
+        .filter((product: any) => (product.stock || 0) < 10)
+        .slice(0, 5);
 
       // Check payment gateway status (real implementation would ping actual gateways)
       const paymentGatewayStatus = {
@@ -189,13 +166,34 @@ const AdminDashboard = () => {
       });
 
       setLastUpdated(new Date());
+      console.log('Dashboard: Data fetch completed successfully');
       
     } catch (error: any) {
       console.error('Dashboard fetch error:', error);
       
       let errorMessage = 'Failed to fetch dashboard data';
+      
+      // Handle different types of errors
       if (error.message === 'Server is not responding') {
         errorMessage = 'Server is offline or not reachable';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Authentication failed. Please login again.';
+        // Don't redirect here, let the axios interceptor handle it
+      } else if (error.response?.status === 403) {
+        errorMessage = 'Access denied. Admin privileges required.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message?.includes('Network Error')) {
+        errorMessage = 'Network error. Please check your connection.';
+      } else if (error.message?.includes('JSON')) {
+        errorMessage = 'Server returned invalid response. This might be a routing issue.';
+        console.error('JSON parsing error details:', {
+          url: error.config?.url,
+          method: error.config?.method,
+          status: error.response?.status,
+          headers: error.response?.headers,
+          data: typeof error.response?.data === 'string' ? error.response.data.substring(0, 200) : error.response?.data
+        });
       }
       
       if (!silent) {
@@ -231,14 +229,38 @@ const AdminDashboard = () => {
 
   // Auto-refresh every 30 seconds for production
   useEffect(() => {
-    fetchDashboardData();
-    
-    const interval = setInterval(() => {
-      fetchDashboardData(true);
-    }, 30000); // 30 seconds
+    // Only fetch data if user is authenticated and is admin
+    if (isAuthenticated && user?.role === 'admin') {
+      console.log('Dashboard: User is authenticated admin, fetching data...');
+      fetchDashboardData();
+      
+      const interval = setInterval(() => {
+        fetchDashboardData(true);
+      }, 30000); // 30 seconds
 
-    return () => clearInterval(interval);
-  }, []);
+      return () => clearInterval(interval);
+    } else {
+      console.log('Dashboard: User not authenticated or not admin:', { isAuthenticated, role: user?.role });
+      setIsLoading(false);
+      
+      // Set empty stats for non-admin users
+      setStats({
+        totalOrders: 0,
+        totalRevenue: 0,
+        totalProducts: 0,
+        activeUsers: 0,
+        pendingOrders: 0,
+        serverStatus: 'offline',
+        lastOrderTime: null,
+        paymentGatewayStatus: {
+          cashfree: 'offline',
+          razorpay: 'offline'
+        },
+        recentOrders: [],
+        lowStockProducts: []
+      });
+    }
+  }, [isAuthenticated, user?.role]);
 
   // Manual refresh
   const handleRefresh = () => {
@@ -301,6 +323,9 @@ const AdminDashboard = () => {
     <>
       <SEO {...seoData} />
       <div className="space-y-8">
+        {/* Debug Panel - only show in development */}
+        {import.meta.env.DEV && <DebugPanel />}
+        
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>

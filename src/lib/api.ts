@@ -82,8 +82,9 @@ api.interceptors.response.use(
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
         
-        // Only redirect if we're not already on the login page
-        if (window.location.pathname !== '/auth/login') {
+        // Only redirect if we're not already on the login page or admin pages
+        const currentPath = window.location.pathname;
+        if (currentPath !== '/auth/login' && !currentPath.startsWith('/admin')) {
           window.location.href = '/auth/login';
         }
       }
