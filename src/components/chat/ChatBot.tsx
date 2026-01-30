@@ -231,99 +231,153 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 
   if (!isOpen) {
     return (
-      <div className={`fixed z-50 ${className}`} style={{
-        bottom: isMobile ? '20px' : '24px',
-        right: '24px',
-        zIndex: 999
-      }}>
-        <div className="relative group">
-          <Button
-            onClick={() => setIsOpen(true)}
-            className="luxury-chat-fab"
-            title={!isMobile ? "Chat with Y7 Assistant" : undefined}
-          >
-            <div className="y7-monogram">Y7</div>
-          </Button>
-          {/* Tooltip - Hidden on mobile */}
-          {!isMobile && (
-            <div className="luxury-tooltip">
-              Chat with Y7 Assistant
-              <div className="tooltip-arrow"></div>
-            </div>
-          )}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="discord-chat-toggle"
+        title={!isMobile ? "Chat with Y7 Assistant" : undefined}
+        style={{
+          position: 'fixed',
+          bottom: isMobile ? '20px' : '24px',
+          right: '24px',
+          zIndex: 1000
+        }}
+      >
+        <img 
+          src="/src/assets/logo-bot.png" 
+          alt="Y7 Bot" 
+          style={{ 
+            width: '32px', 
+            height: '32px', 
+            objectFit: 'cover',
+            borderRadius: '50%'
+          }} 
+        />
+        <div className="discord-chat-badge">
+          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>!</span>
         </div>
-      </div>
+      </button>
     );
   }
 
   return (
-    <div className={`fixed z-50 ${className}`} style={{
-      bottom: isMobile ? '20px' : '24px',
-      right: isMobile ? '20px' : '24px',
-      zIndex: 999
-    }}>
-      <Card className={`luxury-chat-window ${
-        isMinimized ? 'minimized' : 'expanded'
-      }`}>
-        {/* Header */}
-        <div className="luxury-header">
-          <div className="flex items-center space-x-3">
-            <div className="y7-icon">Y7</div>
-            <div>
-              <h3 className="luxury-title">Y7 Assistant</h3>
-              <div className="luxury-status">
-                <div className="status-dot"></div>
-                <span>Always Online</span>
-              </div>
+    <div 
+      className={`discord-chat-container ${isMinimized ? 'minimized' : ''}`}
+      style={{
+        position: 'fixed',
+        bottom: isMobile ? '20px' : '24px',
+        right: isMobile ? '20px' : '24px',
+        left: isMobile && !isMinimized ? '20px' : 'auto',
+        width: isMobile && !isMinimized ? 'auto' : '380px',
+        height: isMinimized ? '60px' : (isMobile ? '70vh' : '600px'),
+        maxHeight: isMobile ? '600px' : '600px',
+        zIndex: 1000
+      }}
+    >
+      {/* Header */}
+      <div className="discord-chat-header">
+        <div className="discord-header-left">
+          <div className="discord-bot-avatar">
+            <img 
+              src="/src/assets/logo-bot.png" 
+              alt="Y7 Bot" 
+              style={{ 
+                width: '24px', 
+                height: '24px', 
+                objectFit: 'cover',
+                borderRadius: '50%'
+              }} 
+            />
+          </div>
+          <div className="discord-header-info">
+            <h3 className="discord-header-title">Y7 Assistant</h3>
+            <div className="discord-status">
+              <div className="discord-status-dot online"></div>
+              <span className="discord-status-text">Always Online</span>
             </div>
           </div>
-          <div className="header-controls">
-            {!isMobile && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleMinimize}
-                className="luxury-control-btn"
-                title="Minimize"
-              >
-                <Minimize2 className="h-4 w-4" />
-              </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClose}
-              className="luxury-control-btn"
-              title="Close"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
         </div>
+        <div className="discord-header-controls">
+          {!isMobile && (
+            <button
+              onClick={handleMinimize}
+              className="discord-control-btn"
+              title="Minimize"
+            >
+              <Minimize2 className="h-4 w-4" />
+            </button>
+          )}
+          <button
+            onClick={handleClose}
+            className="discord-control-btn close"
+            title="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
 
-        {!isMinimized && (
-          <>
-            {/* Messages */}
-            <ScrollArea className="luxury-messages-area">
-              <div className="messages-container">
-                {messages.map((message) => (
-                  <div key={message.id} className="message-wrapper">
-                    <div className={`message-bubble ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
-                      <div className="message-content">
-                        {message.text}
+      {!isMinimized && (
+        <>
+          {/* Messages */}
+          <div className="discord-messages-container">
+            <div className="discord-messages">
+              {messages.map((message) => (
+                <div key={message.id} className={`discord-message ${message.sender}`}>
+                  <div className="discord-message-avatar">
+                    {message.sender === 'bot' ? (
+                      <div className="discord-bot-avatar">
+                        <img 
+                          src="/src/assets/logo-bot.png" 
+                          alt="Y7 Bot" 
+                          style={{ 
+                            width: '24px', 
+                            height: '24px', 
+                            objectFit: 'cover',
+                            borderRadius: '50%'
+                          }} 
+                        />
                       </div>
+                    ) : (
+                      <div className="discord-user-avatar">U</div>
+                    )}
+                  </div>
+                  <div className="discord-message-content">
+                    <div className="discord-message-header">
+                      <span className="discord-message-author">
+                        {message.sender === 'bot' ? 'Y7 Assistant' : 'You'}
+                      </span>
+                      {message.sender === 'bot' && (
+                        <span className="discord-bot-tag">BOT</span>
+                      )}
+                      <span className="discord-message-timestamp">
+                        {message.timestamp.toLocaleTimeString([], { 
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </span>
+                    </div>
+                    <div className="discord-message-text">
+                      {message.text}
                     </div>
                     
                     {/* Quick Replies */}
                     {message.quickReplies && message.quickReplies.length > 0 && (
-                      <div className="quick-replies">
+                      <div className="quick-replies" style={{ marginTop: '8px' }}>
                         {message.quickReplies.map((reply, index) => (
                           <Button
                             key={index}
                             variant="outline"
-                            className="luxury-quick-reply"
+                            size="sm"
                             onClick={() => handleQuickReply(reply)}
-                            style={{ animationDelay: `${index * 0.1}s` }}
+                            style={{ 
+                              marginRight: '8px', 
+                              marginBottom: '4px',
+                              background: '#5865f2',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '16px',
+                              fontSize: '12px'
+                            }}
                           >
                             {reply}
                           </Button>
@@ -333,70 +387,116 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 
                     {/* Product Card */}
                     {message.productCard && (
-                      <div className="luxury-product-card">
+                      <div style={{
+                        background: '#2f3136',
+                        border: '1px solid #40444b',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        marginTop: '8px',
+                        maxWidth: '280px'
+                      }}>
                         <img 
                           src={message.productCard.image} 
                           alt={message.productCard.name}
-                          className="product-image"
+                          style={{
+                            width: '100%',
+                            height: '120px',
+                            objectFit: 'cover',
+                            borderRadius: '4px',
+                            marginBottom: '8px'
+                          }}
                         />
-                        <div className="product-info">
-                          <h4 className="product-name">{message.productCard.name}</h4>
-                          <div className="product-price">{message.productCard.price}</div>
-                          <Badge className="stock-badge">{message.productCard.stock}</Badge>
-                          <div className="product-actions">
-                            <Button className="luxury-btn-secondary">View Product</Button>
-                            <Button className="luxury-btn-primary">Add to Cart</Button>
+                        <div>
+                          <h4 style={{ color: '#ffffff', fontSize: '14px', margin: '0 0 4px 0' }}>
+                            {message.productCard.name}
+                          </h4>
+                          <div style={{ color: '#43b883', fontSize: '16px', fontWeight: 'bold', margin: '4px 0' }}>
+                            {message.productCard.price}
+                          </div>
+                          <Badge style={{ background: '#43b883', color: 'white', fontSize: '10px' }}>
+                            {message.productCard.stock}
+                          </Badge>
+                          <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                            <Button size="sm" variant="outline" style={{ fontSize: '12px' }}>
+                              View Product
+                            </Button>
+                            <Button size="sm" style={{ background: '#5865f2', fontSize: '12px' }}>
+                              Add to Cart
+                            </Button>
                           </div>
                         </div>
                       </div>
                     )}
                   </div>
-                ))}
-                
-                {isLoading && (
-                  <div className="message-wrapper">
-                    <div className="bot-message typing-message">
-                      <div className="luxury-typing-indicator">
-                        <div className="typing-dot"></div>
-                        <div className="typing-dot"></div>
-                        <div className="typing-dot"></div>
+                </div>
+              ))}
+              
+              {isLoading && (
+                <div className="discord-message bot">
+                  <div className="discord-message-avatar">
+                    <div className="discord-bot-avatar">
+                      <img 
+                        src="/src/assets/logo-bot.png" 
+                        alt="Y7 Bot" 
+                        style={{ 
+                          width: '24px', 
+                          height: '24px', 
+                          objectFit: 'cover',
+                          borderRadius: '50%'
+                        }} 
+                      />
+                    </div>
+                  </div>
+                  <div className="discord-message-content">
+                    <div className="discord-message-header">
+                      <span className="discord-message-author">Y7 Assistant</span>
+                      <span className="discord-bot-tag">BOT</span>
+                    </div>
+                    <div className="discord-typing-indicator">
+                      <span>Y7 is typing</span>
+                      <div className="discord-typing-dots">
+                        <div className="discord-typing-dot"></div>
+                        <div className="discord-typing-dot"></div>
+                        <div className="discord-typing-dot"></div>
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-              <div ref={messagesEndRef} />
-            </ScrollArea>
-
-            {/* Input */}
-            <div className="luxury-input-bar">
-              <div className="input-container">
-                <Input
-                  ref={inputRef}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Ask about Y7 products, orders, or recipes…"
-                  className="luxury-input"
-                  disabled={isLoading}
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck="false"
-                />
-                <Button
-                  onClick={() => sendMessage(inputValue)}
-                  disabled={isLoading || !inputValue.trim()}
-                  className="luxury-send-btn"
-                  title="Send message"
-                >
-                  <Send className="h-5 w-5" />
-                </Button>
-              </div>
+                </div>
+              )}
             </div>
-          </>
-        )}
-      </Card>
+          </div>
+
+          {/* Input */}
+          <div className="discord-input-container">
+            <div className="discord-input-wrapper">
+              <input
+                ref={inputRef}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Message Y7 Assistant"
+                className="discord-input"
+                disabled={isLoading}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+              />
+              <button
+                onClick={() => sendMessage(inputValue)}
+                disabled={isLoading || !inputValue.trim()}
+                className="discord-send-btn"
+                title="Send message"
+              >
+                <Send className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="discord-input-hint">
+              Press Enter to send • Shift+Enter for new line
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Lead Form Modal */}
       {showLeadForm && (
@@ -482,116 +582,245 @@ const LeadForm: React.FC<LeadFormProps> = ({ sessionId, onClose, onSubmit, isMob
   };
 
   return (
-    <Card 
-      className="luxury-lead-form" 
-      onClick={(e) => e.stopPropagation()}
+    <div 
       style={{
         position: 'relative',
-        zIndex: 1001
+        zIndex: 1001,
+        background: '#36393f',
+        border: '1px solid #40444b',
+        borderRadius: '12px',
+        width: isMobile ? '90vw' : '400px',
+        maxWidth: '400px',
+        maxHeight: '80vh',
+        overflow: 'hidden',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)'
       }}
+      onClick={(e) => e.stopPropagation()}
     >
-        <div className="form-header">
+        <div style={{
+          background: '#2f3136',
+          padding: '16px',
+          borderBottom: '1px solid #40444b',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
           <div>
-            <h3 className="form-title">Business Inquiry</h3>
-            <p className="form-subtitle">Connect with our B2B team</p>
+            <h3 style={{ 
+              color: '#ffffff', 
+              fontSize: '18px', 
+              fontWeight: '600', 
+              margin: '0 0 4px 0' 
+            }}>
+              Business Inquiry
+            </h3>
+            <p style={{ 
+              color: '#b9bbbe', 
+              fontSize: '14px', 
+              margin: '0' 
+            }}>
+              Connect with our B2B team
+            </p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={handleClose}
-            className="luxury-close-btn"
+            className="discord-control-btn close"
             title="Close"
+            style={{
+              width: '32px',
+              height: '32px',
+              background: 'transparent',
+              border: 'none',
+              borderRadius: '4px',
+              color: '#b9bbbe',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             <X className="h-4 w-4" />
-          </Button>
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="form-content">
-          <Input
+        <form onSubmit={handleSubmit} style={{
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          maxHeight: 'calc(80vh - 80px)',
+          overflowY: 'auto'
+        }}>
+          <input
             placeholder="Your Name *"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="luxury-form-input"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none'
+            }}
             required
             autoComplete="name"
             autoCorrect="off"
             autoCapitalize="words"
           />
-          <Input
+          <input
             placeholder="Business/Company Name"
             value={formData.businessName}
             onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-            className="luxury-form-input"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none'
+            }}
             autoComplete="organization"
             autoCorrect="off"
             autoCapitalize="words"
           />
-          <Input
+          <input
             placeholder="Designation"
             value={formData.designation}
             onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-            className="luxury-form-input"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none'
+            }}
             autoComplete="organization-title"
             autoCorrect="off"
             autoCapitalize="words"
           />
-          <Input
+          <input
             placeholder="Phone Number *"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="luxury-form-input"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none'
+            }}
             required
             type="tel"
             autoComplete="tel"
           />
-          <Input
+          <input
             placeholder="Email Address *"
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="luxury-form-input"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none'
+            }}
             required
             autoComplete="email"
             autoCorrect="off"
             autoCapitalize="off"
           />
-          <Input
+          <input
             placeholder="Location/City"
             value={formData.country}
             onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-            className="luxury-form-input"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none'
+            }}
             autoComplete="address-level2"
             autoCorrect="off"
             autoCapitalize="words"
           />
-          <Input
+          <input
             placeholder="Estimated Quantity (e.g., 100 units)"
             value={formData.quantity}
             onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-            className="luxury-form-input"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none'
+            }}
             autoCorrect="off"
           />
           <textarea
             placeholder="Product Requirements & Details *"
             value={formData.message}
             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            className="luxury-form-textarea"
+            style={{
+              background: '#40444b',
+              border: '1px solid #484c52',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              color: '#ffffff',
+              fontSize: '14px',
+              outline: 'none',
+              minHeight: '80px',
+              resize: 'vertical',
+              fontFamily: 'inherit'
+            }}
             required
             autoCorrect="on"
             autoCapitalize="sentences"
           />
-          <Button
+          <button
             type="submit"
             disabled={isSubmitting || !formData.name || !formData.phone || !formData.email || !formData.message}
-            className="luxury-submit-btn"
+            style={{
+              background: isSubmitting || !formData.name || !formData.phone || !formData.email || !formData.message 
+                ? '#72767d' : '#5865f2',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '12px 20px',
+              fontSize: '14px',
+              fontWeight: '600',
+              cursor: isSubmitting || !formData.name || !formData.phone || !formData.email || !formData.message 
+                ? 'not-allowed' : 'pointer',
+              transition: 'background 0.2s ease'
+            }}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Business Inquiry'}
-          </Button>
-          <p className="form-disclaimer">
+          </button>
+          <p style={{
+            color: '#72767d',
+            fontSize: '12px',
+            textAlign: 'center',
+            margin: '0',
+            lineHeight: '1.4'
+          }}>
             Our team will contact you within 24 hours with customized pricing and solutions.
           </p>
         </form>
-      </Card>
+      </div>
   );
 };
 export default ChatBot;

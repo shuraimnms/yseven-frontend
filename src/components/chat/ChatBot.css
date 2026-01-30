@@ -1,237 +1,457 @@
-/* Y7 Luxury Chatbot Styles - Redesigned for Middle Content Area */
+/* Discord-like Chat Bot Styles */
 
-/* Import luxury fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
-/* Color System */
-:root {
-  --luxury-black: #0B0B0F;
-  --luxury-gold: #D4AF37;
-  --luxury-white: #FFFFFF;
-  --luxury-gray: #C8C8C8;
-  --luxury-border: #2A2A2E;
-  --luxury-user-bubble: #1C1C1F;
-  --luxury-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  --luxury-glow: 0 0 20px rgba(212, 175, 55, 0.3);
-  
-  /* Safe area calculations to avoid header/footer */
-  --header-height: 80px; /* Mobile header height */
-  --header-height-lg: 96px; /* Desktop header height */
-  --footer-height: 200px; /* Approximate footer height */
-  --safe-bottom: max(24px, env(safe-area-inset-bottom, 24px));
-  --safe-top: max(24px, env(safe-area-inset-top, 24px));
-}
-
-/* Floating Action Button - Larger size */
-.luxury-chat-fab {
-  width: 64px;
-  height: 64px;
+/* Chat Toggle Button */
+.discord-chat-toggle {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  border: none;
   border-radius: 50%;
-  background: var(--luxury-black);
-  border: 2px solid var(--luxury-gold);
-  box-shadow: var(--luxury-shadow);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(88, 101, 242, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
-.luxury-chat-fab::before {
+.discord-chat-toggle::before {
   content: '';
   position: absolute;
   inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--luxury-gold), transparent);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.luxury-chat-fab:hover {
-  transform: scale(1.05);
-  box-shadow: var(--luxury-glow), var(--luxury-shadow);
+.discord-chat-toggle:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(88, 101, 242, 0.4);
 }
 
-.luxury-chat-fab:hover::before {
-  opacity: 0.1;
-}
-
-.y7-monogram {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--luxury-gold);
-  letter-spacing: -0.5px;
-}
-
-/* Tooltip */
-.luxury-tooltip {
-  position: absolute;
-  bottom: 100%;
-  right: 0;
-  margin-bottom: 8px;
-  padding: 8px 12px;
-  background: var(--luxury-black);
-  color: var(--luxury-white);
-  font-size: 12px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  border-radius: 8px;
-  border: 1px solid var(--luxury-gold);
-  opacity: 0;
-  transform: translateY(4px);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-  white-space: nowrap;
-  z-index: 1000;
-}
-
-.luxury-chat-fab:hover + .luxury-tooltip,
-.luxury-chat-fab:focus + .luxury-tooltip {
+.discord-chat-toggle:hover::before {
   opacity: 1;
-  transform: translateY(0);
 }
 
-.tooltip-arrow {
+.discord-chat-toggle:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.discord-chat-badge {
   position: absolute;
-  top: 100%;
-  right: 16px;
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid var(--luxury-gold);
-}
-
-/* Chat Window - Larger dimensions */
-.luxury-chat-window {
-  background: var(--luxury-black);
-  border: 1px solid var(--luxury-gold);
-  border-radius: 16px;
-  box-shadow: var(--luxury-shadow);
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  backdrop-filter: blur(20px);
-}
-
-.luxury-chat-window.expanded {
-  width: 420px;
-  height: 580px;
-  /* Ensure it never goes above header or below footer */
-  max-height: calc(100vh - var(--header-height-lg) - var(--footer-height) - 48px);
-}
-
-.luxury-chat-window.minimized {
-  width: 420px;
-  height: 60px;
-}
-
-/* Header - Luxury Design */
-.luxury-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, var(--luxury-black), #1a1a1f);
-  border-bottom: 1px solid var(--luxury-gold);
-  height: 60px;
-}
-
-.y7-icon {
-  width: 32px;
-  height: 32px;
+  top: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border: 2px solid white;
   border-radius: 50%;
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: -0.5px;
+  animation: pulse 2s infinite;
 }
 
-.luxury-title {
-  font-family: 'Playfair Display', serif;
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Chat Container */
+.discord-chat-container {
+  background: #36393f;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #40444b;
+}
+
+.discord-chat-container.minimized {
+  /* Height will be controlled by inline styles */
+}
+
+/* Chat Header */
+.discord-chat-header {
+  background: #2f3136;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #40444b;
+  min-height: 60px;
+}
+
+.discord-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.discord-bot-avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
   font-weight: 600;
+  font-size: 12px;
+}
+
+.discord-user-avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #43b883 0%, #369870 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.discord-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.discord-header-title {
+  color: #ffffff;
   font-size: 16px;
-  color: var(--luxury-white);
+  font-weight: 600;
   margin: 0;
   line-height: 1.2;
 }
 
-.luxury-status {
+.discord-status {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.discord-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #43b883;
+}
+
+.discord-status-dot.online {
+  background: #43b883;
+  box-shadow: 0 0 8px rgba(67, 184, 131, 0.5);
+}
+
+.discord-status-text {
+  color: #b9bbbe;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.discord-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.discord-control-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #b9bbbe;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.discord-control-btn:hover {
+  background: #40444b;
+  color: #ffffff;
+}
+
+.discord-control-btn.close:hover {
+  background: #ed4245;
+  color: #ffffff;
+}
+
+/* Messages Container */
+.discord-messages-container {
+  flex: 1;
+  overflow: hidden;
+  background: #36393f;
+}
+
+.discord-messages {
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.discord-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.discord-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.discord-messages::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 4px;
+}
+
+.discord-messages::-webkit-scrollbar-thumb:hover {
+  background: #40444b;
+}
+
+/* Message */
+.discord-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 16px;
+  position: relative;
+}
+
+.discord-message:hover {
+  background: rgba(4, 4, 5, 0.07);
+}
+
+.discord-message.user {
+  flex-direction: row-reverse;
+}
+
+.discord-message.user .discord-message-content {
+  align-items: flex-end;
+}
+
+.discord-message.user .discord-message-header {
+  flex-direction: row-reverse;
+}
+
+.discord-message.user .discord-message-text {
+  background: #5865f2;
+  color: white;
+  border-radius: 18px 18px 4px 18px;
+}
+
+.discord-message-avatar {
+  flex-shrink: 0;
   margin-top: 2px;
 }
 
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--luxury-gold);
-  animation: statusPulse 2s infinite;
+.discord-message-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-@keyframes statusPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.2); }
+.discord-message-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.luxury-status span {
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--luxury-gray);
+.discord-message-author {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-.header-controls {
+.discord-bot-tag {
+  background: #5865f2;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.discord-message-timestamp {
+  color: #72767d;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.discord-message-text {
+  color: #dcddde;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  background: #40444b;
+  padding: 12px 16px;
+  border-radius: 18px 18px 18px 4px;
+  max-width: 280px;
+  position: relative;
+}
+
+.discord-message.user .discord-message-text {
+  border-radius: 18px 18px 4px 18px;
+}
+
+/* Typing Indicator */
+.discord-typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #72767d;
+  font-size: 14px;
+  font-style: italic;
+  padding: 8px 16px;
+  background: #40444b;
+  border-radius: 18px 18px 18px 4px;
+  max-width: fit-content;
+}
+
+.discord-typing-dots {
   display: flex;
   gap: 4px;
 }
 
-.luxury-control-btn {
-  width: 28px;
-  height: 28px;
+.discord-typing-dot {
+  width: 6px;
+  height: 6px;
+  background: #72767d;
   border-radius: 50%;
-  background: transparent;
-  border: 1px solid var(--luxury-border);
-  color: var(--luxury-gray);
-  transition: all 0.2s ease;
-  padding: 0;
+  animation: typing 1.4s infinite ease-in-out;
 }
 
-.luxury-control-btn:hover {
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-  border-color: var(--luxury-gold);
+.discord-typing-dot:nth-child(1) { animation-delay: 0s; }
+.discord-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.discord-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
 }
 
-/* Messages Area - Larger height */
-.luxury-messages-area {
-  height: 440px;
-  background: var(--luxury-black);
+/* Input Container */
+.discord-input-container {
+  background: #40444b;
+  padding: 16px;
+  border-top: 1px solid #32353b;
 }
 
-.messages-container {
-  padding: 20px;
+.discord-input-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.message-wrapper {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
-  animation: messageSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #484c52;
+  border-radius: 24px;
+  padding: 4px;
+  transition: all 0.2s ease;
 }
 
-@keyframes messageSlideIn {
+.discord-input-wrapper:focus-within {
+  background: #5865f2;
+  box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.3);
+}
+
+.discord-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  font-family: inherit;
+}
+
+.discord-input::placeholder {
+  color: #72767d;
+}
+
+.discord-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.discord-send-btn {
+  width: 40px;
+  height: 40px;
+  background: #5865f2;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.discord-send-btn:hover:not(:disabled) {
+  background: #4752c4;
+  transform: scale(1.05);
+}
+
+.discord-send-btn:active {
+  transform: scale(0.95);
+}
+
+.discord-send-btn:disabled {
+  background: #72767d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.discord-input-hint {
+  color: #72767d;
+  font-size: 11px;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .discord-message-text {
+    max-width: 240px;
+  }
+
+  .discord-input-hint {
+    display: none;
+  }
+}
+
+/* Animations */
+@keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -239,963 +459,55 @@
   }
 }
 
-/* Message Bubbles */
-.message-bubble {
-  max-width: 85%;
-  padding: 12px 16px;
-  border-radius: 16px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  word-wrap: break-word;
+.discord-chat-container {
+  animation: slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.user-message {
-  align-self: flex-end;
-  background: var(--luxury-user-bubble);
-  color: var(--luxury-white);
-  border-bottom-right-radius: 4px;
+.discord-message {
+  animation: slideInUp 0.2s ease-out;
 }
 
-.bot-message {
-  align-self: flex-start;
-  background: transparent;
-  color: var(--luxury-gray);
-  border-left: 3px solid var(--luxury-gold);
-  border-bottom-left-radius: 4px;
-  padding-left: 16px;
+/* Dark theme enhancements */
+.discord-chat-container {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-.message-content {
-  white-space: pre-wrap;
+/* Focus styles for accessibility */
+.discord-control-btn:focus,
+.discord-send-btn:focus,
+.discord-input:focus {
+  outline: 2px solid #5865f2;
+  outline-offset: 2px;
 }
 
-/* Quick Replies */
-.quick-replies {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-left: 19px;
-}
-
-.luxury-quick-reply {
-  background: transparent;
-  border: 1px solid var(--luxury-gold);
-  color: var(--luxury-gold);
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 20px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  height: auto;
-  min-height: 32px;
-}
-
-.luxury-quick-reply:hover {
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-}
-
-/* Product Cards */
-.luxury-product-card {
-  background: var(--luxury-border);
-  border: 1px solid var(--luxury-gold);
-  border-radius: 12px;
-  padding: 16px;
-  margin-left: 19px;
-  max-width: 280px;
-}
-
-.product-image {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.product-name {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--luxury-white);
-  margin-bottom: 4px;
-}
-
-.product-price {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 18px;
-  color: var(--luxury-gold);
-  margin-bottom: 8px;
-}
-
-.stock-badge {
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-}
-
-.product-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.luxury-btn-secondary {
-  background: transparent;
-  border: 1px solid var(--luxury-gold);
-  color: var(--luxury-gold);
-  font-size: 12px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.luxury-btn-secondary:hover {
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-}
-
-.luxury-btn-primary {
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: none;
-  transition: all 0.2s ease;
-}
-
-.luxury-btn-primary:hover {
-  background: #b8941f;
-  transform: translateY(-1px);
-}
-
-/* Typing Indicator */
-.typing-message {
-  background: transparent;
-  border-left: 3px solid var(--luxury-gold);
-  padding: 12px 16px;
-  border-radius: 16px;
-  border-bottom-left-radius: 4px;
-}
-
-.luxury-typing-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.typing-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--luxury-gold);
-  animation: typingPulse 1.4s infinite ease-in-out;
-}
-
-.typing-dot:nth-child(1) { animation-delay: -0.32s; }
-.typing-dot:nth-child(2) { animation-delay: -0.16s; }
-.typing-dot:nth-child(3) { animation-delay: 0s; }
-
-@keyframes typingPulse {
-  0%, 80%, 100% {
-    transform: scale(0.6);
-    opacity: 0.4;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Input Bar */
-.luxury-input-bar {
-  padding: 16px 20px;
-  background: var(--luxury-black);
-  border-top: 1px solid var(--luxury-border);
-}
-
-.input-container {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.luxury-input {
-  flex: 1;
-  background: var(--luxury-border);
-  border: 1px solid var(--luxury-border);
-  color: var(--luxury-white);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  padding: 12px 16px;
-  border-radius: 24px;
-  transition: all 0.2s ease;
-}
-
-.luxury-input::placeholder {
-  color: var(--luxury-gray);
-  font-style: italic;
-}
-
-.luxury-input:focus {
-  outline: none;
-  border-color: var(--luxury-gold);
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-}
-
-.luxury-send-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-  border: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.luxury-send-btn:hover:not(:disabled) {
-  background: #b8941f;
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
-}
-
-.luxury-send-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* Lead Form Modal - Larger size */
-.luxury-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: backdropFadeIn 0.3s ease;
-}
-
-@keyframes backdropFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.luxury-lead-form {
-  width: 450px;
-  max-height: 80vh;
-  background: var(--luxury-black);
-  border: 1px solid var(--luxury-gold);
-  border-radius: 16px;
-  box-shadow: var(--luxury-shadow);
-  margin: 20px;
-  overflow-y: auto;
-  animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.form-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 24px 16px;
-  border-bottom: 1px solid var(--luxury-border);
-}
-
-.form-title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  font-size: 20px;
-  color: var(--luxury-white);
-  margin: 0;
-}
-
-.form-subtitle {
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: var(--luxury-gray);
-  margin-top: 4px;
-}
-
-.luxury-close-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: transparent;
-  border: 1px solid var(--luxury-border);
-  color: var(--luxury-gray);
-  transition: all 0.2s ease;
-  padding: 0;
-}
-
-.luxury-close-btn:hover {
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-  border-color: var(--luxury-gold);
-}
-
-.form-content {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.luxury-form-input {
-  background: var(--luxury-border);
-  border: 1px solid var(--luxury-border);
-  color: var(--luxury-white);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.luxury-form-input::placeholder {
-  color: var(--luxury-gray);
-}
-
-.luxury-form-input:focus {
-  outline: none;
-  border-color: var(--luxury-gold);
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-  transform: translateY(-1px);
-}
-
-.luxury-form-textarea {
-  width: 100%;
-  background: var(--luxury-border);
-  border: 1px solid var(--luxury-border);
-  color: var(--luxury-white);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  resize: none;
-  height: 80px;
-  transition: all 0.2s ease;
-}
-
-.luxury-form-textarea::placeholder {
-  color: var(--luxury-gray);
-}
-
-.luxury-form-textarea:focus {
-  outline: none;
-  border-color: var(--luxury-gold);
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-  transform: translateY(-1px);
-}
-
-.luxury-submit-btn {
-  background: var(--luxury-gold);
-  color: var(--luxury-black);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 14px 24px;
-  border-radius: 8px;
-  border: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  width: 100%;
-}
-
-.luxury-submit-btn:hover:not(:disabled) {
-  background: #b8941f;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
-}
-
-.luxury-submit-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.form-disclaimer {
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  color: var(--luxury-gray);
-  text-align: center;
-  line-height: 1.4;
-  margin-top: 8px;
-}
-
-/* Custom Scrollbar */
-.luxury-messages-area::-webkit-scrollbar {
-  width: 4px;
-}
-
-.luxury-messages-area::-webkit-scrollbar-track {
-  background: var(--luxury-border);
-}
-
-.luxury-messages-area::-webkit-scrollbar-thumb {
-  background: var(--luxury-gold);
-  border-radius: 2px;
-}
-
-.luxury-messages-area::-webkit-scrollbar-thumb:hover {
-  background: #b8941f;
-}
-
-/* Mobile-First Responsive Design - Fixed positioning */
-@media (max-width: 768px) {
-  :root {
-    --header-height: 80px;
-    --footer-height: 150px;
-  }
-  
-  /* Mobile chat window - fixed to stay on screen */
-  .luxury-chat-window.expanded {
-    width: calc(100vw - 24px) !important;
-    max-width: 380px !important;
-    height: calc(100vh - 160px) !important;
-    max-height: 500px !important;
-    position: fixed !important;
-    top: 80px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    right: auto !important;
-    bottom: auto !important;
-    border-radius: 16px !important;
-    border: 1px solid var(--luxury-gold) !important;
-    z-index: 1000 !important;
-    margin: 0 12px !important;
-  }
-  
-  /* Mobile FAB positioning - fixed to stay visible */
-  .luxury-chat-fab {
-    position: fixed !important;
-    bottom: 20px !important;
-    right: 20px !important;
-    width: 56px !important;
-    height: 56px !important;
-    z-index: 999 !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.2) !important;
-  }
-  
-  .y7-monogram {
-    font-size: 20px !important;
-  }
-  
-  /* Mobile header adjustments */
-  .luxury-header {
-    padding: 16px 20px !important;
-    height: 60px !important;
-    min-height: 60px !important;
-    background: linear-gradient(135deg, var(--luxury-black), #1a1a1f) !important;
-  }
-  
-  .luxury-title {
-    font-size: 18px !important;
-  }
-  
-  .header-controls {
-    gap: 8px !important;
-  }
-  
-  .luxury-control-btn {
-    width: 36px !important;
-    height: 36px !important;
-    min-height: 44px !important;
-    min-width: 44px !important;
-  }
-  
-  /* Mobile messages area - adjusted for fixed positioning */
-  .luxury-messages-area {
-    height: calc(100% - 140px) !important;
-    max-height: 360px !important;
-  }
-  
-  .messages-container {
-    padding: 16px !important;
-    gap: 12px !important;
-  }
-  
-  /* Mobile message bubbles */
-  .message-bubble {
-    max-width: 90% !important;
-    padding: 14px 18px !important;
-    font-size: 16px !important;
-    line-height: 1.6 !important;
-  }
-  
-  .bot-message {
-    padding-left: 18px !important;
-    border-left-width: 4px !important;
-  }
-  
-  /* Mobile quick replies - touch-friendly */
-  .quick-replies {
-    gap: 10px !important;
-    margin-left: 22px !important;
-    flex-wrap: wrap !important;
-  }
-  
-  .luxury-quick-reply {
-    min-height: 44px !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    border-radius: 22px !important;
-    touch-action: manipulation !important;
-  }
-  
-  /* Mobile product cards */
-  .luxury-product-card {
-    margin-left: 22px !important;
-    max-width: calc(100% - 22px) !important;
-    padding: 20px !important;
-  }
-  
-  .product-image {
-    height: 160px !important;
-  }
-  
-  .product-name {
-    font-size: 18px !important;
-  }
-  
-  .product-price {
-    font-size: 20px !important;
-  }
-  
-  .product-actions {
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-  
-  .luxury-btn-secondary,
-  .luxury-btn-primary {
-    width: 100% !important;
-    min-height: 44px !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    touch-action: manipulation !important;
-  }
-  
-  /* Mobile input bar */
-  .luxury-input-bar {
-    padding: 16px 20px !important;
-    background: var(--luxury-black) !important;
-    border-top: 2px solid var(--luxury-border) !important;
-  }
-  
-  .input-container {
-    gap: 16px !important;
-  }
-  
-  .luxury-input {
-    font-size: 16px !important;
-    padding: 16px 20px !important;
-    border-radius: 28px !important;
-    min-height: 56px !important;
-  }
-  
-  .luxury-send-btn {
-    width: 56px !important;
-    height: 56px !important;
-    min-width: 56px !important;
-    min-height: 56px !important;
-    flex-shrink: 0 !important;
-    touch-action: manipulation !important;
-  }
-  
-  /* Mobile lead form - fixed positioning */
-  .luxury-lead-form {
-    width: calc(100vw - 24px) !important;
-    max-width: 380px !important;
-    height: calc(100vh - 160px) !important;
-    max-height: 500px !important;
-    margin: 0 !important;
-    border-radius: 16px !important;
-    border: 1px solid var(--luxury-gold) !important;
-    position: fixed !important;
-    top: 80px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    right: auto !important;
-    bottom: auto !important;
-    overflow-y: auto !important;
-  }
-  
-  .form-header {
-    padding: 24px 24px 20px !important;
-  }
-  
-  .form-title {
-    font-size: 22px !important;
-  }
-  
-  .luxury-close-btn {
-    width: 40px !important;
-    height: 40px !important;
-    min-height: 44px !important;
-    min-width: 44px !important;
-  }
-  
-  .form-content {
-    padding: 20px 24px 24px !important;
-    height: auto !important;
-    overflow-y: visible !important;
-  }
-  
-  .luxury-form-input,
-  .luxury-form-textarea {
-    font-size: 16px !important;
-    padding: 16px 20px !important;
-    min-height: 56px !important;
-    border-radius: 12px !important;
-  }
-  
-  .luxury-form-textarea {
-    height: 120px !important;
-    resize: none !important;
-  }
-  
-  .luxury-submit-btn {
-    min-height: 56px !important;
-    padding: 16px 24px !important;
-    font-size: 16px !important;
-    border-radius: 12px !important;
-    touch-action: manipulation !important;
-  }
-  
-  /* Remove body scroll lock on mobile - let it scroll naturally */
-  body.chat-open {
-    overflow: auto !important;
-    position: static !important;
-    width: auto !important;
-  }
-}
-
-/* Tablet adjustments - larger sizes */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .luxury-chat-window.expanded {
-    width: 420px !important;
-    height: 580px !important;
-  }
-  
-  .luxury-chat-fab {
-    bottom: 2rem !important;
-    right: 2rem !important;
-    width: 64px !important;
-    height: 64px !important;
-  }
-  
-  .luxury-lead-form {
-    width: 450px !important;
-    max-width: calc(100vw - 4rem) !important;
-  }
-}
-
-/* Large mobile devices */
-@media (max-width: 480px) {
-  .messages-container {
-    padding: 12px !important;
-  }
-  
-  .message-bubble {
-    padding: 12px 16px !important;
-    font-size: 15px !important;
-  }
-  
-  .luxury-input-bar {
-    padding: 12px 16px max(12px, env(safe-area-inset-bottom, 12px)) !important;
-  }
-  
-  .luxury-input {
-    padding: 14px 18px !important;
-    min-height: 52px !important;
-  }
-  
-  .luxury-send-btn {
-    width: 52px !important;
-    height: 52px !important;
-    min-width: 52px !important;
-    min-height: 52px !important;
-  }
-  
-  .form-content {
-    padding: 16px 20px max(20px, env(safe-area-inset-bottom, 20px)) !important;
-  }
-}
-
-/* Landscape mobile adjustments */
-@media (max-width: 768px) and (orientation: landscape) {
-  .luxury-messages-area {
-    height: calc(100vh - 120px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
-  }
-  
-  .luxury-header {
-    padding: max(12px, env(safe-area-inset-top, 12px)) 20px 12px !important;
-    min-height: 50px !important;
-  }
-  
-  .luxury-input-bar {
-    padding: 12px 20px max(12px, env(safe-area-inset-bottom, 12px)) !important;
-  }
-}
-
-/* iOS specific adjustments */
-@supports (-webkit-touch-callout: none) {
-  .luxury-chat-window.expanded {
-    height: 100vh !important;
-    height: -webkit-fill-available !important;
-  }
-  
-  .luxury-messages-area {
-    height: calc(100vh - 140px) !important;
-    height: calc(-webkit-fill-available - 140px) !important;
-  }
-  
-  .luxury-input {
-    -webkit-appearance: none !important;
-    border-radius: 28px !important;
-  }
-  
-  .luxury-form-input,
-  .luxury-form-textarea {
-    -webkit-appearance: none !important;
-  }
-}
-
-/* Android specific adjustments */
-@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
-  .luxury-input,
-  .luxury-form-input,
-  .luxury-form-textarea {
-    background-clip: padding-box !important;
-  }
-}
-
-/* Additional Mobile Enhancements */
-@media (max-width: 768px) {
-  /* Prevent text selection on touch elements */
-  .luxury-quick-reply,
-  .luxury-btn-primary,
-  .luxury-btn-secondary,
-  .luxury-send-btn,
-  .luxury-control-btn,
-  .luxury-chat-fab {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-  }
-  
-  /* Improve touch feedback */
-  .luxury-quick-reply:active,
-  .luxury-btn-primary:active,
-  .luxury-btn-secondary:active {
-    transform: scale(0.95) !important;
-    transition: transform 0.1s ease !important;
-  }
-  
-  .luxury-send-btn:active {
-    transform: scale(0.9) !important;
-  }
-  
-  .luxury-chat-fab:active {
-    transform: scale(0.95) !important;
-  }
-  
-  /* Mobile-specific animations */
-  .luxury-chat-window.expanded {
-    animation: mobileSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
-  
-  @keyframes mobileSlideUp {
-    from {
-      opacity: 0;
-      transform: translateY(100%);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Mobile lead form animation */
-  .luxury-lead-form {
-    animation: mobileFormSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
-  
-  @keyframes mobileFormSlideUp {
-    from {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Better mobile scrolling */
-  .luxury-messages-area {
-    -webkit-overflow-scrolling: touch !important;
-    scroll-behavior: smooth !important;
-  }
-  
-  .form-content {
-    -webkit-overflow-scrolling: touch !important;
-    scroll-behavior: smooth !important;
-  }
-  
-  /* Mobile keyboard handling */
-  .luxury-input:focus,
-  .luxury-form-input:focus,
-  .luxury-form-textarea:focus {
-    transform: none !important; /* Prevent transform on focus for mobile */
-  }
-  
-  /* Mobile status bar color */
-  .luxury-chat-window.expanded {
-    background: var(--luxury-black) !important;
-  }
-  
-  /* Mobile safe area adjustments for newer devices */
-  @supports (padding: max(0px)) {
-    .luxury-header {
-      padding-top: max(16px, env(safe-area-inset-top, 16px)) !important;
-    }
-    
-    .luxury-input-bar {
-      padding-bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
-    }
-    
-    .luxury-chat-fab {
-      bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem)) !important;
-      right: max(1.5rem, env(safe-area-inset-right, 1.5rem)) !important;
-    }
-    
-    .form-header {
-      padding-top: max(24px, env(safe-area-inset-top, 24px)) !important;
-    }
-    
-    .form-content {
-      padding-bottom: max(24px, env(safe-area-inset-bottom, 24px)) !important;
-    }
-  }
-  
-  /* Mobile dark mode adjustments */
-  @media (prefers-color-scheme: dark) {
-    .luxury-chat-window,
-    .luxury-lead-form {
-      background: var(--luxury-black) !important;
-    }
-  }
-  
-  /* Mobile focus states */
-  .luxury-input:focus,
-  .luxury-form-input:focus,
-  .luxury-form-textarea:focus {
-    border-color: var(--luxury-gold) !important;
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2) !important;
-    outline: none !important;
-  }
-  
-  /* Mobile message bubble improvements */
-  .message-bubble {
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-    hyphens: auto !important;
-  }
-  
-  /* Mobile product card touch improvements */
-  .luxury-product-card {
-    border-radius: 16px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  }
-  
-  .product-image {
-    border-radius: 12px !important;
-  }
-  
-  /* Mobile typing indicator */
-  .typing-message {
-    padding: 16px 20px !important;
-  }
-  
-  /* Mobile backdrop blur */
-  .luxury-modal-backdrop {
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-  }
-}
-
-/* Extra small mobile devices */
-@media (max-width: 360px) {
-  .luxury-header {
-    padding: max(12px, env(safe-area-inset-top, 12px)) 16px 12px !important;
-  }
-  
-  .luxury-title {
-    font-size: 16px !important;
-  }
-  
-  .messages-container {
-    padding: 10px !important;
-  }
-  
-  .luxury-input-bar {
-    padding: 10px 16px max(10px, env(safe-area-inset-bottom, 10px)) !important;
-  }
-  
-  .form-content {
-    padding: 16px 20px max(20px, env(safe-area-inset-bottom, 20px)) !important;
-  }
-}
-
-/* Mobile hover states (for devices that support hover) */
-@media (hover: hover) and (max-width: 768px) {
-  .luxury-quick-reply:hover,
-  .luxury-btn-primary:hover,
-  .luxury-btn-secondary:hover {
-    transform: translateY(-1px) !important;
-  }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* High contrast mode */
+/* High contrast mode support */
 @media (prefers-contrast: high) {
-  :root {
-    --luxury-gold: #FFD700;
-    --luxury-border: #444444;
+  .discord-chat-container {
+    border: 2px solid #ffffff;
+  }
+  
+  .discord-message-text {
+    border: 1px solid #72767d;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .discord-chat-toggle,
+  .discord-control-btn,
+  .discord-send-btn,
+  .discord-input-wrapper,
+  .discord-message {
+    transition: none;
+    animation: none;
+  }
+  
+  .discord-typing-dot {
+    animation: none;
+  }
+  
+  .discord-chat-badge {
+    animation: none;
   }
 }

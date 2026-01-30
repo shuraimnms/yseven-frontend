@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// Get API base URL from environment or default to production for deployment
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://yseven-backend.onrender.com/api/v1';
+// Get API base URL from environment or default to local development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
 
 // Export the base URL for use in other files
 export const getApiBaseUrl = () => API_BASE_URL;
@@ -172,11 +172,17 @@ export const adminAPI = {
     getById: (id: string) => api.get(`/admin/orders/${id}`),
   },
   
-  // Analytics & Dashboard
-  analytics: {
-    getDashboard: (timeRange?: string) => api.get(`/admin/analytics/dashboard${timeRange ? `?range=${timeRange}` : ''}`),
-    getRevenue: (timeRange?: string) => api.get(`/admin/analytics/revenue${timeRange ? `?range=${timeRange}` : ''}`),
-    getOrderStats: (timeRange?: string) => api.get(`/admin/analytics/orders${timeRange ? `?range=${timeRange}` : ''}`),
+  // Dashboard & Analytics
+  dashboard: {
+    getStats: () => api.get('/admin/dashboard'),
+  },
+  
+  // Keep-Alive Management
+  keepAlive: {
+    getStatus: () => api.get('/admin/keep-alive/status'),
+    manualPing: () => api.post('/admin/keep-alive/ping'),
+    start: () => api.post('/admin/keep-alive/start'),
+    stop: () => api.post('/admin/keep-alive/stop'),
   },
   
   // Customer Management
@@ -204,9 +210,7 @@ export const adminAPI = {
   
   // System & Settings
   system: {
-    getStats: () => api.get('/admin/system/stats'),
-    getLogs: (type?: string) => api.get(`/admin/system/logs${type ? `?type=${type}` : ''}`),
-    getHealth: () => api.get('/admin/system/health'),
+    getHealth: () => api.get('/health'), // Use simple health endpoint
   },
 
   // Chat Management

@@ -1,8 +1,8 @@
 // Utility functions for API calls
 
-// Get the API base URL from environment or fallback to production
+// Get the API base URL from environment or fallback to local development
 export const getApiBaseUrl = () => {
-  return import.meta.env.VITE_API_BASE_URL || 'https://yseven-backend.onrender.com/api/v1';
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
 };
 
 // Create a fetch wrapper that automatically uses the correct base URL with better error handling
