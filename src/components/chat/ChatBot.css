@@ -4,7 +4,7 @@
 .discord-chat-toggle {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  background: transparent;
   border: none;
   border-radius: 50%;
   color: white;
@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 32px rgba(88, 101, 242, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -22,7 +22,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  background: transparent;
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -30,7 +30,7 @@
 
 .discord-chat-toggle:hover {
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 12px 40px rgba(88, 101, 242, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
 .discord-chat-toggle:hover::before {
@@ -74,7 +74,7 @@
 }
 
 .discord-chat-container.minimized {
-  /* Height will be controlled by inline styles */
+  overflow: hidden;
 }
 
 /* Chat Header */
@@ -97,7 +97,7 @@
 .discord-bot-avatar {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  background: transparent;
   border-radius: 50%;
   display: flex;
   align-items: center;

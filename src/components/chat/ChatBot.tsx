@@ -7,6 +7,7 @@ import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
 import { chatAPI } from '../../lib/api';
 import { useFormSubmission } from '../../hooks/useFormSubmission';
+import { ChatBotIcon } from './ChatBotIcon';
 import './ChatBot.css';
 
 interface Message {
@@ -231,10 +232,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
 
   if (!isOpen) {
     return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="discord-chat-toggle"
-        title={!isMobile ? "Chat with Y7 Assistant" : undefined}
+      <div
         style={{
           position: 'fixed',
           bottom: isMobile ? '20px' : '24px',
@@ -242,20 +240,12 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
           zIndex: 1000
         }}
       >
-        <img 
-          src="/src/assets/logo-bot.png" 
-          alt="Y7 Bot" 
-          style={{ 
-            width: '32px', 
-            height: '32px', 
-            objectFit: 'cover',
-            borderRadius: '50%'
-          }} 
+        <ChatBotIcon
+          size={isMobile ? 56 : 60}
+          onClick={() => setIsOpen(true)}
+          className="y7-chat-toggle"
         />
-        <div className="discord-chat-badge">
-          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>!</span>
-        </div>
-      </button>
+      </div>
     );
   }
 

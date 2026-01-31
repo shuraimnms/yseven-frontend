@@ -1,0 +1,15 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simplified for favicon clarity -->
+  <circle cx="16" cy="16" r="15" fill="#0A0A0A" stroke="#00D4FF" stroke-width="1"/>
+  
+  <!-- Y7 symbol -->
+  <!-- Y letter -->
+  <path d="M10 8 L13 14 L16 8" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M13 14 L13 20" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- 7 number -->
+  <path d="M18 8 L22 8 L20 20" stroke="#00D4FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Single accent dot -->
+  <circle cx="24" cy="10" r="1" fill="#00D4FF"/>
+</svg>

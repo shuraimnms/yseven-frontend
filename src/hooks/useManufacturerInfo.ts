@@ -21,9 +21,9 @@ export const useManufacturerInfo = (): ManufacturerInfo => {
   return useMemo(() => ({
     manufacturer: "Crush In Agro Products",
     brandOwner: "Y-Seven",
-    address: "Plot No. 123, Industrial Area, Phase-II",
-    city: "Chandigarh",
-    state: "Punjab", 
+    address: "Plot 120, Survey No. 6, 8B, II Stage, Mundargi Industrial Estate",
+    city: "Ballari",
+    state: "Karnataka", 
     country: "India",
     countryOfOrigin: "India",
     fssaiNo: "10019022001234",
@@ -40,11 +40,11 @@ export const useManufacturerAddress = () => {
   const info = useManufacturerInfo();
   
   return useMemo(() => ({
-    full: `${info.address}, ${info.city} - 160002, ${info.state}, ${info.country}`,
+    full: `${info.address}, ${info.city} – 583101, ${info.state}, ${info.country}`,
     short: `${info.city}, ${info.state}, ${info.country}`,
     formatted: {
       line1: info.address,
-      line2: `${info.city} - 160002`,
+      line2: `${info.city} – 583101`,
       line3: `${info.state}, ${info.country}`
     }
   }), [info]);

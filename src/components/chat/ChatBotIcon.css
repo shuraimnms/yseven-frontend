@@ -1,0 +1,285 @@
+/* Y7 Premium Chatbot Icon Styles */
+
+.y7-chatbot-icon {
+  position: relative;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  padding: 0;
+  overflow: visible;
+}
+
+
+.y7-chatbot-icon:focus {
+  outline: 2px solid #00D4FF;
+  outline-offset: 2px;
+}
+
+/* SVG container */
+.y7-icon-svg {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 4px 20px rgba(0, 212, 255, 0.15));
+}
+
+/* Background circle with subtle pulse */
+.y7-icon-bg {
+  animation: y7-idle-pulse 7s ease-in-out infinite;
+}
+
+/* Neural dots orbital animation */
+.y7-neural-dots {
+  animation: y7-neural-orbit 8s ease-in-out infinite;
+}
+
+.dot-1 {
+  animation: y7-dot-fade 6s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.dot-2 {
+  animation: y7-dot-fade 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.dot-3 {
+  animation: y7-dot-fade 6s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+/* Y7 letters subtle breathing */
+.y7-letters {
+  transform-origin: center;
+  animation: y7-symbol-breathe 6s ease-in-out infinite;
+}
+
+/* Thinking line morph */
+.thinking-line {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: y7-thinking-morph 8s ease-in-out infinite;
+}
+
+/* Hover states */
+.y7-chatbot-icon:hover .y7-icon-svg {
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 25px rgba(0, 212, 255, 0.25));
+}
+
+.y7-chatbot-icon:hover .y7-icon-bg {
+  animation: y7-hover-pulse 2s ease-in-out infinite;
+}
+
+/* Active/clicked state */
+.y7-chatbot-icon:active .y7-icon-svg {
+  transform: scale(0.95);
+}
+
+.y7-chatbot-icon.active .y7-icon-bg {
+  stroke: #00D4FF;
+  stroke-width: 2;
+}
+
+/* Click ripple effect */
+.y7-chatbot-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease-out;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.y7-chatbot-icon:active::after {
+  width: 120%;
+  height: 120%;
+  opacity: 1;
+  transition: all 0.1s ease-out;
+}
+
+/* Notification badge */
+.y7-notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF4500 100%);
+  border: 2px solid #0A0A0A;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  animation: y7-badge-pulse 3s ease-in-out infinite;
+}
+
+.y7-notification-badge span {
+  line-height: 1;
+}
+
+/* Keyframe Animations */
+
+/* Idle pulse - very subtle breathing effect */
+@keyframes y7-idle-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.02);
+    opacity: 0.95;
+  }
+}
+
+/* Hover pulse - slightly more pronounced */
+@keyframes y7-hover-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    stroke-width: 1;
+  }
+  50% { 
+    transform: scale(1.03);
+    stroke-width: 1.5;
+  }
+}
+
+/* Neural dots fade in/out */
+@keyframes y7-dot-fade {
+  0%, 80%, 100% { 
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  10%, 70% { 
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+}
+
+/* Neural orbital movement */
+@keyframes y7-neural-orbit {
+  0%, 90%, 100% { 
+    transform: rotate(0deg);
+  }
+  45% { 
+    transform: rotate(5deg);
+  }
+}
+
+/* Symbol breathing */
+@keyframes y7-symbol-breathe {
+  0%, 100% { 
+    transform: scale(1);
+  }
+  50% { 
+    transform: scale(1.01);
+  }
+}
+
+/* Thinking line animation */
+@keyframes y7-thinking-morph {
+  0%, 70%, 100% { 
+    stroke-dashoffset: 20;
+    opacity: 0.3;
+  }
+  15%, 55% { 
+    stroke-dashoffset: 0;
+    opacity: 0.7;
+  }
+}
+
+/* Badge pulse */
+@keyframes y7-badge-pulse {
+  0%, 100% { 
+    transform: scale(1);
+  }
+  50% { 
+    transform: scale(1.1);
+  }
+}
+
+/* Dark mode optimization */
+@media (prefers-color-scheme: dark) {
+  .y7-icon-bg {
+    fill: #0A0A0A;
+    stroke: #2A2A2A;
+  }
+  
+  .y7-notification-badge {
+    border-color: #0A0A0A;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .y7-chatbot-icon *,
+  .y7-chatbot-icon::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .y7-chatbot-icon:hover .y7-icon-svg {
+    transform: none;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .y7-chatbot-icon {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .y7-icon-svg {
+    filter: drop-shadow(0 2px 15px rgba(0, 212, 255, 0.1));
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .y7-icon-bg {
+    stroke: #FFFFFF;
+    stroke-width: 2;
+  }
+  
+  .y7-bubble {
+    stroke: #FFFFFF;
+    stroke-width: 2;
+  }
+  
+  .thinking-line {
+    stroke: #FFFFFF;
+  }
+}
+
+/* Size variants */
+.y7-chatbot-icon.size-small {
+  width: 40px;
+  height: 40px;
+}
+
+.y7-chatbot-icon.size-large {
+  width: 80px;
+  height: 80px;
+}
+
+/* Static fallback for no-animation preference */
+.y7-chatbot-icon.static .y7-icon-bg,
+.y7-chatbot-icon.static .y7-neural-dots,
+.y7-chatbot-icon.static .y7-main-symbol,
+.y7-chatbot-icon.static .thinking-line,
+.y7-chatbot-icon.static .y7-notification-badge {
+  animation: none;
+}

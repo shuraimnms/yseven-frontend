@@ -238,7 +238,7 @@ export default function Contact() {
                           <p className="text-sm text-gray-500">Manufacturing Unit:</p>
                           <p className="text-xs text-gray-400">
                             Crush In Agro Products<br />
-                            Chandigarh, Punjab, India
+                            Ballari, Karnataka, India
                           </p>
                         </div>
                       </div>
