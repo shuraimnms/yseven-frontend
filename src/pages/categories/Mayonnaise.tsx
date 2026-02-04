@@ -453,7 +453,7 @@ export default function Mayonnaise() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="aspect-square rounded-2xl overflow-hidden">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden">
                   <img
                     src="/mayonnaise-cooking.jpg"
                     alt="Cooking with mayonnaise"

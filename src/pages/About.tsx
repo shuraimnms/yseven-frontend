@@ -153,7 +153,7 @@ export default function About() {
       
       <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-40">
           {/* Background Video/Image */}
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />

@@ -30,9 +30,7 @@ Allow: /
 Crawl-delay: 1
 
 # Sitemap locations
-Sitemap: https://y7sauces.com/sitemap.xml
-Sitemap: https://y7sauces.com/sitemap-blog.xml
-Sitemap: https://y7sauces.com/sitemap-products.xml
+Sitemap: https://ysevenfoods.com/sitemap.xml
 
 # Host directive
-Host: https://y7sauces.com
+Host: https://ysevenfoods.com

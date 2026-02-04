@@ -30,16 +30,20 @@ const SauceDrops = () => {
     generateDrops();
   }, []);
 
+  // Component render
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 5 }}>
       {drops.map((drop) => (
         <div
           key={drop.id}
           className="absolute animate-sauce-drop"
           style={{
             left: `${drop.left}%`,
+            top: '-10vh',
             animationDelay: `${drop.delay}s`,
             animationDuration: `${drop.duration}s`,
+            zIndex: 10
           }}
         >
           {/* Main drop */}

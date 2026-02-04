@@ -6,28 +6,190 @@
     <title>Y7 Premium Sauces | One Brand. Endless Flavor.</title>
     <meta name="description" content="Y7 is a premium global sauce brand redefining flavor with innovation, precision, and uncompromising quality. Crafted for bold kitchens worldwide." />
     <meta name="author" content="Y7 Premium Sauces" />
-    <meta name="keywords" content="Y7, premium sauces, gourmet sauces, hot sauce, mayo, condiments, luxury food" />
+    <meta name="keywords" content="Y7, premium sauces, gourmet sauces, hot sauce, mayo, condiments, luxury food, peri peri sauce, sambal sauce, international sauces, bbq sauce, mayonnaise" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow" />
+    <meta httpEquiv="Content-Language" content="en" />
+    <meta name="language" content="en" />
 
+    <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Y7 Premium Sauces | One Brand. Endless Flavor." />
     <meta property="og:description" content="Premium sauces crafted for bold kitchens worldwide. Experience the art of flavor perfection." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image" content="https://y7sauces.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:url" content="https://y7sauces.com" />
+    <meta property="og:site_name" content="Y7 Sauces" />
+    <meta property="og:locale" content="en_US" />
 
+    <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@y7sauces" />
+    <meta name="twitter:creator" content="@y7sauces" />
     <meta name="twitter:title" content="Y7 Premium Sauces | One Brand. Endless Flavor." />
     <meta name="twitter:description" content="Premium sauces crafted for bold kitchens worldwide." />
-    <meta name="twitter:image" content="/og-image.png" />
+    <meta name="twitter:image" content="https://y7sauces.com/og-image.jpg" />
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://y7sauces.com/" />
+
+    <!-- Favicon and Icons -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
     
-    <meta name="theme-color" content="#080808" />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Theme and App Meta -->
+    <meta name="theme-color" content="#D4AF37" />
+    <meta name="msapplication-TileColor" content="#D4AF37" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Y7 Sauces" />
+
+    <!-- Performance Optimizations -->
+    <link rel="preload" href="/logo.png" as="image" type="image/png" />
+    <link rel="preload" href="/hero-sauce.jpg" as="image" type="image/jpeg" />
+    <link rel="prefetch" href="/hero-sauce.mp4" as="video" type="video/mp4" />
+    
+    <!-- Critical CSS Inline (will be replaced by build process) -->
+    <style>
+      /* Critical above-the-fold styles */
+      body { margin: 0; padding: 0; background: #000; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
+      .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+      .spinner { width: 40px; height: 40px; border: 3px solid #333; border-top: 3px solid #D4AF37; border-radius: 50%; animation: spin 1s linear infinite; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.google-analytics.com" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//www.google-analytics.com" />
+    <link rel="dns-prefetch" href="//connect.facebook.net" />
+
+    <!-- Hreflang for International SEO -->
+    <link rel="alternate" hrefLang="en" href="https://y7sauces.com/" />
+    <link rel="alternate" hrefLang="en-US" href="https://y7sauces.com/" />
+    <link rel="alternate" hrefLang="en-GB" href="https://y7sauces.com/uk/" />
+    <link rel="alternate" hrefLang="en-IN" href="https://y7sauces.com/in/" />
+    <link rel="alternate" hrefLang="x-default" href="https://y7sauces.com/" />
+
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Y7 Sauces",
+      "alternateName": "Y Seven Sauces",
+      "description": "Premium global sauce and condiment manufacturer specializing in authentic international flavors.",
+      "url": "https://y7sauces.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://y7sauces.com/logo.png",
+        "width": 200,
+        "height": 200
+      },
+      "image": "https://y7sauces.com/og-image.jpg",
+      "foundingDate": "2020",
+      "slogan": "One Brand. Endless Flavor.",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+91-1234567890",
+          "contactType": "customer service",
+          "availableLanguage": ["English", "Hindi"],
+          "areaServed": "Worldwide"
+        }
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN",
+        "addressRegion": "Maharashtra",
+        "addressLocality": "Mumbai"
+      },
+      "sameAs": [
+        "https://facebook.com/Y7Sauces",
+        "https://instagram.com/Y7Sauces",
+        "https://twitter.com/Y7Sauces",
+        "https://linkedin.com/company/y7sauces"
+      ]
+    }
+    </script>
+
+    <!-- Structured Data - Website -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Y7 Sauces",
+      "url": "https://y7sauces.com",
+      "description": "Y7 is a premium global sauce brand redefining flavor with innovation, precision, and uncompromising quality. Crafted for bold kitchens worldwide.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Y7 Sauces"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://y7sauces.com/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Noscript fallback for crawlers -->
+    <noscript>
+      <style>
+        .noscript-fallback {
+          font-family: Arial, sans-serif;
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+          background: #fff;
+          color: #333;
+        }
+      </style>
+    </noscript>
   </head>
 
   <body>
-    <div id="root"></div>
+    <!-- Noscript fallback content for crawlers -->
+    <noscript>
+      <div class="noscript-fallback">
+        <h1>Y7 Premium Sauces - One Brand. Endless Flavor</h1>
+        <p>Y7 is a premium global sauce brand redefining flavor with innovation, precision, and uncompromising quality. Crafted for bold kitchens worldwide.</p>
+        
+        <h2>Our Products</h2>
+        <ul>
+          <li><strong>Hot Sauces:</strong> Peri-peri, ghost pepper, carolina reaper, and international varieties</li>
+          <li><strong>Mayonnaise:</strong> Gourmet mayonnaise with various flavors and preparations</li>
+          <li><strong>International Sauces:</strong> Sambal, harissa, chimichurri, and regional specialties</li>
+          <li><strong>BBQ Sauces:</strong> Kansas City, Carolina, Texas, and international BBQ styles</li>
+        </ul>
+        
+        <h2>Contact Us</h2>
+        <p>Email: info@y7sauces.com | Phone: +91-1234567890</p>
+        <p>Visit our full website at <a href="https://y7sauces.com">https://y7sauces.com</a></p>
+      </div>
+    </noscript>
+    
+    <div id="root">
+      <!-- Loading fallback -->
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

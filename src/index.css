@@ -4,6 +4,81 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+  PERFORMANCE OPTIMIZATIONS
+  =========================
+*/
+
+/* Enable hardware acceleration for smooth animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+/* Optimize font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Optimize scrolling performance */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  /* Only disable problematic animations, keep decorative ones */
+  .animate-spin,
+  .animate-bounce,
+  .animate-pulse {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  /* Reduce transition durations but don't eliminate them */
+  * {
+    transition-duration: 0.15s !important;
+  }
+}
+
+/* 
+  Z-INDEX HIERARCHY SYSTEM
+  ========================
+  -1: Background elements (watermarks, etc.)
+  0-10: Page content layers
+  100: Fixed header
+  110: Header dropdowns and mobile menu button
+  120: Modal overlays (dialogs, sheets)
+  150: Toast notifications
+  1000: ChatBot component
+  1001: ChatBot lead form modal
+*/
+
+/* 
+  CONSISTENT SECTION SPACING
+  ==========================
+  Reduced spacing for better visual flow
+*/
+.section-spacing {
+  @apply py-12 lg:py-16;
+}
+
+.section-spacing-sm {
+  @apply py-8 lg:py-12;
+}
+
+.section-spacing-lg {
+  @apply py-16 lg:py-20;
+}
+
 /* Prevent zooming and touch manipulation */
 * {
   touch-action: manipulation;

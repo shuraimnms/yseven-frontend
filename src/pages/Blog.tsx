@@ -223,7 +223,7 @@ const Blog = () => {
         schema={[faqSchema, breadcrumbSchema]}
       />
       {/* 1️⃣ HERO SECTION - Cinematic */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-40">
         {/* Background Video Simulation */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-obsidian/80 via-obsidian/60 to-obsidian/90 z-10" />
@@ -263,7 +263,7 @@ const Blog = () => {
       </section>
 
       {/* 2️⃣ FEATURED RECIPES - Visual First */}
-      <section className="py-24 lg:py-32 bg-gradient-to-b from-obsidian to-charcoal">
+      <section className="py-12 lg:py-16 bg-gradient-to-b from-obsidian to-charcoal">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
             <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Curated by Master Chefs</p>
@@ -328,7 +328,7 @@ const Blog = () => {
       </section>
 
       {/* 3️⃣ BLOG CATEGORIES - SEO Silos */}
-      <section className="py-24 lg:py-32 bg-charcoal">
+      <section className="py-12 lg:py-16 bg-charcoal">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-cream mb-6">
@@ -359,7 +359,7 @@ const Blog = () => {
       </section>
 
       {/* 4️⃣ AUTHORITY CONTENT BLOCK */}
-      <section className="py-24 lg:py-32 bg-gradient-to-r from-obsidian via-charcoal to-obsidian">
+      <section className="py-12 lg:py-16 bg-gradient-to-r from-obsidian via-charcoal to-obsidian">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-cream mb-8">
@@ -380,7 +380,7 @@ const Blog = () => {
       </section>
 
       {/* 5️⃣ LATEST BLOG POSTS - Editorial Style */}
-      <section className="py-24 lg:py-32 bg-obsidian">
+      <section className="py-12 lg:py-16 bg-obsidian">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
             <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Editorial</p>

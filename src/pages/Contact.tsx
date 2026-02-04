@@ -6,7 +6,6 @@ import {
   Send, 
   Clock,
   Package,
-  Users,
   HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -53,7 +52,6 @@ export default function Contact() {
     const result = await submitForm({
       ...formData,
       type: formData.subject.toLowerCase().includes('bulk') ? 'bulk' :
-            formData.subject.toLowerCase().includes('partnership') ? 'partnership' :
             formData.subject.toLowerCase().includes('support') ? 'support' :
             formData.subject.toLowerCase().includes('media') ? 'media' :
             'general'
@@ -77,7 +75,7 @@ export default function Contact() {
       
       <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
-        <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden -mt-20 pt-40">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
             <img
@@ -154,7 +152,6 @@ export default function Contact() {
                           <SelectContent className="bg-gray-800 border-gray-700">
                             <SelectItem value="general">General Inquiry</SelectItem>
                             <SelectItem value="bulk">Bulk Orders</SelectItem>
-                            <SelectItem value="partnership">Partnership</SelectItem>
                             <SelectItem value="support">Support</SelectItem>
                             <SelectItem value="media">Media & Press</SelectItem>
                           </SelectContent>
@@ -267,18 +264,11 @@ export default function Contact() {
                 </Card>
 
                 {/* Quick Actions */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   <Card className="bg-gray-900 border-gray-800 hover:border-yellow-500 transition-colors cursor-pointer">
                     <CardContent className="p-4 text-center">
                       <Package className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
                       <p className="font-medium text-sm">Bulk Orders</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-gray-900 border-gray-800 hover:border-yellow-500 transition-colors cursor-pointer">
-                    <CardContent className="p-4 text-center">
-                      <Users className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-                      <p className="font-medium text-sm">Partnerships</p>
                     </CardContent>
                   </Card>
                 </div>

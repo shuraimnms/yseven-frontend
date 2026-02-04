@@ -93,7 +93,7 @@ export default function Certifications() {
       
       <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
-        <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden -mt-20 pt-40">
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20" />
 

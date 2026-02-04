@@ -137,7 +137,7 @@ export default function Export() {
       
       <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-40">
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black z-0" />
 

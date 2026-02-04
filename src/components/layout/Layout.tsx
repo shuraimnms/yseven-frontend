@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
     <MaintenanceMode>
       <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 mt-20">{children}</main>
         <Footer />
       </div>
     </MaintenanceMode>

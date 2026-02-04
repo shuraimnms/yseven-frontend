@@ -5,10 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SEOHead from "@/components/SEOHead";
 import ProductVideo from "@/components/ProductVideo";
-import sauceClassic from "@/assets/sauce-classic.jpg";
-import sauceSpicy from "@/assets/sauce-spicy.jpg";
-import sauceInternational from "@/assets/sauce-international.jpg";
-import sauceCreamy from "@/assets/sauce-creamy.jpg";
 // Product specific images
 import tomatoKetchup from "@/assets/Tomato-Ketchup.png";
 import tomatoSauce from "@/assets/Tomato-Sauce.png";
@@ -335,7 +331,7 @@ const Products = () => {
       <SEOHead seo={seoData} />
 
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-24">
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden -mt-20 pt-40">
         <div className="absolute inset-0 bg-gradient-to-b from-charcoal to-obsidian" />
         <div className="relative z-10 container mx-auto px-6 lg:px-12 text-center">
           <p className="text-caption mb-6">Y7 Premium Sauces</p>
@@ -350,7 +346,7 @@ const Products = () => {
       </section>
 
       {/* Individual Products Section */}
-      <section className="py-24 lg:py-32 bg-obsidian">
+      <section className="py-12 lg:py-16 bg-obsidian">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
             <p className="text-caption mb-4">
@@ -391,7 +387,7 @@ const Products = () => {
                       }
                     `}
                   >
-                    <div className="aspect-[4/3] overflow-hidden">
+                    <div className="w-full h-64 overflow-hidden">
                       {firstProduct?.name === "Tomato Ketchup" ? (
                         <ProductVideo
                           videoSrc={tomatoKetchupVideo}
@@ -498,7 +494,7 @@ const Products = () => {
                   {/* Product Image/Video */}
                   <div className={index % 2 === 1 ? "lg:order-2" : ""}>
                     <div className="relative group">
-                      <div className="aspect-square overflow-hidden rounded-lg border border-gold/20">
+                      <div className="w-full h-96 overflow-hidden rounded-lg border border-gold/20">
                         {product.name === "Tomato Ketchup" ? (
                           <ProductVideo
                             videoSrc={tomatoKetchupVideo}
@@ -582,10 +578,32 @@ const Products = () => {
                       </div>
                     </div>
 
-                    {/* Uses */}
-                    <div>
-                      <h4 className="font-body-semibold text-cream mb-2">Perfect For:</h4>
-                      <p className="text-body-premium">{product.uses}</p>
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-3">
+                      <Link to="/bulk-orders">
+                        <Button 
+                          variant="default" 
+                          className="bg-gold text-obsidian hover:bg-gold/90 transition-all duration-300"
+                        >
+                          Bulk Order
+                        </Button>
+                      </Link>
+                      <Link to="/contact">
+                        <Button 
+                          variant="outline" 
+                          className="border-gold text-gold hover:bg-gold/10 transition-all duration-300"
+                        >
+                          Get Quote
+                        </Button>
+                      </Link>
+                      <Link to="/export">
+                        <Button 
+                          variant="outline" 
+                          className="border-cream/30 text-cream hover:bg-cream/10 transition-all duration-300"
+                        >
+                          Export Inquiry
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -615,7 +633,7 @@ const Products = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 lg:py-32 bg-gradient-section">
+      <section className="py-12 lg:py-16 bg-gradient-section">
         <div className="container mx-auto px-6 lg:px-12 text-center">
           <h2 className="text-section-title mb-6">
             Interested in <span className="text-gradient-gold">Bulk Orders?</span>

@@ -527,7 +527,7 @@ export default function International() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="aspect-square rounded-2xl overflow-hidden">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden">
                   <img
                     src="/international-cooking.jpg"
                     alt="International cooking"

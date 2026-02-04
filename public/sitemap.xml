@@ -1,122 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://y7sauces.com/</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/about</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/about</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/products</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/products</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/shop</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/shop</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/blog</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/blog</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/contact</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/recipes</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://ysevenfoods.com/contact</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/hot-sauces</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/hot-sauces</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/mayonnaise</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/mayonnaise</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/international</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/international</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/bbq-sauces</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/bbq-sauces</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/bulk-orders</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/bulk-orders</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/quality</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/export</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/faq</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/certifications</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ysevenfoods.com/quality</loc>
+    <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ysevenfoods.com/faq</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/careers</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/careers</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/press</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/press</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/partnerships</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/partnerships</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/privacy</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/privacy</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/terms</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/terms</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/refund</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/refund</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://y7sauces.com/shipping</loc>
-    <lastmod>2024-01-25</lastmod>
+    <loc>https://ysevenfoods.com/shipping</loc>
+    <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

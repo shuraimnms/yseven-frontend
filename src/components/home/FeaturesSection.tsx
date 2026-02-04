@@ -25,9 +25,9 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <section className="py-24 lg:py-32 bg-gradient-section">
+    <section className="py-12 lg:py-16 bg-gradient-section">
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Why Choose Y7</p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream">
             Crafted for <span className="text-gradient-gold">Excellence</span>

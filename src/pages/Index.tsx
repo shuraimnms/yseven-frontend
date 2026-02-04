@@ -14,10 +14,9 @@ import TestimonialsSection from "@/components/home/TestimonialsSection";
 import StatsSection from "@/components/home/StatsSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
-import InstagramSection from "@/components/home/InstagramSection";
 
 const HeroSection = () => (
-  <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-20">
     {/* Cinematic Video Background */}
     <HeroVideoBackground />
 
@@ -83,23 +82,16 @@ const HeroSection = () => (
       </div>
     </div>
 
-    {/* Scroll Indicator */}
-    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-float" style={{ zIndex: 10 }}>
-      <div className="w-7 h-12 border-2 border-cream/30 rounded-full flex items-start justify-center p-2">
-        <div className="w-1.5 h-3 bg-gold rounded-full animate-pulse" />
-      </div>
-      <p className="text-cream/40 text-xs mt-2 tracking-widest uppercase"></p>
-    </div>
   </section>
 );
 
 const BrandStorySection = () => (
-  <section className="py-24 lg:py-32 bg-gradient-section relative">
+  <section className="py-12 lg:py-16 bg-gradient-section relative">
     {/* Decorative elements */}
     <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
     
     <div className="container mx-auto px-6 lg:px-12">
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <p className="text-gold text-sm tracking-[0.3em] uppercase mb-6">Our Story</p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-8 leading-tight">
@@ -124,8 +116,8 @@ const BrandStorySection = () => (
         </div>
         
         {/* Visual element */}
-        <div className="relative">
-          <div className="aspect-square rounded-2xl overflow-hidden border border-gold/20">
+        <div className="relative max-w-md mx-auto lg:mx-0">
+          <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-gold/20">
             <img
               src={allprod}
               alt="Y7 Premium Sauce"
@@ -134,9 +126,9 @@ const BrandStorySection = () => (
             <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-transparent" />
           </div>
           {/* Floating accent */}
-          <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
+          <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
             <div className="text-center">
-              <span className="block text-3xl font-display font-bold text-gold">25+</span>
+              <span className="block text-2xl font-display font-bold text-gold">25+</span>
               <span className="text-cream/60 text-xs">Unique Flavors</span>
             </div>
           </div>
@@ -147,61 +139,84 @@ const BrandStorySection = () => (
 );
 
 const FounderSection = () => (
-  <section className="py-24 lg:py-32 bg-obsidian relative">
-    <div className="container mx-auto px-6 lg:px-12">
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
-        {/* Founder Image */}
-        <div className="relative">
-          <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/10 to-charcoal">
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <ChefHat className="w-12 h-12 text-gold" />
+  <section className="py-12 lg:py-16 bg-obsidian relative">
+    <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+      <div className="grid lg:grid-cols-5 gap-6 lg:gap-8 items-center">
+        {/* Founder Image - 2 columns (40%) */}
+        <div className="lg:col-span-2 flex justify-center">
+          <div className="aspect-square rounded-2xl overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/10 to-charcoal w-full max-w-sm relative">
+            {/* Professional placeholder with better visual hierarchy */}
+            <div className="w-full h-full flex flex-col items-center justify-center p-6">
+              {/* Professional avatar placeholder */}
+              <div className="w-28 h-28 bg-gradient-to-br from-gold/30 to-gold/10 rounded-full mb-5 flex items-center justify-center border-2 border-gold/20 relative overflow-hidden">
+                {/* Subtle pattern background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-transparent"></div>
+                {/* Professional silhouette or initials */}
+                <div className="relative z-10 text-center">
+                  <div className="text-2xl font-bold text-gold mb-1">BS</div>
+                  <div className="w-6 h-0.5 bg-gold/40 rounded-full mx-auto"></div>
                 </div>
-                <p className="text-cream/40">B. Shanthi</p>
-                <p className="text-cream/30 text-sm">Founder & Managing Director</p>
+              </div>
+              
+              {/* Name and title */}
+              <div className="text-center mb-3">
+                <h3 className="text-lg font-semibold text-cream mb-1">B. Shanthi</h3>
+                <p className="text-cream/60 text-sm mb-2">Founder & Managing Director</p>
+                
+                {/* Credibility lines */}
+                <div className="space-y-1">
+                  <p className="text-gold text-xs font-medium">15+ Years in Agro & Food Processing</p>
+                  <p className="text-cream/50 text-xs">ISO & Quality-Driven Leadership</p>
+                </div>
+              </div>
+              
+              {/* Professional accent */}
+              <div className="flex items-center gap-1.5 mt-2">
+                <div className="w-1.5 h-1.5 bg-gold rounded-full"></div>
+                <div className="w-1 h-1 bg-gold/60 rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-gold rounded-full"></div>
               </div>
             </div>
-          </div>
-          {/* Floating badge */}
-          <div className="absolute -top-4 -right-4 bg-gold text-obsidian px-4 py-2 rounded-full text-sm font-semibold">
-            Visionary Leader
+            
+            {/* Subtle corner accent */}
+            <div className="absolute top-3 right-3 w-2.5 h-2.5 border-t-2 border-r-2 border-gold/30"></div>
+            <div className="absolute bottom-3 left-3 w-2.5 h-2.5 border-b-2 border-l-2 border-gold/30"></div>
           </div>
         </div>
 
-        {/* Founder Content */}
-        <div>
-          <p className="text-gold text-sm tracking-[0.3em] uppercase mb-6">Meet Our Founder</p>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-6 leading-tight">
+        {/* Founder Content - 3 columns (60%) */}
+        <div className="lg:col-span-3">
+          <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Meet Our Founder</p>
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-cream mb-4 leading-tight">
             Agricultural Heritage Meets <span className="text-gradient-gold">Modern Innovation</span>
           </h2>
-          <p className="text-cream/60 text-lg leading-relaxed mb-6">
+          <p className="text-cream/60 text-base lg:text-lg leading-relaxed mb-4">
             B. Shanthi is a passionate entrepreneur from an agricultural family, deeply rooted in the values 
             of hard work, resilience, and sustainability. Raised amidst traditional farming practices, 
             she brings rural wisdom together with modern business strategies.
           </p>
-          <p className="text-cream/50 text-base leading-relaxed mb-8">
+          <p className="text-cream/50 text-sm lg:text-base leading-relaxed mb-6">
             With a strong commitment to quality and ethical sourcing, she leads M/S Crush In Agro Products 
             with a mission to deliver pure, nutritious, and eco-conscious agro products while empowering 
             rural communities and supporting farmers.
           </p>
 
           {/* Core Values */}
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-gold rounded-full" />
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-gold rounded-full" />
               <span className="text-cream/70 text-sm">Agricultural Heritage</span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-gold rounded-full" />
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-gold rounded-full" />
               <span className="text-cream/70 text-sm">Sustainability</span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-gold rounded-full" />
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-gold rounded-full" />
               <span className="text-cream/70 text-sm">Quality Excellence</span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-gold rounded-full" />
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-gold rounded-full" />
               <span className="text-cream/70 text-sm">Community Empowerment</span>
             </div>
           </div>
@@ -246,9 +261,9 @@ const productRanges = [
 ];
 
 const ProductRangeSection = () => (
-  <section className="py-24 lg:py-32 bg-obsidian">
+  <section className="py-12 lg:py-16 bg-obsidian">
     <div className="container mx-auto px-6 lg:px-12">
-      <div className="text-center mb-16">
+      <div className="text-center mb-10">
         <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Our Collection</p>
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-4">
           Curated <span className="text-gradient-gold">Excellence</span>
@@ -267,7 +282,7 @@ const ProductRangeSection = () => (
             className="group relative overflow-hidden rounded-2xl bg-charcoal border border-gold/10 hover:border-gold/40 transition-all duration-500 transform hover:-translate-y-2"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <div className="aspect-[4/5] overflow-hidden">
+            <div className="aspect-square overflow-hidden">
               <img
                 src={range.image}
                 alt={range.name}
@@ -295,7 +310,7 @@ const ProductRangeSection = () => (
         ))}
       </div>
 
-      <div className="text-center mt-12">
+      <div className="text-center mt-8">
         <Link to="/products">
           <Button variant="gold" size="lg">
             View All Products
@@ -315,19 +330,19 @@ const recipes = [
 ];
 
 const RecipePreviewSection = () => (
-  <section className="py-24 lg:py-32 bg-gradient-section relative overflow-hidden">
+  <section className="py-12 lg:py-16 bg-gradient-section relative overflow-hidden">
     {/* Decorative Elements */}
     <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
     <div className="absolute bottom-0 left-0 w-96 h-96 bg-deep-red/5 rounded-full blur-3xl" />
 
     <div className="container mx-auto px-6 lg:px-12 relative z-10">
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Recipe Ideas</p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-6">
             Elevate Your <span className="text-gradient-gold">Culinary Art</span>
           </h2>
-          <p className="text-cream/60 text-lg leading-relaxed mb-8">
+          <p className="text-cream/60 text-lg leading-relaxed mb-6">
             Discover gourmet recipes crafted by world-class chefs, 
             designed to unlock the full potential of Y7 sauces. From quick 
             weeknight dinners to impressive dinner party dishes.
@@ -371,7 +386,7 @@ const RecipePreviewSection = () => (
 );
 
 const FinalCTASection = () => (
-  <section className="py-24 lg:py-40 bg-obsidian relative overflow-hidden">
+  <section className="py-16 lg:py-20 bg-obsidian relative overflow-hidden">
     {/* Background Pattern */}
     <div className="absolute inset-0 opacity-5">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-gold rounded-full animate-pulse-ring" />
@@ -391,7 +406,7 @@ const FinalCTASection = () => (
         <h2 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-cream mb-6">
           Taste the <span className="text-gradient-gold">Difference</span>
         </h2>
-        <p className="text-cream/60 text-xl max-w-2xl mx-auto mb-12">
+        <p className="text-cream/60 text-xl max-w-2xl mx-auto mb-8">
           Join thousands of culinary enthusiasts who've discovered the Y7 difference. 
           Premium flavor awaits.
         </p>
@@ -452,7 +467,6 @@ const Index = () => {
       <FounderSection />
       <NewsletterSection />
       <FinalCTASection />
-      <InstagramSection />
     </>
   );
 };

@@ -7,7 +7,7 @@ const Shop = () => {
   return (
     <>
       {/* Coming Soon Hero */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-40">
         <div className="absolute inset-0">
           <img
             src={heroImage}

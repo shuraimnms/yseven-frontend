@@ -53,7 +53,7 @@ const AnimatedNumber = ({ value, suffix }: { value: number; suffix: string }) =>
 
 const StatsSection = () => {
   return (
-    <section className="py-20 bg-obsidian relative overflow-hidden">
+    <section className="py-10 bg-obsidian relative overflow-hidden">
       {/* Decorative lines */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-gold to-transparent" />

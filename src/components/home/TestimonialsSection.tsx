@@ -23,12 +23,12 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-24 lg:py-32 bg-charcoal relative overflow-hidden">
+    <section className="py-12 lg:py-16 bg-charcoal relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gold/5 blur-3xl" />
       
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <p className="text-caption mb-4">Testimonials</p>
           <h2 className="text-section-title">
             Loved by <span className="text-gradient-gold">Chefs Worldwide</span>

@@ -10,7 +10,7 @@ import Logo from "@/components/ui/Logo";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
-  { name: "About", href: "/about" },
+  { name: "About Us", href: "/about" },
   { name: "Export", href: "/export" },
   { name: "Recipes", href: "/blog" },
   { name: "Contact", href: "/contact" },
@@ -100,13 +100,13 @@ const Header = () => {
       )}
     >
       <nav className="container mx-auto px-6 lg:px-12">
-        <div className="flex items-center justify-between h-20 lg:h-24">
+        <div className="flex items-center justify-between h-20 lg:h-20">
           {/* Logo */}
           <button 
             onClick={() => handleNavigation("/")} 
             className="flex items-center space-x-3 group cursor-pointer"
           >
-            <Logo size="3xl" />
+            <Logo size="3xl" priority />
             <span className="hidden sm:block text-cream/60 text-xs tracking-luxury uppercase">
               Premium Sauces
             </span>
@@ -134,7 +134,7 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             {/* Mobile Menu Toggle */}
             <button
-              className="lg:hidden text-white bg-gold/50 hover:bg-gold/70 p-4 transition-all duration-300 relative z-[60] rounded-lg border-2 border-gold shadow-xl"
+              className="lg:hidden text-white bg-gold/50 hover:bg-gold/70 p-4 transition-all duration-300 relative z-[110] rounded-lg border-2 border-gold shadow-xl"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle mobile menu"
               style={{ minWidth: '52px', minHeight: '52px' }}
@@ -169,7 +169,7 @@ const Header = () => {
 
                 {/* Profile Dropdown Menu */}
                 <div className={cn(
-                  "absolute right-0 mt-2 w-72 bg-obsidian/95 backdrop-blur-xl border border-gold/20 rounded-lg shadow-2xl transition-all duration-300 z-50",
+                  "absolute right-0 mt-2 w-72 bg-obsidian/95 backdrop-blur-xl border border-gold/20 rounded-lg shadow-2xl transition-all duration-300 z-[110]",
                   isProfileDropdownOpen 
                     ? "opacity-100 visible transform translate-y-0" 
                     : "opacity-0 invisible transform -translate-y-2"

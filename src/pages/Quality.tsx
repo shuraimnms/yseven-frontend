@@ -12,7 +12,7 @@ const Quality = () => {
 
   return (
     <>
-      <section className="relative py-32 lg:py-40 overflow-hidden pt-24">
+      <section className="relative py-32 lg:py-40 overflow-hidden pt-20">
         <div className="absolute inset-0 bg-gradient-to-b from-charcoal to-obsidian" />
         <div className="relative z-10 container mx-auto px-6 lg:px-12 text-center">
           <p className="text-gold text-sm tracking-[0.3em] uppercase mb-6">Our Standards</p>
