@@ -33,7 +33,7 @@ const Refund = () => {
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold text-cream mb-4">How to Return</h2>
-                <p>To initiate a return, contact our customer service team at returns@y7sauces.com with your order number. We'll provide return instructions and a prepaid shipping label.</p>
+                <p>To initiate a return, contact our customer service team at returns@ysevenfoods.com with your order number. We'll provide return instructions and a prepaid shipping label.</p>
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold text-cream mb-4">Refund Processing</h2>

@@ -30,7 +30,7 @@ const Privacy = () => {
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold text-cream mb-4">Your Rights</h2>
-                <p>You have the right to access, correct, or delete your personal information. Contact us at privacy@y7sauces.com for any privacy-related requests.</p>
+                <p>You have the right to access, correct, or delete your personal information. Contact us at privacy@ysevenfoods.com for any privacy-related requests.</p>
               </div>
             </div>
           </div>

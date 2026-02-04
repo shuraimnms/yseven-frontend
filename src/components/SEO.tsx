@@ -75,7 +75,7 @@ const SEO: React.FC<SEOProps> = ({
       {
         "@type": "ContactPoint",
         "contactType": "sales",
-        "email": "sales@y7sauces.com",
+        "email": "sales@ysevenfoods.com",
         "availableLanguage": ["English"]
       }
     ],

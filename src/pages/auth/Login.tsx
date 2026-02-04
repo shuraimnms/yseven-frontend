@@ -58,7 +58,7 @@ const Login = () => {
   const seoData = generateSEO({
     title: 'Login to Y7 Sauces Account',
     description: 'Sign in to your Y7 Sauces account to access exclusive deals, track orders, and manage your premium sauce collection.',
-    canonical: 'https://y7sauces.com/auth/login',
+    canonical: 'https://ysevenfoods.com/auth/login',
   });
 
   return (

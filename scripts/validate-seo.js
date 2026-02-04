@@ -10,7 +10,7 @@ const path = require('path');
 
 // Configuration
 const config = {
-  siteUrl: 'https://y7sauces.com',
+  siteUrl: 'https://ysevenfoods.com',
   publicDir: path.join(__dirname, '../public'),
   srcDir: path.join(__dirname, '../src')
 };

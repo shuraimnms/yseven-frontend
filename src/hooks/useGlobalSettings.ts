@@ -34,7 +34,7 @@ export const useGlobalSettings = (autoFetch = true) => {
     refreshSettings: fetchSettings,
     // Convenience getters with fallbacks
     siteTitle: settings?.siteTitle || 'Y7 Sauces',
-    supportEmail: settings?.supportEmail || 'support@y7sauces.com',
+    supportEmail: settings?.supportEmail || 'support@ysevenfoods.com',
     supportPhone: settings?.supportPhone || '+91 9876543210',
     officeAddress: settings?.officeAddress || 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
     socialMedia: settings?.socialMedia || {

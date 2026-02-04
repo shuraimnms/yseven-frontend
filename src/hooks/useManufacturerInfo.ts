@@ -30,9 +30,9 @@ export const useManufacturerInfo = (): ManufacturerInfo => {
     gstinNo: "04ABCDE1234F1Z5",
     iecNo: "BQEPS7979D",
     rcmcNo: "RCMC/APEDA/24897/2025-2026",
-    customerCare: "support@y7sauces.com",
+    customerCare: "support@ysevenfoods.com",
     customerPhone: "+91-172-1234567",
-    website: "www.y7sauces.com"
+    website: "www.ysevenfoods.com"
   }), []);
 };
 

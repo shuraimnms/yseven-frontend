@@ -58,7 +58,7 @@ const Cart = () => {
   const seoData = generateSEO({
     title: 'Shopping Cart - Y7 Sauces',
     description: 'Review your Y7 Sauces cart and proceed to checkout. Premium sauces and condiments ready for delivery.',
-    canonical: 'https://y7sauces.com/cart',
+    canonical: 'https://ysevenfoods.com/cart',
   });
 
   if (isLoading) {

@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 
 // Configuration
 const config = {
-  siteUrl: 'https://y7sauces.com',
+  siteUrl: 'https://ysevenfoods.com',
   outputDir: path.join(__dirname, '../public'),
   currentDate: new Date().toISOString().split('T')[0]
 };
@@ -118,7 +118,7 @@ Host: ${config.siteUrl}`;
 
 // Generate security.txt for security researchers
 function generateSecurityTxt() {
-  const security = `Contact: security@y7sauces.com
+  const security = `Contact: security@ysevenfoods.com
 Expires: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()}
 Acknowledgments: ${config.siteUrl}/security-acknowledgments
 Preferred-Languages: en
@@ -137,7 +137,7 @@ Canonical: ${config.siteUrl}/.well-known/security.txt`;
 function generateHumansTxt() {
   const humans = `/* TEAM */
 Developer: Y7 Development Team
-Contact: dev@y7sauces.com
+Contact: dev@ysevenfoods.com
 Location: Mumbai, India
 
 /* THANKS */
@@ -195,7 +195,7 @@ function generateManifest() {
 function generateAdsTxt() {
   const ads = `# Y7 Sauces ads.txt
 # Updated: ${config.currentDate}
-# Contact: advertising@y7sauces.com
+# Contact: advertising@ysevenfoods.com
 
 # Google AdSense (example - replace with actual publisher ID)
 # google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

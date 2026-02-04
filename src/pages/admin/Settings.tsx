@@ -72,7 +72,7 @@ interface SiteSettings {
 const SettingsPage = () => {
   const [settings, setSettings] = useState<SiteSettings>({
     siteTitle: 'Y7 Sauces',
-    supportEmail: 'support@y7sauces.com',
+    supportEmail: 'support@ysevenfoods.com',
     supportPhone: '+91 9876543210',
     officeAddress: 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
     socialMedia: {

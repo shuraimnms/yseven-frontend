@@ -5,7 +5,7 @@ export const setTestAdmin = () => {
   const testAdminUser = {
     _id: 'test-admin-id',
     name: 'Test Admin',
-    email: 'admin@y7sauces.com',
+    email: 'admin@ysevenfoods.com',
     phone: '9999999999',
     role: 'admin' as const,
     emailVerified: true,

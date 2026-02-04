@@ -73,7 +73,7 @@ const Register = () => {
   const seoData = generateSEO({
     title: 'Create Y7 Sauces Account - Join the Flavor Revolution',
     description: 'Sign up for Y7 Sauces to access exclusive deals, track orders, and discover premium sauce recipes. Join thousands of flavor enthusiasts.',
-    canonical: 'https://y7sauces.com/auth/register',
+    canonical: 'https://ysevenfoods.com/auth/register',
   });
 
   return (

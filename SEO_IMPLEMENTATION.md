@@ -237,7 +237,7 @@ function BlogPost({ post }) {
 ### Google Search Console Setup
 
 1. Verify domain ownership
-2. Submit sitemap: `https://y7sauces.com/sitemap.xml`
+2. Submit sitemap: `https://ysevenfoods.com/sitemap.xml`
 3. Monitor crawl errors and indexing status
 4. Track search performance and keywords
 
