@@ -15,6 +15,7 @@ import PerformanceMonitor from "./components/PerformanceMonitor";
 import { SettingsProvider } from "./components/providers/SettingsProvider";
 import { useAuthStore } from "./store/authStore";
 import { ChatBot } from "./components/chat/ChatBot";
+import FloatingContactButtons from "./components/FloatingContactButtons";
 import { initializeErrorHandling } from "./utils/errorHandler";
 
 // Import watermark image
@@ -126,6 +127,7 @@ const App = () => {
             <ScrollRestoration />
             <PerformanceMonitor />
             <ChatBot />
+            <FloatingContactButtons />
             <Routes>
               {/* Auth Routes (No Layout) */}
               <Route path="/auth/login" element={

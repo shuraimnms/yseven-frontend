@@ -125,6 +125,8 @@ const SettingsPage = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.data) {
+          console.log('📥 Fetched settings from API');
+          console.log('📧 Email from API:', data.data.supportEmail);
           setSettings(data.data);
           setLastUpdated(new Date(data.data.updatedAt || new Date()));
         }
@@ -151,9 +153,13 @@ const SettingsPage = () => {
 
   const saveSettings = async () => {
     try {
+      console.log('💾 Attempting to save settings...');
+      console.log('📧 Email being saved:', settings.supportEmail);
+      
       // Validate settings before saving
       const validationErrors = validateSettings(settings);
       if (validationErrors.length > 0) {
+        console.error('❌ Validation failed:', validationErrors);
         toast({
           title: 'Validation Error',
           description: validationErrors[0].message,
@@ -174,11 +180,18 @@ const SettingsPage = () => {
         body: JSON.stringify(settings)
       });
 
+      console.log('📡 Save response status:', response.status);
+
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Save failed:', errorData);
         throw new Error('Failed to save settings');
       }
 
       const data = await response.json();
+      console.log('✅ Save successful, response data:', data.data);
+      console.log('📧 Email in response:', data.data.supportEmail);
+      
       setLastUpdated(new Date(data.data?.updatedAt || new Date()));
 
       // CRITICAL: Update global settings store with timestamp to force refresh
@@ -187,6 +200,9 @@ const SettingsPage = () => {
         lastUpdated: new Date().toISOString(),
         _forceUpdate: Date.now() // Add unique timestamp to force update
       };
+      
+      console.log('📤 Broadcasting updated settings...');
+      console.log('📧 Email in broadcast:', updatedSettings.supportEmail);
       
       setGlobalSettings(updatedSettings);
       
