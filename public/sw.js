@@ -1,7 +1,8 @@
 // Service Worker for Y7 Sauces - Lightning Fast Caching
-const CACHE_NAME = 'y7-sauces-v1';
-const STATIC_CACHE = 'y7-static-v1';
-const DYNAMIC_CACHE = 'y7-dynamic-v1';
+const CACHE_VERSION = '2.0'; // Increment this to force cache refresh
+const CACHE_NAME = `y7-sauces-v${CACHE_VERSION}`;
+const STATIC_CACHE = `y7-static-v${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `y7-dynamic-v${CACHE_VERSION}`;
 
 // Critical resources to cache immediately
 const CRITICAL_RESOURCES = [
@@ -75,6 +76,16 @@ self.addEventListener('fetch', (event) => {
   
   // Skip non-GET requests
   if (request.method !== 'GET') {
+    return;
+  }
+  
+  // Skip chrome-extension, browser extensions, and non-http(s) requests
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+  
+  // Skip external domains we don't control
+  if (url.hostname !== self.location.hostname && !url.hostname.includes('ysevenfoods.com')) {
     return;
   }
   

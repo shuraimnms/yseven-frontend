@@ -19,7 +19,8 @@ import {
   AlertTriangle,
   Download,
   FileText,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Trash2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -180,17 +181,37 @@ const SettingsPage = () => {
       const data = await response.json();
       setLastUpdated(new Date(data.data?.updatedAt || new Date()));
 
-      // Update global settings store to refresh all frontend pages IMMEDIATELY
-      setGlobalSettings(data.data);
+      // CRITICAL: Update global settings store with timestamp to force refresh
+      const updatedSettings = {
+        ...data.data,
+        lastUpdated: new Date().toISOString(),
+        _forceUpdate: Date.now() // Add unique timestamp to force update
+      };
+      
+      setGlobalSettings(updatedSettings);
       
       // Force immediate refresh across all open tabs/windows
-      window.dispatchEvent(new CustomEvent('settingsUpdated', { detail: data.data }));
+      window.dispatchEvent(new CustomEvent('settingsUpdated', { detail: updatedSettings }));
       
-      // Broadcast to other tabs using localStorage
-      localStorage.setItem('settingsUpdate', JSON.stringify({
+      // Broadcast to other tabs using localStorage with timestamp
+      const updatePayload = {
         timestamp: Date.now(),
-        settings: data.data
+        settings: updatedSettings,
+        action: 'SETTINGS_UPDATED'
+      };
+      localStorage.setItem('settingsUpdate', JSON.stringify(updatePayload));
+      
+      // FORCE update the Zustand storage with new timestamp
+      localStorage.setItem('y7-settings-storage', JSON.stringify({
+        state: {
+          settings: updatedSettings,
+          lastFetch: 0 // Set to 0 to force refresh on next load
+        },
+        version: 0
       }));
+
+      // Clear any cached settings in sessionStorage
+      sessionStorage.removeItem('y7-settings-cache');
 
       toast({
         title: '✅ Success',
@@ -198,6 +219,8 @@ const SettingsPage = () => {
       });
       
       console.log('✅ Settings saved and broadcasted to all pages');
+      console.log('📢 Updated settings:', updatedSettings);
+      console.log('📧 New email:', updatedSettings.supportEmail);
       
     } catch (error) {
       console.error('Settings save error:', error);
@@ -208,6 +231,45 @@ const SettingsPage = () => {
       });
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const clearAllCaches = async () => {
+    try {
+      // Clear all browser caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map(name => caches.delete(name)));
+        console.log('✅ All caches cleared');
+      }
+
+      // Clear localStorage settings
+      localStorage.removeItem('y7-settings-storage');
+      localStorage.removeItem('settingsUpdate');
+      
+      // Clear sessionStorage
+      sessionStorage.clear();
+
+      // Force fetch fresh settings
+      await fetchSettings();
+
+      toast({
+        title: '✅ Cache Cleared',
+        description: 'All caches cleared and settings refreshed. Page will reload.',
+      });
+
+      // Reload page after 1 second
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
+    } catch (error) {
+      console.error('Clear cache error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to clear caches',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -274,6 +336,16 @@ const SettingsPage = () => {
             </div>
           </div>
           <div className="flex items-center space-x-3">
+            <Button 
+              onClick={clearAllCaches}
+              variant="outline" 
+              size="sm" 
+              className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+              disabled={isSaving}
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Clear Cache
+            </Button>
             <Button 
               onClick={fetchSettings}
               variant="outline" 
