@@ -11,10 +11,15 @@ export const validateSettings = (settings: any): ValidationError[] => {
     errors.push({ field: 'siteTitle', message: 'Site title is required' });
   }
 
+  // Email validation - more lenient
   if (!settings.supportEmail?.trim()) {
     errors.push({ field: 'supportEmail', message: 'Support email is required' });
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.supportEmail)) {
-    errors.push({ field: 'supportEmail', message: 'Please enter a valid email address' });
+  } else {
+    const trimmedEmail = settings.supportEmail.trim();
+    // Very simple email validation - just check for @ and .
+    if (!trimmedEmail.includes('@') || !trimmedEmail.includes('.')) {
+      errors.push({ field: 'supportEmail', message: 'Please enter a valid email address' });
+    }
   }
 
   if (!settings.supportPhone?.trim()) {
@@ -53,20 +58,41 @@ export const validateSettings = (settings: any): ValidationError[] => {
   if (settings.socialMedia) {
     const urlPattern = /^https?:\/\/.+/;
     
-    if (settings.socialMedia.facebook && !urlPattern.test(settings.socialMedia.facebook)) {
-      errors.push({ field: 'facebook', message: 'Please enter a valid Facebook URL' });
+    if (settings.socialMedia.facebook?.trim() && !urlPattern.test(settings.socialMedia.facebook)) {
+      errors.push({ field: 'facebook', message: 'Please enter a valid Facebook URL (must start with http:// or https://)' });
     }
     
-    if (settings.socialMedia.instagram && !urlPattern.test(settings.socialMedia.instagram)) {
-      errors.push({ field: 'instagram', message: 'Please enter a valid Instagram URL' });
+    if (settings.socialMedia.instagram?.trim() && !urlPattern.test(settings.socialMedia.instagram)) {
+      errors.push({ field: 'instagram', message: 'Please enter a valid Instagram URL (must start with http:// or https://)' });
     }
     
-    if (settings.socialMedia.twitter && !urlPattern.test(settings.socialMedia.twitter)) {
-      errors.push({ field: 'twitter', message: 'Please enter a valid Twitter URL' });
+    if (settings.socialMedia.twitter?.trim() && !urlPattern.test(settings.socialMedia.twitter)) {
+      errors.push({ field: 'twitter', message: 'Please enter a valid Twitter URL (must start with http:// or https://)' });
     }
     
-    if (settings.socialMedia.youtube && !urlPattern.test(settings.socialMedia.youtube)) {
-      errors.push({ field: 'youtube', message: 'Please enter a valid YouTube URL' });
+    if (settings.socialMedia.youtube?.trim() && !urlPattern.test(settings.socialMedia.youtube)) {
+      errors.push({ field: 'youtube', message: 'Please enter a valid YouTube URL (must start with http:// or https://)' });
+    }
+  }
+
+  // Download links URL validation (optional but if provided should be valid)
+  if (settings.downloadLinks) {
+    const urlPattern = /^https?:\/\/.+/;
+    
+    if (settings.downloadLinks.catalogUrl?.trim() && !urlPattern.test(settings.downloadLinks.catalogUrl)) {
+      errors.push({ field: 'catalogUrl', message: 'Please enter a valid catalog URL (must start with http:// or https://)' });
+    }
+    
+    if (settings.downloadLinks.brochureUrl?.trim() && !urlPattern.test(settings.downloadLinks.brochureUrl)) {
+      errors.push({ field: 'brochureUrl', message: 'Please enter a valid brochure URL (must start with http:// or https://)' });
+    }
+    
+    if (settings.downloadLinks.priceListUrl?.trim() && !urlPattern.test(settings.downloadLinks.priceListUrl)) {
+      errors.push({ field: 'priceListUrl', message: 'Please enter a valid price list URL (must start with http:// or https://)' });
+    }
+    
+    if (settings.downloadLinks.certificatesUrl?.trim() && !urlPattern.test(settings.downloadLinks.certificatesUrl)) {
+      errors.push({ field: 'certificatesUrl', message: 'Please enter a valid certificates URL (must start with http:// or https://)' });
     }
   }
 

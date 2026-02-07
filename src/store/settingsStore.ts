@@ -27,6 +27,12 @@ export interface GlobalSettings {
   };
   maintenanceMode: boolean;
   contactPageContent: string;
+  downloadLinks: {
+    catalogUrl: string;
+    brochureUrl: string;
+    priceListUrl: string;
+    certificatesUrl: string;
+  };
   lastUpdated?: string;
 }
 
@@ -64,7 +70,13 @@ const DEFAULT_SETTINGS: GlobalSettings = {
     expressShippingRate: 100
   },
   maintenanceMode: false,
-  contactPageContent: 'Get in touch with us for any queries or support. We are here to help you!'
+  contactPageContent: 'Get in touch with us for any queries or support. We are here to help you!',
+  downloadLinks: {
+    catalogUrl: '',
+    brochureUrl: '',
+    priceListUrl: '',
+    certificatesUrl: ''
+  }
 };
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -94,12 +106,7 @@ export const useSettingsStore = create<SettingsStore>()(
 
       fetchSettings: async () => {
         try {
-          const { setLoading, setSettings, shouldRefresh } = get();
-          
-          // Skip if recently fetched
-          if (!shouldRefresh()) {
-            return;
-          }
+          const { setLoading, setSettings } = get();
 
           setLoading(true);
 
@@ -109,7 +116,10 @@ export const useSettingsStore = create<SettingsStore>()(
             const data = await response.json();
             if (data.data) {
               setSettings(data.data);
-              console.log('Global settings updated:', data.data.siteTitle);
+              console.log('✅ Global settings updated across entire website:', data.data.siteTitle);
+              
+              // Trigger a custom event to notify all components
+              window.dispatchEvent(new CustomEvent('settingsUpdated', { detail: data.data }));
             }
           } else {
             console.warn('Failed to fetch public settings, using cached/default');

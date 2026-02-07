@@ -180,13 +180,24 @@ const SettingsPage = () => {
       const data = await response.json();
       setLastUpdated(new Date(data.data?.updatedAt || new Date()));
 
-      // Update global settings store to refresh all frontend pages
+      // Update global settings store to refresh all frontend pages IMMEDIATELY
       setGlobalSettings(data.data);
+      
+      // Force immediate refresh across all open tabs/windows
+      window.dispatchEvent(new CustomEvent('settingsUpdated', { detail: data.data }));
+      
+      // Broadcast to other tabs using localStorage
+      localStorage.setItem('settingsUpdate', JSON.stringify({
+        timestamp: Date.now(),
+        settings: data.data
+      }));
 
       toast({
-        title: 'Success',
-        description: 'Settings saved successfully. All pages will update automatically.',
+        title: '✅ Success',
+        description: 'Settings saved and updated across entire website immediately!',
       });
+      
+      console.log('✅ Settings saved and broadcasted to all pages');
       
     } catch (error) {
       console.error('Settings save error:', error);

@@ -56,6 +56,12 @@ export const useGlobalSettings = (autoFetch = true) => {
       standardShippingRate: 50,
       expressShippingRate: 100
     },
-    taxRate: settings?.taxRate || 18
+    taxRate: settings?.taxRate || 18,
+    downloadLinks: settings?.downloadLinks || {
+      catalogUrl: '',
+      brochureUrl: '',
+      priceListUrl: '',
+      certificatesUrl: ''
+    }
   };
 };
