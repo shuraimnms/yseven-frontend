@@ -1,10 +1,16 @@
 # Netlify SPA routing configuration
 # This file handles client-side routing for React Router
 
-# Redirect all routes to index.html for SPA routing
-/*    /index.html   200
+# Serve static assets directly (don't redirect to index.html)
+/js/*       /js/:splat      200
+/css/*      /css/:splat     200
+/images/*   /images/:splat  200
+/assets/*   /assets/:splat  200
 
 # API routes (if any local functions)
 /api/*  /api/:splat  200
+
+# Redirect all other routes to index.html for SPA routing
+/*    /index.html   200
 
 # Security headers and caching rules are handled in netlify.toml
