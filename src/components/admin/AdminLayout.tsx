@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import logoImage from '@/assets/logo.png';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
 import Logo from '@/components/ui/Logo';
@@ -115,7 +116,7 @@ const AdminLayout = () => {
         <div className="flex items-center justify-between h-20 px-6 border-b border-gold/20">
           <div className="flex items-center space-x-3">
             <img 
-              src="/src/assets/logo.png" 
+              src={logoImage} 
               alt="Y7 Admin Panel" 
               className="h-8 w-auto object-contain"
             />

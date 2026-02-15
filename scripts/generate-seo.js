@@ -118,7 +118,7 @@ Host: ${config.siteUrl}`;
 
 // Generate security.txt for security researchers
 function generateSecurityTxt() {
-  const security = `Contact: security@ysevenfoods.com
+  const security = `Contact: ysevenfoods@gmail.com
 Expires: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()}
 Acknowledgments: ${config.siteUrl}/security-acknowledgments
 Preferred-Languages: en
@@ -137,7 +137,7 @@ Canonical: ${config.siteUrl}/.well-known/security.txt`;
 function generateHumansTxt() {
   const humans = `/* TEAM */
 Developer: Y7 Development Team
-Contact: dev@ysevenfoods.com
+Contact: ysevenfoods@gmail.com
 Location: Mumbai, India
 
 /* THANKS */
@@ -195,7 +195,7 @@ function generateManifest() {
 function generateAdsTxt() {
   const ads = `# Y7 Sauces ads.txt
 # Updated: ${config.currentDate}
-# Contact: advertising@ysevenfoods.com
+# Contact: ysevenfoods@gmail.com
 
 # Google AdSense (example - replace with actual publisher ID)
 # google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

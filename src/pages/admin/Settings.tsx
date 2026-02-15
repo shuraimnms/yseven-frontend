@@ -73,7 +73,7 @@ interface SiteSettings {
 const SettingsPage = () => {
   const [settings, setSettings] = useState<SiteSettings>({
     siteTitle: 'Y7 Sauces',
-    supportEmail: 'support@ysevenfoods.com',
+    supportEmail: 'ysevenfoods@gmail.com',
     supportPhone: '+91 9876543210',
     officeAddress: 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
     socialMedia: {
@@ -389,70 +389,6 @@ const SettingsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Site Information */}
-          <Card className="bg-charcoal border-gold/20">
-            <CardHeader>
-              <CardTitle className="text-cream flex items-center">
-                <Globe className="w-5 h-5 mr-2" />
-                Site Information
-              </CardTitle>
-              <CardDescription>Basic site configuration and branding</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="siteTitle" className="text-cream/80">Site Title</Label>
-                <Input
-                  id="siteTitle"
-                  value={settings.siteTitle}
-                  onChange={(e) => handleInputChange('siteTitle', e.target.value)}
-                  className="bg-obsidian border-gold/20 text-cream mt-1"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Contact Information */}
-          <Card className="bg-charcoal border-gold/20">
-            <CardHeader>
-              <CardTitle className="text-cream flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
-                Contact Information
-              </CardTitle>
-              <CardDescription>Support and business contact details</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="supportEmail" className="text-cream/80">Support Email</Label>
-                <Input
-                  id="supportEmail"
-                  type="email"
-                  value={settings.supportEmail}
-                  onChange={(e) => handleInputChange('supportEmail', e.target.value)}
-                  className="bg-obsidian border-gold/20 text-cream mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="supportPhone" className="text-cream/80">Support Phone</Label>
-                <Input
-                  id="supportPhone"
-                  value={settings.supportPhone}
-                  onChange={(e) => handleInputChange('supportPhone', e.target.value)}
-                  className="bg-obsidian border-gold/20 text-cream mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="officeAddress" className="text-cream/80">Office Address</Label>
-                <Textarea
-                  id="officeAddress"
-                  value={settings.officeAddress}
-                  onChange={(e) => handleInputChange('officeAddress', e.target.value)}
-                  className="bg-obsidian border-gold/20 text-cream mt-1"
-                  rows={3}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Social Media */}
           <Card className="bg-charcoal border-gold/20">
             <CardHeader>

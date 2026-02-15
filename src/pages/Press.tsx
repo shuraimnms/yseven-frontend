@@ -78,11 +78,11 @@ const Press = () => {
                 </p>
                 <div className="space-y-3">
                   <a
-                    href="mailto:press@ysevenfoods.com"
+                    href="mailto:ysevenfoods@gmail.com"
                     className="flex items-center gap-2 text-gold hover:text-gold-light transition-colors"
                   >
                     <Mail className="w-4 h-4" />
-                    press@ysevenfoods.com
+                    ysevenfoods@gmail.com
                   </a>
                   <Button 
                     variant="outline" 

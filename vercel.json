@@ -1,13 +1,13 @@
 {
   "rewrites": [
     {
-      "source": "/((?!js/|css/|images/|assets/|.*\\..*).*)",
+      "source": "/((?!js/|css/|images/|assets/|favicon.ico|manifest.json|robots.txt|sitemap.xml|.*\\..*).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "/js/(.*).js",
+      "source": "/js/(.*)",
       "headers": [
         {
           "key": "Content-Type",
@@ -20,11 +20,11 @@
       ]
     },
     {
-      "source": "/assets/(.*).js",
+      "source": "/css/(.*)",
       "headers": [
         {
           "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
+          "value": "text/css; charset=utf-8"
         },
         {
           "key": "Cache-Control",
@@ -33,12 +33,17 @@
       ]
     },
     {
-      "source": "/(.*).js",
+      "source": "/images/(.*)",
       "headers": [
         {
-          "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
-        },
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
@@ -63,15 +68,6 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
       "source": "/(.*).html",
       "headers": [
         {
@@ -85,5 +81,6 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "devCommand": "npm run dev",
-  "framework": "vite"
+  "framework": "vite",
+  "cleanUrls": true
 }

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowRight, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -306,6 +306,7 @@ const allProducts = [
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const productRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
   // Get unique categories
   const categories = ["All", ...Array.from(new Set(allProducts.map(product => product.category)))];
@@ -314,6 +315,44 @@ const Products = () => {
   const filteredProducts = selectedCategory === "All" 
     ? allProducts 
     : allProducts.filter(product => product.category === selectedCategory);
+
+  // Scroll to first product of selected category
+  const scrollToCategory = (category: string) => {
+    setSelectedCategory(category);
+    
+    if (category === "All") {
+      // Scroll to products section
+      const productsSection = document.getElementById('products-section');
+      if (productsSection) {
+        const offset = 100; // Offset for fixed header
+        const elementPosition = productsSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      // Find first product of this category
+      const firstProductOfCategory = allProducts.find(p => p.category === category);
+      if (firstProductOfCategory && productRefs.current[firstProductOfCategory.id]) {
+        setTimeout(() => {
+          const element = productRefs.current[firstProductOfCategory.id];
+          if (element) {
+            const offset = 100; // Offset for fixed header
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        }, 100); // Small delay to allow filtering to complete
+      }
+    }
+  };
 
   const seoData = {
     title: "Y7 Premium Sauces - Master Product Catalog | One Brand. Endless Flavor.",
@@ -378,7 +417,7 @@ const Products = () => {
                 return (
                   <div
                     key={category}
-                    onClick={() => setSelectedCategory(category)}
+                    onClick={() => scrollToCategory(category)}
                     className={`
                       relative overflow-hidden rounded-lg border cursor-pointer transition-all duration-300 group
                       ${selectedCategory === category 
@@ -449,7 +488,7 @@ const Products = () => {
                 <Button
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => scrollToCategory(category)}
                   className={`
                     ${selectedCategory === category 
                       ? "bg-gold text-obsidian hover:bg-gold/90" 
@@ -482,15 +521,17 @@ const Products = () => {
           </div>
 
           {/* Individual Product Cards */}
-          {filteredProducts.length > 0 ? (
-            <div className="space-y-24">
-              {filteredProducts.map((product, index) => (
-                <div
-                  key={product.id}
-                  className={`grid lg:grid-cols-2 gap-12 items-center ${
-                    index % 2 === 1 ? "lg:flex-row-reverse" : ""
-                  }`}
-                >
+          <div id="products-section">
+            {filteredProducts.length > 0 ? (
+              <div className="space-y-24">
+                {filteredProducts.map((product, index) => (
+                  <div
+                    key={product.id}
+                    ref={(el) => (productRefs.current[product.id] = el)}
+                    className={`grid lg:grid-cols-2 gap-12 items-center ${
+                      index % 2 === 1 ? "lg:flex-row-reverse" : ""
+                    }`}
+                  >
                   {/* Product Image/Video */}
                   <div className={index % 2 === 1 ? "lg:order-2" : ""}>
                     <div className="relative group">
@@ -621,7 +662,7 @@ const Products = () => {
                 </p>
                 <Button
                   variant="outline"
-                  onClick={() => setSelectedCategory("All")}
+                  onClick={() => scrollToCategory("All")}
                   className="border-gold/30 text-gold hover:bg-gold/10"
                 >
                   View All Products
@@ -629,6 +670,7 @@ const Products = () => {
               </div>
             </div>
           )}
+          </div>
         </div>
       </section>
 

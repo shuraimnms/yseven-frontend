@@ -9,6 +9,7 @@ import { chatAPI } from '../../lib/api';
 import { useFormSubmission } from '../../hooks/useFormSubmission';
 import { ChatBotIcon } from './ChatBotIcon';
 import './ChatBot.css';
+import logoBotImage from '../../assets/logo-bot.png';
 
 interface Message {
   id: string;
@@ -159,7 +160,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
       if (response.data.data.fallbackToHuman) {
         const supportMessage: Message = {
           id: (Date.now() + 2).toString(),
-          text: "For this request, please contact our team at support@y7foods.com.",
+          text: "For this request, please contact our team at ysevenfoods@gmail.com.",
           sender: 'bot',
           timestamp: new Date(),
           quickReplies: ['Contact Support', 'Browse Products']
@@ -172,7 +173,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'For this request, please contact our team at support@y7foods.com.',
+        text: 'For this request, please contact our team at ysevenfoods@gmail.com.',
         sender: 'bot',
         timestamp: new Date(),
         quickReplies: ['Contact Support', 'Try Again']
@@ -268,7 +269,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
         <div className="discord-header-left">
           <div className="discord-bot-avatar">
             <img 
-              src="/src/assets/logo-bot.png" 
+              src={logoBotImage} 
               alt="Y7 Bot" 
               style={{ 
                 width: '24px', 
@@ -317,7 +318,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
                     {message.sender === 'bot' ? (
                       <div className="discord-bot-avatar">
                         <img 
-                          src="/src/assets/logo-bot.png" 
+                          src={logoBotImage} 
                           alt="Y7 Bot" 
                           style={{ 
                             width: '24px', 
@@ -426,7 +427,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
                   <div className="discord-message-avatar">
                     <div className="discord-bot-avatar">
                       <img 
-                        src="/src/assets/logo-bot.png" 
+                        src={logoBotImage} 
                         alt="Y7 Bot" 
                         style={{ 
                           width: '24px', 
