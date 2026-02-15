@@ -1,28 +1,8 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/js/.*",
-      "dest": "/js/$0"
-    },
-    {
-      "src": "/css/.*",
-      "dest": "/css/$0"
-    },
-    {
-      "src": "/images/.*",
-      "dest": "/images/$0"
-    },
-    {
-      "src": "/assets/.*",
-      "dest": "/assets/$0"
-    },
-    {
-      "src": "/(favicon.ico|manifest.json|robots.txt|sitemap.xml|sitemap-enhanced.xml)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!.*\\.).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -101,6 +81,5 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "devCommand": "npm run dev",
-  "framework": "vite",
-  "cleanUrls": true
+  "framework": "vite"
 }
