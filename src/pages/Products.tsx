@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect, useMemo, memo } from "react";
 import { ArrowRight, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,11 +37,25 @@ import guavaPowder from "@/assets/Guava-Powder.png";
 import sweetPotatoPowder from "@/assets/Sweet-Potato-Powder.png";
 import chikooSapotaPowder from "@/assets/Chikoo(Sapota)-Powder.png";
 
+// Helper function to generate slug from product name
+const generateSlug = (name: string) => {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+};
+
+// Map category names to category page slugs
+const categorySlugMap: { [key: string]: string } = {
+  "Sauces & Condiments": "sauces-condiments",
+  "Flakes & Powders (Agro Products)": "flakes-powders",
+  "Raw Banana Powders": "banana-powders",
+  "Fruit & Vegetable Powders": "fruit-vegetable-powders"
+};
+
 const allProducts = [
   // Sauces & Condiments
   {
     id: 1,
     name: "Tomato Ketchup",
+    slug: "tomato-ketchup",
     description: "Classic tomato ketchup made from ripe, high-quality tomatoes, blended with a balanced mix of spices for rich flavor and smooth texture.",
     benefits: ["Rich tomato antioxidants (lycopene)", "Enhances taste instantly", "Low-fat condiment", "Kid-friendly flavor"],
     uses: "Burgers, fries, sandwiches, snacks, wraps",
@@ -52,6 +66,7 @@ const allProducts = [
   {
     id: 2,
     name: "Tomato Sauce / Continental Sauce",
+    slug: "tomato-sauce-continental",
     description: "A tangy, mildly spiced tomato-based sauce ideal for continental dishes and fusion recipes.",
     benefits: ["Improves digestion", "Adds depth of flavor", "Low calorie", "Versatile use"],
     uses: "Pasta, pizzas, sandwiches, gravies",
@@ -62,6 +77,7 @@ const allProducts = [
   {
     id: 3,
     name: "Snack Sauce",
+    slug: "snack-sauce",
     description: "A bold, tangy, spicy sauce crafted for Indian snacks and street food flavors.",
     benefits: ["Boosts appetite", "Enhances snack flavor", "Low-fat condiment"],
     uses: "Samosa, pakora, chaat, fries",
@@ -72,6 +88,7 @@ const allProducts = [
   {
     id: 4,
     name: "Green Chilli Sauce",
+    slug: "green-chilli-sauce",
     description: "Spicy sauce made from fresh green chilies, delivering sharp heat and bold aroma.",
     benefits: ["Boosts metabolism", "Rich in Vitamin C", "Improves digestion"],
     uses: "Noodles, momos, stir-fry, marinades",
@@ -82,6 +99,7 @@ const allProducts = [
   {
     id: 5,
     name: "Red Chilli Sauce",
+    slug: "red-chilli-sauce",
     description: "Fiery red chili sauce with rich color and intense flavor for spicy food lovers.",
     benefits: ["Enhances metabolism", "Rich in antioxidants", "Improves circulation"],
     uses: "Chinese dishes, snacks, dips",
@@ -92,6 +110,7 @@ const allProducts = [
   {
     id: 6,
     name: "Soya Sauce",
+    slug: "soya-sauce",
     description: "Fermented soy-based sauce delivering deep umami flavor for Asian cuisines.",
     benefits: ["Rich in amino acids", "Enhances taste", "Low calorie seasoning"],
     uses: "Fried rice, noodles, marinades",
@@ -102,6 +121,7 @@ const allProducts = [
   {
     id: 7,
     name: "Vinegar",
+    slug: "vinegar",
     description: "Naturally fermented vinegar for culinary and health applications.",
     benefits: ["Aids digestion", "Supports weight loss", "Antibacterial properties"],
     uses: "Salads, pickling, marinades",
@@ -112,6 +132,7 @@ const allProducts = [
   {
     id: 8,
     name: "Hot & Spicy Sauce",
+    slug: "hot-spicy-sauce",
     description: "A powerful blend of chilies and spices for intense heat lovers.",
     benefits: ["Boosts metabolism", "Improves appetite", "Rich in antioxidants"],
     uses: "Grills, wraps, burgers",
@@ -122,6 +143,7 @@ const allProducts = [
   {
     id: 9,
     name: "Garlic Sauce",
+    slug: "garlic-sauce",
     description: "Creamy garlic-based sauce with bold aroma and savory richness.",
     benefits: ["Heart-healthy compounds", "Boosts immunity", "Anti-inflammatory"],
     uses: "Shawarma, wraps, dips",
@@ -132,6 +154,7 @@ const allProducts = [
   {
     id: 10,
     name: "Schezwan Sauce",
+    slug: "schezwan-sauce",
     description: "Spicy Indo-Chinese sauce made with red chilies, garlic, and spices.",
     benefits: ["Enhances flavor", "Boosts metabolism", "Appetite stimulant"],
     uses: "Fried rice, noodles, momos",
@@ -142,6 +165,7 @@ const allProducts = [
   {
     id: 11,
     name: "Lite Mayonnaise",
+    slug: "lite-mayonnaise",
     description: "Low-fat creamy mayonnaise with smooth texture and mild flavor.",
     benefits: ["Reduced fat content", "Heart-friendly", "High protein (egg-based)"],
     uses: "Sandwiches, burgers, dips",
@@ -152,6 +176,7 @@ const allProducts = [
   {
     id: 12,
     name: "Classic Mayonnaise",
+    slug: "classic-mayonnaise",
     description: "Rich, creamy mayonnaise made from premium oils and eggs.",
     benefits: ["Energy boosting", "Improves texture", "Rich mouthfeel"],
     uses: "Wraps, burgers, salads",
@@ -162,6 +187,7 @@ const allProducts = [
   {
     id: 13,
     name: "Cheese Blend",
+    slug: "cheese-blend",
     description: "Creamy cheese-flavored sauce for rich, savory dishes.",
     benefits: ["Calcium-rich", "Energy boosting", "Enhances flavor"],
     uses: "Nachos, fries, pasta",
@@ -172,6 +198,7 @@ const allProducts = [
   {
     id: 14,
     name: "Peri Peri Sauce",
+    slug: "peri-peri-sauce",
     description: "Tangy, spicy African-style sauce made with bird's eye chilies.",
     benefits: ["Boosts metabolism", "Rich in antioxidants", "Appetite stimulant"],
     uses: "Grilled chicken, fries",
@@ -182,6 +209,7 @@ const allProducts = [
   {
     id: 15,
     name: "Romesco Sauce",
+    slug: "romesco-sauce",
     description: "Spanish-style nutty tomato-based sauce with rich smoky flavor.",
     benefits: ["Healthy fats", "Antioxidant rich", "Heart-friendly"],
     uses: "Grilled vegetables, pasta",
@@ -192,6 +220,7 @@ const allProducts = [
   {
     id: 16,
     name: "Sambal Sauce",
+    slug: "sambal-sauce",
     description: "Indonesian-style chili sauce with bold spice and tangy notes.",
     benefits: ["Improves digestion", "Boosts metabolism", "Rich in Vitamin C"],
     uses: "Rice, noodles, stir-fries",
@@ -203,6 +232,7 @@ const allProducts = [
   {
     id: 17,
     name: "Green Chilli Flakes",
+    slug: "green-chilli-flakes",
     description: "Dried green chilies crushed into flakes for bold heat and aroma.",
     benefits: ["Boosts metabolism", "Rich in Vitamin C", "Improves digestion"],
     uses: "Pizza topping, spice blends",
@@ -213,6 +243,7 @@ const allProducts = [
   {
     id: 18,
     name: "Green Chilli Powder",
+    slug: "green-chilli-powder",
     description: "Finely ground green chili powder with intense flavor.",
     benefits: ["Metabolism booster", "Antioxidant rich", "Enhances appetite"],
     uses: "Curries, marinades",
@@ -224,6 +255,7 @@ const allProducts = [
   {
     id: 19,
     name: "Yelkahi Banana Powder",
+    slug: "yelkahi-banana-powder",
     description: "Made from premium Yelkahi bananas grown near Tungabhadra River.",
     benefits: ["Resistant starch", "Gut health support", "Low glycemic index"],
     uses: "Smoothies, porridge",
@@ -234,6 +266,7 @@ const allProducts = [
   {
     id: 20,
     name: "Rasabale Banana Powder",
+    slug: "rasabale-banana-powder",
     description: "Powdered aromatic bananas from Cauvery river belt.",
     benefits: ["Energy boosting", "Rich in potassium", "Digestive support"],
     uses: "Milkshakes, desserts",
@@ -244,6 +277,7 @@ const allProducts = [
   {
     id: 21,
     name: "G9 Banana Powder",
+    slug: "g9-banana-powder",
     description: "Powder made from export-grade Grand Naine bananas.",
     benefits: ["Rich in fiber", "Energy booster", "Heart health"],
     uses: "Smoothies, baking",
@@ -255,6 +289,7 @@ const allProducts = [
   {
     id: 22,
     name: "Raw Papaya Powder",
+    slug: "raw-papaya-powder",
     description: "Unripe papaya powder rich in papain enzyme.",
     benefits: ["Improves digestion", "Anti-inflammatory", "Detox support"],
     uses: "Health drinks, cooking",
@@ -265,6 +300,7 @@ const allProducts = [
   {
     id: 23,
     name: "Mango Powder",
+    slug: "mango-powder",
     description: "Naturally sweet mango powder from ripe mangoes.",
     benefits: ["Vitamin A & C", "Immunity booster", "Antioxidant rich"],
     uses: "Smoothies, desserts",
@@ -275,6 +311,7 @@ const allProducts = [
   {
     id: 24,
     name: "Guava Powder",
+    slug: "guava-powder",
     description: "Powdered guava rich in fiber and antioxidants.",
     benefits: ["Improves digestion", "Immunity booster", "Heart health"],
     uses: "Health drinks, baking",
@@ -285,6 +322,7 @@ const allProducts = [
   {
     id: 25,
     name: "Sweet Potato Powder",
+    slug: "sweet-potato-powder",
     description: "Naturally sweet powder made from dried sweet potatoes.",
     benefits: ["Rich in fiber", "Blood sugar control", "Energy boosting"],
     uses: "Porridge, baking",
@@ -294,7 +332,8 @@ const allProducts = [
   },
   {
     id: 26,
-    name: "Chikoo (Sapota) Powder",
+    name: "Chikoo \(Sapota\) Powder",
+    slug: "chikoo-sapota-powder",
     description: "Sweet, nutrient-rich sapota powder.",
     benefits: ["Energy booster", "Digestive support", "Antioxidant rich"],
     uses: "Milkshakes, desserts",
@@ -305,6 +344,7 @@ const allProducts = [
 ];
 
 const Products = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const productRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
@@ -369,35 +409,13 @@ const Products = () => {
     <>
       <SEOHead seo={seoData} />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden -mt-20 pt-40">
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal to-obsidian" />
-        <div className="relative z-10 container mx-auto px-6 lg:px-12 text-center">
-          <p className="text-caption mb-6">Y7 Premium Sauces</p>
-          <h1 className="text-hero text-gradient-gold mb-6">
-            One Brand. <span className="text-gradient-gold">Endless Flavor.</span>
-          </h1>
-          <p className="text-hero-sub max-w-2xl mx-auto">
-            Discover our comprehensive range of sauces, condiments, and agro products 
-            crafted with premium ingredients for exceptional taste and nutrition.
-          </p>
-        </div>
-      </section>
-
       {/* Individual Products Section */}
-      <section className="py-12 lg:py-16 bg-obsidian">
+      <section className="pt-20 pb-12 lg:pb-16 bg-obsidian">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
-            <p className="text-caption mb-4">
-              Y7 / M/S CRUSH IN AGRO PRODUCTS
-            </p>
             <h2 className="text-section-title mb-6">
               Master <span className="text-gradient-gold">Product Catalog</span>
             </h2>
-            <p className="text-body-large max-w-3xl mx-auto">
-              From premium sauces to nutritious agro products - Y7 brings you quality, 
-              taste, and health benefits in every product we craft.
-            </p>
           </div>
 
           {/* Category Filter Section */}
@@ -413,13 +431,14 @@ const Products = () => {
                 const categoryProducts = allProducts.filter(p => p.category === category);
                 const firstProduct = categoryProducts[0];
                 const categoryImage = firstProduct?.image;
+                const categorySlug = categorySlugMap[category];
                 
                 return (
-                  <div
+                  <Link
                     key={category}
-                    onClick={() => scrollToCategory(category)}
+                    to={categorySlug ? `/category/${categorySlug}` : '#'}
                     className={`
-                      relative overflow-hidden rounded-lg border cursor-pointer transition-all duration-300 group
+                      relative overflow-hidden rounded-lg border cursor-pointer transition-all duration-300 group block
                       ${selectedCategory === category 
                         ? "border-gold bg-gold/10" 
                         : "border-gold/20 hover:border-gold/40"
@@ -469,6 +488,12 @@ const Products = () => {
                       <p className="text-cream/60 text-xs">
                         {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
                       </p>
+                      {categorySlug && (
+                        <div className="mt-2 flex items-center text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span>View Collection</span>
+                          <ArrowRight className="w-3 h-3 ml-1" />
+                        </div>
+                      )}
                     </div>
                     {selectedCategory === category && (
                       <div className="absolute top-2 right-2">
@@ -477,38 +502,77 @@ const Products = () => {
                         </Badge>
                       </div>
                     )}
-                  </div>
+                  </Link>
                 );
               })}
             </div>
             
             {/* Filter Buttons */}
             <div className="flex flex-wrap justify-center gap-3">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  onClick={() => scrollToCategory(category)}
-                  className={`
-                    ${selectedCategory === category 
-                      ? "bg-gold text-obsidian hover:bg-gold/90" 
-                      : "border-gold/30 text-gold hover:bg-gold/10"
-                    }
-                    transition-all duration-300
-                  `}
-                >
-                  {category}
-                  <Badge 
-                    variant="secondary" 
-                    className="ml-2 bg-obsidian/20 text-xs"
+              {categories.map((category) => {
+                const categorySlug = categorySlugMap[category];
+                const isAll = category === "All";
+                
+                if (isAll) {
+                  // "All" button scrolls on same page
+                  return (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      onClick={() => scrollToCategory(category)}
+                      className={`
+                        ${selectedCategory === category 
+                          ? "bg-gold text-obsidian hover:bg-gold/90" 
+                          : "border-gold/30 text-gold hover:bg-gold/10"
+                        }
+                        transition-all duration-300
+                      `}
+                    >
+                      {category}
+                      <Badge 
+                        variant="secondary" 
+                        className="ml-2 bg-obsidian/20 text-xs"
+                      >
+                        {allProducts.length}
+                      </Badge>
+                    </Button>
+                  );
+                }
+                
+                // Category buttons navigate to category page
+                return categorySlug ? (
+                  <Link key={category} to={`/category/${categorySlug}`}>
+                    <Button
+                      variant="outline"
+                      className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300"
+                    >
+                      {category}
+                      <Badge 
+                        variant="secondary" 
+                        className="ml-2 bg-obsidian/20 text-xs"
+                      >
+                        {allProducts.filter(p => p.category === category).length}
+                      </Badge>
+                      <ArrowRight className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    key={category}
+                    variant="outline"
+                    onClick={() => scrollToCategory(category)}
+                    className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300"
                   >
-                    {category === "All" 
-                      ? allProducts.length 
-                      : allProducts.filter(p => p.category === category).length
-                    }
-                  </Badge>
-                </Button>
-              ))}
+                    {category}
+                    <Badge 
+                      variant="secondary" 
+                      className="ml-2 bg-obsidian/20 text-xs"
+                    >
+                      {allProducts.filter(p => p.category === category).length}
+                    </Badge>
+                  </Button>
+                );
+              })}
             </div>
 
             {/* Results Count */}
@@ -621,10 +685,21 @@ const Products = () => {
 
                     {/* Action Buttons */}
                     <div className="flex flex-wrap gap-3">
+                      {product.slug && (
+                        <Link to={`/products/${product.slug}`}>
+                          <Button 
+                            variant="default" 
+                            className="bg-gold text-obsidian hover:bg-gold/90 transition-all duration-300"
+                          >
+                            <ArrowRight className="w-4 h-4 mr-2" />
+                            View Details
+                          </Button>
+                        </Link>
+                      )}
                       <Link to="/bulk-orders">
                         <Button 
-                          variant="default" 
-                          className="bg-gold text-obsidian hover:bg-gold/90 transition-all duration-300"
+                          variant="outline" 
+                          className="border-gold text-gold hover:bg-gold/10 transition-all duration-300"
                         >
                           Bulk Order
                         </Button>
@@ -632,17 +707,9 @@ const Products = () => {
                       <Link to="/contact">
                         <Button 
                           variant="outline" 
-                          className="border-gold text-gold hover:bg-gold/10 transition-all duration-300"
+                          className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300"
                         >
                           Get Quote
-                        </Button>
-                      </Link>
-                      <Link to="/export">
-                        <Button 
-                          variant="outline" 
-                          className="border-cream/30 text-cream hover:bg-cream/10 transition-all duration-300"
-                        >
-                          Export Inquiry
                         </Button>
                       </Link>
                     </div>

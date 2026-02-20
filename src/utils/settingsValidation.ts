@@ -11,14 +11,50 @@ export const validateSettings = (settings: any): ValidationError[] => {
     errors.push({ field: 'siteTitle', message: 'Site title is required' });
   }
 
-  // Email validation - more lenient
+  // Email validation - strict format checking
   if (!settings.supportEmail?.trim()) {
     errors.push({ field: 'supportEmail', message: 'Support email is required' });
   } else {
     const trimmedEmail = settings.supportEmail.trim();
-    // Very simple email validation - just check for @ and .
-    if (!trimmedEmail.includes('@') || !trimmedEmail.includes('.')) {
-      errors.push({ field: 'supportEmail', message: 'Please enter a valid email address' });
+    
+    // Comprehensive email validation
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    if (!emailPattern.test(trimmedEmail)) {
+      errors.push({ 
+        field: 'supportEmail', 
+        message: 'Please enter a valid email address (e.g., support@domain.com)' 
+      });
+    }
+    
+    // Check for common mistakes
+    if (trimmedEmail.includes('@gmail') && !trimmedEmail.includes('@gmail.')) {
+      errors.push({ 
+        field: 'supportEmail', 
+        message: 'Invalid Gmail format. Did you mean @gmail.com?' 
+      });
+    }
+    
+    if (trimmedEmail.includes('@yahoo') && !trimmedEmail.includes('@yahoo.')) {
+      errors.push({ 
+        field: 'supportEmail', 
+        message: 'Invalid Yahoo format. Did you mean @yahoo.com?' 
+      });
+    }
+    
+    if (trimmedEmail.includes('@hotmail') && !trimmedEmail.includes('@hotmail.')) {
+      errors.push({ 
+        field: 'supportEmail', 
+        message: 'Invalid Hotmail format. Did you mean @hotmail.com?' 
+      });
+    }
+    
+    // Check if email ends with a valid TLD
+    if (!trimmedEmail.match(/\.(com|net|org|in|co|edu|gov|io|ai|tech|info|biz)$/i)) {
+      errors.push({ 
+        field: 'supportEmail', 
+        message: 'Email must end with a valid domain extension (e.g., .com, .net, .in)' 
+      });
     }
   }
 

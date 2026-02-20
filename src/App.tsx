@@ -71,6 +71,7 @@ const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 
 // Product Pages
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
 
 // Payment Pages
 const PaymentSuccess = lazy(() => import("./pages/payment/PaymentSuccess"));
@@ -161,6 +162,13 @@ const App = () => {
                 <Layout>
                   <Suspense fallback={<PageLoader />}>
                     <ProductDetail />
+                  </Suspense>
+                </Layout>
+              } />
+              <Route path="/category/:slug" element={
+                <Layout>
+                  <Suspense fallback={<PageLoader />}>
+                    <CategoryPage />
                   </Suspense>
                 </Layout>
               } />

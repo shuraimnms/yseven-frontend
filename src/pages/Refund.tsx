@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 const Refund = () => {
+  const { supportEmail } = useGlobalSettings();
   return (
     <>
       <section className="relative py-32 lg:py-40 overflow-hidden pt-20">
@@ -33,7 +35,7 @@ const Refund = () => {
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold text-cream mb-4">How to Return</h2>
-                <p>To initiate a return, contact our customer service team at ysevenfoods@gmail.com with your order number. We'll provide return instructions and a prepaid shipping label.</p>
+                <p>To initiate a return, contact our customer service team at <a href={`mailto:${supportEmail}`} className="text-gold hover:underline">{supportEmail}</a> with your order number. We'll provide return instructions and a prepaid shipping label.</p>
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold text-cream mb-4">Refund Processing</h2>

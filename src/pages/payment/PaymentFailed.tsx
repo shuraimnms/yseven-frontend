@@ -3,9 +3,11 @@ import { XCircle, RefreshCw, ArrowLeft, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import SEO from '@/components/SEO';
+import { useGlobalSettings } from '@/hooks/useGlobalSettings';
 
 export default function PaymentFailed() {
   const [searchParams] = useSearchParams();
+  const { supportEmail, supportPhone } = useGlobalSettings();
   const orderId = searchParams.get('orderId');
   const reason = searchParams.get('reason') || 'Payment was not completed';
 
@@ -134,8 +136,8 @@ export default function PaymentFailed() {
 
             {/* Support Contact */}
             <p className="text-sm text-gray-400 mt-6">
-              Need immediate help? Call us at <span className="text-yellow-500">+91-XXXXXXXXXX</span> or 
-              email <span className="text-yellow-500">ysevenfoods@gmail.com</span>
+              Need immediate help? Call us at <span className="text-yellow-500">{supportPhone}</span> or 
+              email <a href={`mailto:${supportEmail}`} className="text-yellow-500 hover:underline">{supportEmail}</a>
             </p>
           </div>
         </div>

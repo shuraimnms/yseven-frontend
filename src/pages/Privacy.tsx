@@ -1,4 +1,7 @@
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
+
 const Privacy = () => {
+  const { supportEmail } = useGlobalSettings();
   return (
     <>
       <section className="relative py-32 lg:py-40 overflow-hidden pt-20">
@@ -30,7 +33,7 @@ const Privacy = () => {
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold text-cream mb-4">Your Rights</h2>
-                <p>You have the right to access, correct, or delete your personal information. Contact us at ysevenfoods@gmail.com for any privacy-related requests.</p>
+                <p>You have the right to access, correct, or delete your personal information. Contact us at <a href={`mailto:${supportEmail}`} className="text-gold hover:underline">{supportEmail}</a> for any privacy-related requests.</p>
               </div>
             </div>
           </div>

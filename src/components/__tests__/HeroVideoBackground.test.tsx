@@ -3,8 +3,8 @@ import { describe, it, expect } from 'vitest';
 import HeroVideoBackground from '../HeroVideoBackground';
 
 // Mock the video and image imports
-vi.mock('@/assets/hero-sauce.mp4', () => ({
-  default: 'mock-video.mp4'
+vi.mock('@/assets/hero-sauce.jpg', () => ({
+  default: 'mock-image.jpg'
 }));
 
 vi.mock('@/assets/hero-sauce.jpg', () => ({

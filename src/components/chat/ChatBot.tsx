@@ -8,6 +8,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { chatAPI } from '../../lib/api';
 import { useFormSubmission } from '../../hooks/useFormSubmission';
 import { ChatBotIcon } from './ChatBotIcon';
+import { useGlobalSettings } from '@/hooks/useGlobalSettings';
 import './ChatBot.css';
 import logoBotImage from '../../assets/logo-bot.png';
 
@@ -43,6 +44,7 @@ interface LeadFormData {
 }
 
 export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
+  const { supportEmail } = useGlobalSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -160,7 +162,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
       if (response.data.data.fallbackToHuman) {
         const supportMessage: Message = {
           id: (Date.now() + 2).toString(),
-          text: "For this request, please contact our team at ysevenfoods@gmail.com.",
+          text: `For this request, please contact our team at ${supportEmail}.`,
           sender: 'bot',
           timestamp: new Date(),
           quickReplies: ['Contact Support', 'Browse Products']
@@ -173,7 +175,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ className = '' }) => {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'For this request, please contact our team at ysevenfoods@gmail.com.',
+        text: `For this request, please contact our team at ${supportEmail}.`,
         sender: 'bot',
         timestamp: new Date(),
         quickReplies: ['Contact Support', 'Try Again']

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, memo } from 'react';
 import heroImage from '@/assets/hero-sauce.jpg';
-import heroVideo from '@/assets/hero-sauce.mp4';
+// Using Cloudinary hosted video for better performance and reduced storage
+const heroVideo = 'https://res.cloudinary.com/dzwaccyfv/video/upload/v1/hero-sauce_nzhlln.mp4';
 
 interface HeroVideoBackgroundProps {
   className?: string;

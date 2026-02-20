@@ -1,9 +1,11 @@
 import { Download, Mail, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSettings } from '@/hooks/useSettings';
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 const Press = () => {
   const { settings } = useSettings();
+  const { supportEmail } = useGlobalSettings();
   
   const pressReleases = [
     { title: "Y7 Announces Global Expansion Plans", date: "January 2026" },
@@ -78,11 +80,11 @@ const Press = () => {
                 </p>
                 <div className="space-y-3">
                   <a
-                    href="mailto:ysevenfoods@gmail.com"
+                    href={`mailto:${supportEmail}`}
                     className="flex items-center gap-2 text-gold hover:text-gold-light transition-colors"
                   >
                     <Mail className="w-4 h-4" />
-                    ysevenfoods@gmail.com
+                    {supportEmail}
                   </a>
                   <Button 
                     variant="outline" 

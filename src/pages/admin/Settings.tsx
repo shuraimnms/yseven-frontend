@@ -389,6 +389,127 @@ const SettingsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Contact Information */}
+          <Card className="bg-charcoal border-gold/20">
+            <CardHeader>
+              <CardTitle className="text-cream flex items-center">
+                <Mail className="w-5 h-5 mr-2" />
+                Contact Information
+              </CardTitle>
+              <CardDescription>Primary contact details displayed across the website</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="siteTitle" className="text-cream/80 flex items-center">
+                  <Globe className="w-4 h-4 mr-2" />
+                  Site Title
+                </Label>
+                <Input
+                  id="siteTitle"
+                  value={settings.siteTitle}
+                  onChange={(e) => handleInputChange('siteTitle', e.target.value)}
+                  className="bg-obsidian border-gold/20 text-cream mt-1"
+                  placeholder="Y7 Sauces"
+                />
+              </div>
+              <div>
+                <Label htmlFor="supportEmail" className="text-cream/80 flex items-center">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Support Email
+                </Label>
+                <Input
+                  id="supportEmail"
+                  type="email"
+                  value={settings.supportEmail}
+                  onChange={(e) => {
+                    const email = e.target.value;
+                    handleInputChange('supportEmail', email);
+                    
+                    // Real-time validation feedback
+                    const emailInput = e.target;
+                    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    
+                    if (email && !emailPattern.test(email)) {
+                      emailInput.setCustomValidity('Invalid email format');
+                    } else if (email.includes('@gmail') && !email.includes('@gmail.')) {
+                      emailInput.setCustomValidity('Did you mean @gmail.com?');
+                    } else if (email.includes('@yahoo') && !email.includes('@yahoo.')) {
+                      emailInput.setCustomValidity('Did you mean @yahoo.com?');
+                    } else if (email.includes('@hotmail') && !email.includes('@hotmail.')) {
+                      emailInput.setCustomValidity('Did you mean @hotmail.com?');
+                    } else if (email && !email.match(/\.(com|net|org|in|co|edu|gov|io|ai|tech|info|biz)$/i)) {
+                      emailInput.setCustomValidity('Email must end with valid domain (.com, .net, etc.)');
+                    } else {
+                      emailInput.setCustomValidity('');
+                    }
+                  }}
+                  onBlur={(e) => {
+                    // Auto-fix common mistakes on blur
+                    let email = e.target.value.trim();
+                    
+                    // Fix missing dot before com/net/org
+                    if (email.includes('@gmailcom')) {
+                      email = email.replace('@gmailcom', '@gmail.com');
+                      handleInputChange('supportEmail', email);
+                      toast({
+                        title: 'Email Auto-Fixed',
+                        description: 'Changed @gmailcom to @gmail.com',
+                      });
+                    } else if (email.includes('@yahoocom')) {
+                      email = email.replace('@yahoocom', '@yahoo.com');
+                      handleInputChange('supportEmail', email);
+                      toast({
+                        title: 'Email Auto-Fixed',
+                        description: 'Changed @yahoocom to @yahoo.com',
+                      });
+                    } else if (email.includes('@hotmailcom')) {
+                      email = email.replace('@hotmailcom', '@hotmail.com');
+                      handleInputChange('supportEmail', email);
+                      toast({
+                        title: 'Email Auto-Fixed',
+                        description: 'Changed @hotmailcom to @hotmail.com',
+                      });
+                    }
+                  }}
+                  className="bg-obsidian border-gold/20 text-cream mt-1"
+                  placeholder="support@y7sauces.com"
+                  required
+                />
+                <p className="text-xs text-cream/40 mt-1">
+                  This email will be displayed in footer, contact pages, and all customer communications
+                </p>
+              </div>
+              <div>
+                <Label htmlFor="supportPhone" className="text-cream/80 flex items-center">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Support Phone
+                </Label>
+                <Input
+                  id="supportPhone"
+                  type="tel"
+                  value={settings.supportPhone}
+                  onChange={(e) => handleInputChange('supportPhone', e.target.value)}
+                  className="bg-obsidian border-gold/20 text-cream mt-1"
+                  placeholder="+91 9876543210"
+                />
+              </div>
+              <div>
+                <Label htmlFor="officeAddress" className="text-cream/80 flex items-center">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Office Address
+                </Label>
+                <Textarea
+                  id="officeAddress"
+                  value={settings.officeAddress}
+                  onChange={(e) => handleInputChange('officeAddress', e.target.value)}
+                  className="bg-obsidian border-gold/20 text-cream mt-1"
+                  rows={3}
+                  placeholder="Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Social Media */}
           <Card className="bg-charcoal border-gold/20">
             <CardHeader>

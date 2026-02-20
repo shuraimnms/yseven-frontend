@@ -30,11 +30,12 @@ const SEO: React.FC<SEOProps> = ({
   noIndex = false,
   noFollow = false,
 }) => {
-  const { siteTitle, supportPhone, socialMedia } = useGlobalSettings();
+  const { siteTitle, supportPhone, supportEmail, socialMedia } = useGlobalSettings();
 
   // Provide fallback values
   const safeSiteTitle = siteTitle || 'Y7 Sauces';
   const safeSupportPhone = supportPhone || '+91 9876543210';
+  const safeSupportEmail = supportEmail || 'y.sevenfoods@gmail.com';
   const safeSocialMedia = socialMedia || {
     facebook: 'https://facebook.com/y7sauces',
     instagram: 'https://instagram.com/y7sauces',
@@ -75,7 +76,7 @@ const SEO: React.FC<SEOProps> = ({
       {
         "@type": "ContactPoint",
         "contactType": "sales",
-        "email": "ysevenfoods@gmail.com",
+        "email": safeSupportEmail,
         "availableLanguage": ["English"]
       }
     ],
