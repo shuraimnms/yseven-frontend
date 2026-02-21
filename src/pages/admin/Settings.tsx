@@ -123,7 +123,8 @@ const SettingsPage = () => {
         const data = await response.json();
         if (data.data) {
           console.log('📥 Fetched settings from API');
-          setSettings(data.data);
+          const { supportEmail: _deprecatedSupportEmail, ...sanitizedSettings } = data.data;
+          setSettings(sanitizedSettings as SiteSettings);
           setLastUpdated(new Date(data.data.updatedAt || new Date()));
         }
       } else {
@@ -150,8 +151,9 @@ const SettingsPage = () => {
   const saveSettings = async () => {
     try {
       console.log('💾 Attempting to save settings...');      
+      const { supportEmail: _deprecatedSupportEmail, ...sanitizedSettings } = settings as SiteSettings & { supportEmail?: string };
       const payload = {
-        ...settings,
+        ...sanitizedSettings,
         siteTitle: settings.siteTitle.trim(),
         supportPhone: settings.supportPhone.trim(),
         officeAddress: settings.officeAddress.trim()
