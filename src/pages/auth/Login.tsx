@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuthStore } from '@/store/authStore';
 import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
+import authTextureImage from '@/assets/hero-sauce.jpg';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -65,7 +66,10 @@ const Login = () => {
     <>
       <SEO {...seoData} />
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-[url('/sauce-texture.jpg')] bg-cover bg-center opacity-5" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-5"
+          style={{ backgroundImage: `url(${authTextureImage})` }}
+        />
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}

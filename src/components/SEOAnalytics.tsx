@@ -11,6 +11,7 @@ declare global {
 
 interface SEOAnalyticsProps {
   trackingId?: string;
+  gtmId?: string;
   enableGoogleAnalytics?: boolean;
   enableGoogleTagManager?: boolean;
   enableFacebookPixel?: boolean;
@@ -18,17 +19,22 @@ interface SEOAnalyticsProps {
 }
 
 const SEOAnalytics = ({
-  trackingId = 'G-XXXXXXXXXX', // Replace with actual GA4 tracking ID
+  trackingId = '',
+  gtmId = '',
   enableGoogleAnalytics = true,
-  enableGoogleTagManager = true,
+  enableGoogleTagManager = false,
   enableFacebookPixel = false,
   enableLinkedInInsight = false
 }: SEOAnalyticsProps) => {
   const location = useLocation();
+  const hasValidTrackingId = /^G-[A-Z0-9]+$/i.test(trackingId) && !trackingId.includes('XXXX');
+  const hasValidGtmId = /^GTM-[A-Z0-9]+$/i.test(gtmId) && !gtmId.includes('XXXX');
+  const shouldEnableGoogleAnalytics = enableGoogleAnalytics && hasValidTrackingId;
+  const shouldEnableGoogleTagManager = enableGoogleTagManager && hasValidGtmId;
 
   useEffect(() => {
     // Initialize Google Analytics 4
-    if (enableGoogleAnalytics && trackingId) {
+    if (shouldEnableGoogleAnalytics) {
       // Load GA4 script
       const script = document.createElement('script');
       script.async = true;
@@ -50,21 +56,21 @@ const SEOAnalytics = ({
     }
 
     // Initialize Google Tag Manager
-    if (enableGoogleTagManager) {
+    if (shouldEnableGoogleTagManager) {
       const gtmScript = document.createElement('script');
       gtmScript.innerHTML = `
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-XXXXXXX');
+        })(window,document,'script','dataLayer','${gtmId}');
       `;
       document.head.appendChild(gtmScript);
 
       // Add GTM noscript fallback
       const noscript = document.createElement('noscript');
       noscript.innerHTML = `
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+        <iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
         height="0" width="0" style="display:none;visibility:hidden"></iframe>
       `;
       document.body.appendChild(noscript);
@@ -107,7 +113,7 @@ const SEOAnalytics = ({
 
   // Track page views on route changes
   useEffect(() => {
-    if (enableGoogleAnalytics && window.gtag) {
+    if (shouldEnableGoogleAnalytics && window.gtag) {
       window.gtag('config', trackingId, {
         page_title: document.title,
         page_location: window.location.href,
@@ -116,7 +122,7 @@ const SEOAnalytics = ({
     }
 
     // Track page view in GTM
-    if (enableGoogleTagManager && window.dataLayer) {
+    if (shouldEnableGoogleTagManager && window.dataLayer) {
       window.dataLayer.push({
         event: 'page_view',
         page_title: document.title,
@@ -129,7 +135,7 @@ const SEOAnalytics = ({
     if (enableFacebookPixel && (window as any).fbq) {
       (window as any).fbq('track', 'PageView');
     }
-  }, [location, trackingId, enableGoogleAnalytics, enableGoogleTagManager, enableFacebookPixel]);
+  }, [location, trackingId, enableFacebookPixel, shouldEnableGoogleAnalytics, shouldEnableGoogleTagManager]);
 
   return null; // This component doesn't render anything
 };

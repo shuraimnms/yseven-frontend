@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuthStore } from '@/store/authStore';
 import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
+import authTextureImage from '@/assets/hero-sauce.jpg';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -80,7 +81,10 @@ const Register = () => {
     <>
       <SEO {...seoData} />
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-[url('/sauce-texture.jpg')] bg-cover bg-center opacity-5" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-5"
+          style={{ backgroundImage: `url(${authTextureImage})` }}
+        />
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}

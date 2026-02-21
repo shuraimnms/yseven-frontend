@@ -206,7 +206,7 @@ export default function Checkout() {
         order_id: razorpayOrderId,
         name: 'Y7 Sauces',
         description: 'Premium Sauces & Condiments',
-        image: '/favicon.png',
+        image: '/favicon.ico',
         handler: async (response: any) => {
           // Payment successful
           toast.success('Payment successful! Redirecting...');

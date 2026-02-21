@@ -1,27 +1,14 @@
 // Performance optimization utilities
 
+const CRITICAL_LOGO_URL = new URL('../assets/logo.png', import.meta.url).href;
+const CRITICAL_HERO_URL = new URL('../assets/hero-sauce.jpg', import.meta.url).href;
+
 // Preload critical resources
 export const preloadCriticalResources = () => {
-  // Preload critical fonts
-  const fontPreloads = [
-    '/fonts/inter-var.woff2',
-    '/fonts/playfair-display.woff2'
-  ];
-
-  fontPreloads.forEach(font => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href = font;
-    link.as = 'font';
-    link.type = 'font/woff2';
-    link.crossOrigin = 'anonymous';
-    document.head.appendChild(link);
-  });
-
   // Preload critical images
   const criticalImages = [
-    '/logo.png',
-    '/hero-sauce.jpg'
+    CRITICAL_LOGO_URL,
+    CRITICAL_HERO_URL
   ];
 
   criticalImages.forEach(src => {

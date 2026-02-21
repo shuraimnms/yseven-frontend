@@ -99,6 +99,8 @@ const PageLoader = () => (
 
 const App = () => {
   const { checkAuth } = useAuthStore();
+  const gaTrackingId = import.meta.env.VITE_GA_TRACKING_ID || '';
+  const gtmId = import.meta.env.VITE_GTM_ID || '';
 
   useEffect(() => {
     checkAuth();
@@ -120,9 +122,10 @@ const App = () => {
               <Sonner />
               <BrowserRouter>
             <SEOAnalytics 
-              trackingId="G-XXXXXXXXXX" 
-              enableGoogleAnalytics={true}
-              enableGoogleTagManager={true}
+              trackingId={gaTrackingId}
+              gtmId={gtmId}
+              enableGoogleAnalytics={Boolean(gaTrackingId)}
+              enableGoogleTagManager={Boolean(gtmId)}
             />
             <ScrollToTop />
             <ScrollRestoration />

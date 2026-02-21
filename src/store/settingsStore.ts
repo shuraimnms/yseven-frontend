@@ -118,7 +118,7 @@ export const useSettingsStore = create<SettingsStore>()(
           setLoading(true);
           console.log('🔄 Fetching settings from API...');
 
-          const response = await apiFetch('/settings/public');
+          const response = await apiFetch('/admin/settings/public');
 
           if (response.ok) {
             const data = await response.json();

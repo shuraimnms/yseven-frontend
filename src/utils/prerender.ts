@@ -89,7 +89,7 @@ export const generateStaticHTML = (
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   ${metaTags}
   ${schemas}
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <style>
     body { 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
