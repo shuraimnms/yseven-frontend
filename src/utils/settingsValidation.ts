@@ -11,22 +11,6 @@ export const validateSettings = (settings: any): ValidationError[] => {
     errors.push({ field: 'siteTitle', message: 'Site title is required' });
   }
 
-  // Email validation
-  if (!settings.supportEmail?.trim()) {
-    errors.push({ field: 'supportEmail', message: 'Support email is required' });
-  } else {
-    const trimmedEmail = settings.supportEmail.trim().toLowerCase();
-    
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    
-    if (!emailPattern.test(trimmedEmail)) {
-      errors.push({ 
-        field: 'supportEmail', 
-        message: 'Please enter a valid email address (e.g., support@domain.com)' 
-      });
-    }
-  }
-
   if (!settings.supportPhone?.trim()) {
     errors.push({ field: 'supportPhone', message: 'Support phone is required' });
   }

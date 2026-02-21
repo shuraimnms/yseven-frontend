@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useSettingsStore } from '@/store/settingsStore';
 
+const SUPPORT_EMAIL_FALLBACK = 'ysevenfoods@gmail.com';
+
 export const useGlobalSettings = (autoFetch = true) => {
   const { 
     settings, 
@@ -34,7 +36,7 @@ export const useGlobalSettings = (autoFetch = true) => {
     refreshSettings: fetchSettings,
     // Convenience getters with fallbacks
     siteTitle: settings?.siteTitle || 'Y7 Sauces',
-    supportEmail: settings?.supportEmail || 'ysevenfoods@gmail.com',
+    supportEmail: SUPPORT_EMAIL_FALLBACK,
     supportPhone: settings?.supportPhone || '+91 9876543210',
     officeAddress: settings?.officeAddress || 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
     socialMedia: settings?.socialMedia || {

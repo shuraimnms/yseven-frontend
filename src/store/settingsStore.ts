@@ -4,7 +4,6 @@ import { apiFetch } from '@/utils/apiUtils';
 
 export interface GlobalSettings {
   siteTitle: string;
-  supportEmail: string;
   supportPhone: string;
   officeAddress: string;
   socialMedia: {
@@ -48,7 +47,6 @@ interface SettingsStore {
 
 const DEFAULT_SETTINGS: GlobalSettings = {
   siteTitle: 'Y7 Sauces',
-  supportEmail: 'ysevenfoods@gmail.com',
   supportPhone: '+91 9876543210',
   officeAddress: 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
   socialMedia: {
@@ -124,9 +122,7 @@ export const useSettingsStore = create<SettingsStore>()(
             const data = await response.json();
             if (data.data) {
               setSettings(data.data);
-              console.log('✅ Global settings updated across entire website:', data.data.siteTitle);
-              console.log('📧 Support Email:', data.data.supportEmail);
-              
+              console.log('✅ Global settings updated across entire website:', data.data.siteTitle);              
               // Trigger a custom event to notify all components
               window.dispatchEvent(new CustomEvent('settingsUpdated', { detail: data.data }));
             }
@@ -160,3 +156,4 @@ export const useSettingsStore = create<SettingsStore>()(
     }
   )
 );
+

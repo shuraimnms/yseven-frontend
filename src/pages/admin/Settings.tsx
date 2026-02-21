@@ -5,7 +5,6 @@ import {
   Save,
   RefreshCw,
   Globe,
-  Mail,
   Phone,
   MapPin,
   Facebook,
@@ -34,12 +33,11 @@ import SEO from '@/components/SEO';
 import { generateSEO } from '@/lib/seo';
 import { getApiBaseUrl } from '@/lib/api';
 import Cookies from 'js-cookie';
-import { validateSettings, ValidationError } from '@/utils/settingsValidation';
+import { validateSettings } from '@/utils/settingsValidation';
 import { useSettingsStore } from '@/store/settingsStore';
 
 interface SiteSettings {
   siteTitle: string;
-  supportEmail: string;
   supportPhone: string;
   officeAddress: string;
   socialMedia: {
@@ -73,7 +71,6 @@ interface SiteSettings {
 const SettingsPage = () => {
   const [settings, setSettings] = useState<SiteSettings>({
     siteTitle: 'Y7 Sauces',
-    supportEmail: 'ysevenfoods@gmail.com',
     supportPhone: '+91 9876543210',
     officeAddress: 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
     socialMedia: {
@@ -126,7 +123,6 @@ const SettingsPage = () => {
         const data = await response.json();
         if (data.data) {
           console.log('📥 Fetched settings from API');
-          console.log('📧 Email from API:', data.data.supportEmail);
           setSettings(data.data);
           setLastUpdated(new Date(data.data.updatedAt || new Date()));
         }
@@ -153,13 +149,10 @@ const SettingsPage = () => {
 
   const saveSettings = async () => {
     try {
-      console.log('💾 Attempting to save settings...');
-      console.log('📧 Email being saved:', settings.supportEmail);
-      
+      console.log('💾 Attempting to save settings...');      
       const payload = {
         ...settings,
         siteTitle: settings.siteTitle.trim(),
-        supportEmail: settings.supportEmail.trim().toLowerCase(),
         supportPhone: settings.supportPhone.trim(),
         officeAddress: settings.officeAddress.trim()
       };
@@ -197,9 +190,7 @@ const SettingsPage = () => {
       }
 
       const data = await response.json();
-      console.log('✅ Save successful, response data:', data.data);
-      console.log('📧 Email in response:', data.data.supportEmail);
-      
+      console.log('✅ Save successful, response data:', data.data);      
       setLastUpdated(new Date(data.data?.updatedAt || new Date()));
 
       // CRITICAL: Update global settings store with timestamp to force refresh
@@ -209,9 +200,7 @@ const SettingsPage = () => {
         _forceUpdate: Date.now() // Add unique timestamp to force update
       };
       
-      console.log('📤 Broadcasting updated settings...');
-      console.log('📧 Email in broadcast:', updatedSettings.supportEmail);
-      
+      console.log('📤 Broadcasting updated settings...');      
       setGlobalSettings(updatedSettings);
       
       // Force immediate refresh across all open tabs/windows
@@ -243,9 +232,7 @@ const SettingsPage = () => {
       });
       
       console.log('✅ Settings saved and broadcasted to all pages');
-      console.log('📢 Updated settings:', updatedSettings);
-      console.log('📧 New email:', updatedSettings.supportEmail);
-      
+      console.log('📢 Updated settings:', updatedSettings);      
     } catch (error: any) {
       console.error('Settings save error:', error);
       toast({
@@ -401,7 +388,7 @@ const SettingsPage = () => {
           <Card className="bg-charcoal border-gold/20">
             <CardHeader>
               <CardTitle className="text-cream flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
+                <Phone className="w-5 h-5 mr-2" />
                 Contact Information
               </CardTitle>
               <CardDescription>Primary contact details displayed across the website</CardDescription>
@@ -419,65 +406,6 @@ const SettingsPage = () => {
                   className="bg-obsidian border-gold/20 text-cream mt-1"
                   placeholder="Y7 Sauces"
                 />
-              </div>
-              <div>
-                <Label htmlFor="supportEmail" className="text-cream/80 flex items-center">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Support Email
-                </Label>
-                <Input
-                  id="supportEmail"
-                  type="email"
-                  value={settings.supportEmail}
-                  onChange={(e) => {
-                    const email = e.target.value;
-                    handleInputChange('supportEmail', email);
-                    
-                    // Real-time validation feedback
-                    const emailInput = e.target;
-                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-                    
-                    if (email && !emailPattern.test(email)) {
-                      emailInput.setCustomValidity('Invalid email format');
-                    } else {
-                      emailInput.setCustomValidity('');
-                    }
-                  }}
-                  onBlur={(e) => {
-                    // Auto-fix common mistakes on blur
-                    let email = e.target.value.trim();
-                    
-                    // Fix missing dot before com/net/org
-                    if (email.includes('@gmailcom')) {
-                      email = email.replace('@gmailcom', '@gmail.com');
-                      handleInputChange('supportEmail', email);
-                      toast({
-                        title: 'Email Auto-Fixed',
-                        description: 'Changed @gmailcom to @gmail.com',
-                      });
-                    } else if (email.includes('@yahoocom')) {
-                      email = email.replace('@yahoocom', '@yahoo.com');
-                      handleInputChange('supportEmail', email);
-                      toast({
-                        title: 'Email Auto-Fixed',
-                        description: 'Changed @yahoocom to @yahoo.com',
-                      });
-                    } else if (email.includes('@hotmailcom')) {
-                      email = email.replace('@hotmailcom', '@hotmail.com');
-                      handleInputChange('supportEmail', email);
-                      toast({
-                        title: 'Email Auto-Fixed',
-                        description: 'Changed @hotmailcom to @hotmail.com',
-                      });
-                    }
-                  }}
-                  className="bg-obsidian border-gold/20 text-cream mt-1"
-                  placeholder="support@y7sauces.com"
-                  required
-                />
-                <p className="text-xs text-cream/40 mt-1">
-                  This email will be displayed in footer, contact pages, and all customer communications
-                </p>
               </div>
               <div>
                 <Label htmlFor="supportPhone" className="text-cream/80 flex items-center">
@@ -849,4 +777,6 @@ const SettingsPage = () => {
 };
 
 export default SettingsPage;
+
+
 
