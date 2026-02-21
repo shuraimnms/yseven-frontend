@@ -139,7 +139,7 @@ const SettingsPage = () => {
         });
       }
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Settings fetch error:', error);
       // Keep default settings if fetch fails
       toast({
@@ -156,8 +156,16 @@ const SettingsPage = () => {
       console.log('💾 Attempting to save settings...');
       console.log('📧 Email being saved:', settings.supportEmail);
       
+      const payload = {
+        ...settings,
+        siteTitle: settings.siteTitle.trim(),
+        supportEmail: settings.supportEmail.trim().toLowerCase(),
+        supportPhone: settings.supportPhone.trim(),
+        officeAddress: settings.officeAddress.trim()
+      };
+      
       // Validate settings before saving
-      const validationErrors = validateSettings(settings);
+      const validationErrors = validateSettings(payload);
       if (validationErrors.length > 0) {
         console.error('❌ Validation failed:', validationErrors);
         toast({
@@ -177,15 +185,15 @@ const SettingsPage = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${Cookies.get('accessToken')}`
         },
-        body: JSON.stringify(settings)
+        body: JSON.stringify(payload)
       });
 
       console.log('📡 Save response status:', response.status);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => null);
         console.error('❌ Save failed:', errorData);
-        throw new Error('Failed to save settings');
+        throw new Error(errorData?.message || 'Failed to save settings');
       }
 
       const data = await response.json();
@@ -238,11 +246,11 @@ const SettingsPage = () => {
       console.log('📢 Updated settings:', updatedSettings);
       console.log('📧 New email:', updatedSettings.supportEmail);
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Settings save error:', error);
       toast({
         title: 'Error',
-        description: 'Failed to save settings',
+        description: error?.message || 'Failed to save settings',
         variant: 'destructive',
       });
     } finally {
@@ -279,7 +287,7 @@ const SettingsPage = () => {
         window.location.reload();
       }, 1000);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Clear cache error:', error);
       toast({
         title: 'Error',
@@ -427,18 +435,10 @@ const SettingsPage = () => {
                     
                     // Real-time validation feedback
                     const emailInput = e.target;
-                    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
                     
                     if (email && !emailPattern.test(email)) {
                       emailInput.setCustomValidity('Invalid email format');
-                    } else if (email.includes('@gmail') && !email.includes('@gmail.')) {
-                      emailInput.setCustomValidity('Did you mean @gmail.com?');
-                    } else if (email.includes('@yahoo') && !email.includes('@yahoo.')) {
-                      emailInput.setCustomValidity('Did you mean @yahoo.com?');
-                    } else if (email.includes('@hotmail') && !email.includes('@hotmail.')) {
-                      emailInput.setCustomValidity('Did you mean @hotmail.com?');
-                    } else if (email && !email.match(/\.(com|net|org|in|co|edu|gov|io|ai|tech|info|biz)$/i)) {
-                      emailInput.setCustomValidity('Email must end with valid domain (.com, .net, etc.)');
                     } else {
                       emailInput.setCustomValidity('');
                     }
@@ -849,3 +849,4 @@ const SettingsPage = () => {
 };
 
 export default SettingsPage;
+
