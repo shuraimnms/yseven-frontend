@@ -1,67 +1,36 @@
 import { useState, useEffect, useRef, memo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
-import LazyImage from '@/components/LazyImage';
 import { categoryData, Category, Product } from '../data/categoryData';
+import { productsData, ProductDetailsSections } from './ProductDetail';
 
 // Memoized product card component for better performance
-const ProductCard = memo(({ product, index, productRef }: { 
+const ProductCard = memo(({ product, productRef }: {
   product: Product; 
-  index: number; 
   productRef: (el: HTMLElement | null) => void;
 }) => {
+  const fullProduct = productsData.find((item) => item.slug === product.slug);
+
   return (
     <article
       ref={productRef}
       id={product.id}
       data-product-id={product.id}
-      className="scroll-mt-32"
+      className="scroll-mt-24" // Reduced from scroll-mt-32 for better detection
     >
-      <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-        {/* Product Image */}
-        <div className={`${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-          <div className="relative group">
-            <div className="aspect-square overflow-hidden rounded-2xl shadow-2xl">
-              <LazyImage
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            {product.badge && (
-              <div className="absolute top-4 right-4">
-                <Badge className="bg-gold text-obsidian px-3 py-1 text-sm shadow-lg">
-                  {product.badge}
-                </Badge>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Product Details */}
-        <div className={`${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-          <h2 className="text-3xl lg:text-4xl font-bold text-cream mb-4">
-            {product.name}
-          </h2>
-          
-          <p className="text-lg text-cream/80 mb-6 leading-relaxed">
-            {product.shortDescription}
-          </p>
-
+      {fullProduct ? (
+        <ProductDetailsSections product={fullProduct} bulkInquiryId={`bulk-inquiry-${product.slug}`} />
+      ) : (
+        <div className="rounded-2xl border border-gold/20 bg-charcoal/30 p-8">
+          <h2 className="text-3xl font-bold text-cream mb-4">{product.name}</h2>
+          <p className="text-cream/80 mb-6">{product.shortDescription}</p>
           <Link to={`/products/${product.slug}`}>
-            <Button
-              size="lg"
-              className="bg-gold hover:bg-gold/90 text-obsidian font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              View Details
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+            <Button className="bg-gold hover:bg-gold/90 text-obsidian">View Details</Button>
           </Link>
         </div>
-      </div>
+      )}
     </article>
   );
 });
@@ -96,32 +65,99 @@ const CategoryPage = () => {
 
   // Intersection Observer for scroll spy
   useEffect(() => {
+    // Clean up previous observer
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
     observerRef.current = new IntersectionObserver(
       (entries) => {
+        // Find the entry with the highest intersection ratio
+        let maxRatio = 0;
+        let activeEntry = null;
+
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-            const productId = entry.target.getAttribute('data-product-id');
-            if (productId) {
-              setActiveProductId(productId);
-            }
+          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio;
+            activeEntry = entry;
           }
         });
+
+        // Update active product if we found one
+        if (activeEntry) {
+          const productId = activeEntry.target.getAttribute('data-product-id');
+          if (productId && productId !== activeProductId) {
+            setActiveProductId(productId);
+          }
+        }
       },
       {
-        threshold: 0.6,
-        rootMargin: '-100px 0px -100px 0px'
+        threshold: [0.1, 0.3, 0.5, 0.7, 0.9], // Multiple thresholds for better detection
+        rootMargin: '-80px 0px -80px 0px' // Reduced margin for better detection
       }
     );
 
-    // Observe all product sections
-    Object.values(productRefs.current).forEach((ref) => {
-      if (ref) observerRef.current?.observe(ref);
-    });
+    // Small delay to ensure DOM elements are ready
+    const timeoutId = setTimeout(() => {
+      // Observe all product sections
+      Object.values(productRefs.current).forEach((ref) => {
+        if (ref && observerRef.current) {
+          observerRef.current.observe(ref);
+        }
+      });
+    }, 100);
 
     return () => {
+      clearTimeout(timeoutId);
       observerRef.current?.disconnect();
     };
   }, [category.products]);
+
+  // Backup scroll spy using scroll event (fallback)
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      
+      // Find the product section that's currently in view
+      let currentProductId = '';
+      let minDistance = Infinity;
+
+      Object.entries(productRefs.current).forEach(([productId, ref]) => {
+        if (ref) {
+          const rect = ref.getBoundingClientRect();
+          const elementCenter = rect.top + window.scrollY + rect.height / 2;
+          const distance = Math.abs(scrollPosition - elementCenter);
+          
+          if (distance < minDistance) {
+            minDistance = distance;
+            currentProductId = productId;
+          }
+        }
+      });
+
+      if (currentProductId && currentProductId !== activeProductId) {
+        setActiveProductId(currentProductId);
+      }
+    };
+
+    // Throttle scroll events
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+    };
+  }, [activeProductId, category.products]);
 
   // Video lazy loading and pause on scroll
   useEffect(() => {
@@ -153,7 +189,10 @@ const CategoryPage = () => {
   const scrollToProduct = (productId: string) => {
     const element = productRefs.current[productId];
     if (element) {
-      const offset = 120;
+      // Update active product immediately for better UX
+      setActiveProductId(productId);
+      
+      const offset = 100; // Reduced offset to match scroll-mt-24
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -265,10 +304,10 @@ const CategoryPage = () => {
                       key={product.id}
                       onClick={() => scrollToProduct(product.id)}
                       className={`
-                        w-full text-left px-4 py-3 rounded-lg transition-all duration-300
+                        w-full text-left px-4 py-3 rounded-lg transition-all duration-300 relative
                         ${activeProductId === product.id
-                          ? 'bg-gold/10 border-l-4 border-gold font-semibold text-cream'
-                          : 'hover:bg-charcoal text-cream/70 hover:text-cream border-l-4 border-transparent'
+                          ? 'bg-gradient-to-r from-gold/20 to-gold/10 border-l-4 border-gold font-semibold text-gold shadow-lg shadow-gold/20'
+                          : 'hover:bg-charcoal/50 text-cream/70 hover:text-cream border-l-4 border-transparent hover:border-gold/30'
                         }
                       `}
                     >
@@ -281,11 +320,10 @@ const CategoryPage = () => {
 
             {/* Right Content - Product Sections */}
             <div className="space-y-24 lg:space-y-32">
-              {category.products.map((product, index) => (
+              {category.products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
-                  index={index}
                   productRef={(el: HTMLElement | null) => {
                     productRefs.current[product.id] = el;
                   }}

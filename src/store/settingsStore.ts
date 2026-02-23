@@ -46,20 +46,20 @@ interface SettingsStore {
 }
 
 const DEFAULT_SETTINGS: GlobalSettings = {
-  siteTitle: 'Y7 Sauces',
+  siteTitle: 'YSeven Foods',
   supportPhone: '+91 9876543210',
-  officeAddress: 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
+  officeAddress: 'YSeven Foods Pvt Ltd, Bangalore, Karnataka, India',
   socialMedia: {
-    facebook: 'https://facebook.com/y7sauces',
-    instagram: 'https://instagram.com/y7sauces',
-    twitter: 'https://twitter.com/y7sauces',
-    youtube: 'https://youtube.com/@y7sauces'
+    facebook: 'https://facebook.com/ysevenfoods',
+    instagram: 'https://instagram.com/ysevenfoods',
+    twitter: 'https://twitter.com/ysevenfoods',
+    youtube: 'https://youtube.com/@ysevenfoods'
   },
   socialMediaHandles: {
-    facebook: 'y7sauces',
-    instagram: 'y7sauces',
-    twitter: 'y7sauces',
-    youtube: 'y7sauces'
+    facebook: 'ysevenfoods',
+    instagram: 'ysevenfoods',
+    twitter: 'ysevenfoods',
+    youtube: 'ysevenfoods'
   },
   taxRate: 18,
   shippingRules: {

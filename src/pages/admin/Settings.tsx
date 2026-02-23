@@ -72,18 +72,18 @@ const SettingsPage = () => {
   const [settings, setSettings] = useState<SiteSettings>({
     siteTitle: 'Y7 Sauces',
     supportPhone: '+91 9876543210',
-    officeAddress: 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
+    officeAddress: 'YSeven Foods Pvt Ltd, Bangalore, Karnataka, India',
     socialMedia: {
-      facebook: 'https://facebook.com/y7sauces',
-      instagram: 'https://instagram.com/y7sauces',
-      twitter: 'https://twitter.com/y7sauces',
-      youtube: 'https://youtube.com/@y7sauces'
+      facebook: 'https://facebook.com/ysevenfoods',
+      instagram: 'https://instagram.com/ysevenfoods',
+      twitter: 'https://twitter.com/ysevenfoods',
+      youtube: 'https://youtube.com/@ysevenfoods'
     },
     socialMediaHandles: {
-      facebook: 'y7sauces',
-      instagram: 'y7sauces',
-      twitter: 'y7sauces',
-      youtube: 'y7sauces'
+      facebook: 'ysevenfoods',
+      instagram: 'ysevenfoods',
+      twitter: 'ysevenfoods',
+      youtube: 'ysevenfoods'
     },
     taxRate: 18,
     shippingRules: {
@@ -523,7 +523,7 @@ const SettingsPage = () => {
                     value={settings.socialMediaHandles.facebook}
                     onChange={(e) => handleNestedInputChange('socialMediaHandles', 'facebook', e.target.value)}
                     className="bg-obsidian border-gold/20 text-cream"
-                    placeholder="y7sauces"
+                    placeholder="ysevenfoods"
                   />
                 </div>
               </div>
@@ -539,7 +539,7 @@ const SettingsPage = () => {
                     value={settings.socialMediaHandles.instagram}
                     onChange={(e) => handleNestedInputChange('socialMediaHandles', 'instagram', e.target.value)}
                     className="bg-obsidian border-gold/20 text-cream"
-                    placeholder="y7sauces"
+                    placeholder="ysevenfoods"
                   />
                 </div>
               </div>
@@ -555,7 +555,7 @@ const SettingsPage = () => {
                     value={settings.socialMediaHandles.twitter}
                     onChange={(e) => handleNestedInputChange('socialMediaHandles', 'twitter', e.target.value)}
                     className="bg-obsidian border-gold/20 text-cream"
-                    placeholder="y7sauces"
+                    placeholder="ysevenfoods"
                   />
                 </div>
               </div>
@@ -571,7 +571,7 @@ const SettingsPage = () => {
                     value={settings.socialMediaHandles.youtube}
                     onChange={(e) => handleNestedInputChange('socialMediaHandles', 'youtube', e.target.value)}
                     className="bg-obsidian border-gold/20 text-cream"
-                    placeholder="y7sauces"
+                    placeholder="ysevenfoods"
                   />
                 </div>
               </div>

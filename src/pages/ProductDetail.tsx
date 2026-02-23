@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Phone, Mail, MessageCircle, Package, Truck, Award, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,8 +38,52 @@ import guavaPowder from '@/assets/Guava-Powder.png';
 import sweetPotatoPowder from '@/assets/Sweet-Potato-Powder.png';
 import chikooSapotaPowder from '@/assets/Chikoo(Sapota)-Powder.png';
 
+interface ProductVariant {
+  size: string;
+  netWeight: string;
+  packaging: string;
+  cartonQty: string;
+}
+
+interface ProductNutrition {
+  nutrient: string;
+  per100g: string;
+}
+
+interface ProductUsage {
+  title: string;
+  description: string;
+}
+
+interface ProductFAQ {
+  question: string;
+  answer: string;
+}
+
+export interface ProductData {
+  id: number;
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  category: string;
+  image: string;
+  videoSrc?: string;
+  hasVideo: boolean;
+  keyFeatures: string[];
+  shelfLife: string;
+  storage: string;
+  variants: ProductVariant[];
+  moq: string;
+  privateLabeling: boolean;
+  exportQuality: boolean;
+  nutritionalInfo: ProductNutrition[];
+  usageImages: ProductUsage[];
+  faqs: ProductFAQ[];
+}
+
 // Product data with variants
-const productsData = [
+export const productsData: ProductData[] = [
   {
     id: 1,
     slug: 'tomato-ketchup',
@@ -520,9 +564,13 @@ productsData.push(
   }))
 );
 
-export default function ProductDetail() {
-  const { slug } = useParams();
-  const navigate = useNavigate();
+export function ProductDetailsSections({
+  product,
+  bulkInquiryId = 'bulk-inquiry'
+}: {
+  product: ProductData;
+  bulkInquiryId?: string;
+}) {
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [formData, setFormData] = useState({
     name: '',
@@ -532,6 +580,448 @@ export default function ProductDetail() {
     quantity: '',
     message: ''
   });
+
+  const currentVariant = product.variants[selectedVariant];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log('Form submitted:', formData);
+    // You can add your form submission logic here
+  };
+
+  return (
+    <>
+      <section className="container mx-auto px-6 lg:px-12 pt-16 pb-12">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="relative">
+            <div className="sticky top-16">
+              <div className="w-full h-96 rounded-2xl overflow-hidden border border-gold/20 bg-charcoal/50">
+                {product.hasVideo && product.videoSrc ? (
+                  <ProductVideo
+                    videoSrc={product.videoSrc}
+                    fallbackImage={product.image}
+                    alt={product.name}
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <Badge variant="outline" className="border-gold text-gold mb-4">
+              {product.category}
+            </Badge>
+
+            <h1 className="text-5xl lg:text-6xl font-bold mb-4 text-gradient-gold">
+              {product.name}
+            </h1>
+
+            <p className="text-2xl text-gold/80 font-semibold mb-6">
+              {product.tagline}
+            </p>
+
+            <p className="text-lg text-cream/80 leading-relaxed mb-8">
+              {product.description}
+            </p>
+
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold mb-4">Available Sizes:</h3>
+              <div className="flex flex-wrap gap-3">
+                {product.variants.map((variant, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedVariant(index)}
+                    className={`
+                      px-6 py-3 rounded-lg font-semibold transition-all duration-300
+                      ${selectedVariant === index
+                        ? 'bg-gold text-obsidian shadow-lg shadow-gold/30'
+                        : 'bg-charcoal border border-gold/30 text-gold hover:border-gold hover:bg-gold/10'
+                      }
+                    `}
+                  >
+                    {variant.size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 p-6 bg-charcoal/50 rounded-xl border border-gold/20 mb-8">
+              <div>
+                <p className="text-cream/60 text-sm mb-1">Net Weight</p>
+                <p className="text-xl font-semibold text-gold">{currentVariant.netWeight}</p>
+              </div>
+              <div>
+                <p className="text-cream/60 text-sm mb-1">Packaging Type</p>
+                <p className="text-xl font-semibold text-gold">{currentVariant.packaging}</p>
+              </div>
+              <div>
+                <p className="text-cream/60 text-sm mb-1">Carton Quantity</p>
+                <p className="text-xl font-semibold text-gold">{currentVariant.cartonQty}</p>
+              </div>
+              <div>
+                <p className="text-cream/60 text-sm mb-1">MOQ</p>
+                <p className="text-xl font-semibold text-gold">{product.moq}</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <a href={`#${bulkInquiryId}`}>
+                <Button size="lg" className="bg-gold text-obsidian hover:bg-gold/90">
+                  Request Bulk Quote
+                </Button>
+              </a>
+              <a href={`https://wa.me/919876543210?text=Hi, I'm interested in ${product.name}`} target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="outline" className="border-green-500 text-green-500 hover:bg-green-500/10">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  WhatsApp
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-6 lg:px-12 py-16 border-t border-gold/10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8 text-center">
+            Product <span className="text-gradient-gold">Information</span>
+          </h2>
+
+          <div className="space-y-8">
+            <div className="bg-charcoal/30 rounded-xl p-8 border border-gold/20">
+              <h3 className="text-2xl font-semibold mb-6 flex items-center">
+                <Award className="w-6 h-6 mr-3 text-gold" />
+                Key Features
+              </h3>
+              <ul className="grid md:grid-cols-2 gap-4">
+                {product.keyFeatures.map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-gold mr-3">✓</span>
+                    <span className="text-cream/80">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-charcoal/30 rounded-xl p-6 border border-gold/20">
+                <h4 className="text-xl font-semibold mb-3 text-gold">Shelf Life</h4>
+                <p className="text-cream/80">{product.shelfLife}</p>
+              </div>
+              <div className="bg-charcoal/30 rounded-xl p-6 border border-gold/20">
+                <h4 className="text-xl font-semibold mb-3 text-gold">Storage Instructions</h4>
+                <p className="text-cream/80">{product.storage}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-6 lg:px-12 py-16 bg-charcoal/20">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8 text-center">
+            Nutritional <span className="text-gradient-gold">Information</span>
+          </h2>
+
+          <div className="bg-obsidian rounded-xl overflow-hidden border border-gold/20">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gold text-obsidian">
+                  <th className="px-6 py-4 text-left font-semibold">Nutrient</th>
+                  <th className="px-6 py-4 text-right font-semibold">Per 100g</th>
+                </tr>
+              </thead>
+              <tbody>
+                {product.nutritionalInfo.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`border-t border-gold/10 ${index % 2 === 0 ? 'bg-charcoal/30' : 'bg-charcoal/10'}`}
+                  >
+                    <td className="px-6 py-4 text-cream">{item.nutrient}</td>
+                    <td className="px-6 py-4 text-right text-gold font-semibold">{item.per100g}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-6 lg:px-12 py-16">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8 text-center">
+            Packaging & <span className="text-gradient-gold">Bulk Supply</span>
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-gradient-to-br from-charcoal/50 to-charcoal/30 rounded-xl p-8 border border-gold/20">
+              <div className="flex items-center mb-4">
+                <Package className="w-6 h-6 text-gold mr-3" />
+                <h3 className="text-xl font-semibold">Available Sizes</h3>
+              </div>
+              <ul className="space-y-2">
+                {product.variants.map((variant, index) => (
+                  <li key={index} className="flex justify-between text-cream/80">
+                    <span>{variant.size}</span>
+                    <span className="text-gold">{variant.packaging}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-br from-charcoal/50 to-charcoal/30 rounded-xl p-8 border border-gold/20">
+              <div className="flex items-center mb-4">
+                <Truck className="w-6 h-6 text-gold mr-3" />
+                <h3 className="text-xl font-semibold">Carton Packing</h3>
+              </div>
+              <ul className="space-y-2">
+                {product.variants.map((variant, index) => (
+                  <li key={index} className="flex justify-between text-cream/80">
+                    <span>{variant.size}</span>
+                    <span className="text-gold">{variant.cartonQty}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl p-8 border border-gold/30">
+              <h3 className="text-xl font-semibold mb-2 text-gold">Minimum Order Quantity</h3>
+              <p className="text-2xl font-bold text-cream">{product.moq}</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl p-8 border border-gold/30">
+              <h3 className="text-xl font-semibold mb-2 text-gold">Private Labeling</h3>
+              <p className="text-2xl font-bold text-cream">
+                {product.privateLabeling ? 'Available ✓' : 'Not Available'}
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl p-8 border border-gold/30 md:col-span-2">
+              <h3 className="text-xl font-semibold mb-2 text-gold">Export Quality</h3>
+              <p className="text-2xl font-bold text-cream">
+                {product.exportQuality ? 'Available for International Markets ✓' : 'Domestic Only'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-6 lg:px-12 py-16 bg-charcoal/20">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8 text-center">
+            Perfect <span className="text-gradient-gold">Pairings</span>
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {product.usageImages.map((usage, index) => (
+              <div
+                key={index}
+                className="bg-charcoal/50 rounded-xl p-6 border border-gold/20 hover:border-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10"
+              >
+                <div className="w-full h-40 bg-gradient-to-br from-gold/20 to-gold/5 rounded-lg mb-4 flex items-center justify-center">
+                  <FileText className="w-16 h-16 text-gold/40" />
+                </div>
+                <h4 className="text-lg font-semibold mb-2 text-gold">{usage.title}</h4>
+                <p className="text-sm text-cream/70">{usage.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id={bulkInquiryId} className="container mx-auto px-6 lg:px-12 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gradient-to-br from-gold/10 to-gold/5 rounded-2xl p-8 lg:p-12 border-2 border-gold/30">
+            <div className="text-center mb-10">
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+                Looking for <span className="text-gradient-gold">Bulk Orders?</span>
+              </h2>
+              <p className="text-lg text-cream/80">
+                Fill out the form below and our team will get back to you within 24 hours with a customized quote.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold mb-2 text-cream">
+                    Your Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2 text-cream">
+                    Company Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="company"
+                    required
+                    value={formData.company}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
+                    placeholder="Your Company"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2 text-cream">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
+                    placeholder="+91 98765 43210"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2 text-cream">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
+                    placeholder="john@company.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-cream">
+                  Required Quantity *
+                </label>
+                <input
+                  type="text"
+                  name="quantity"
+                  required
+                  value={formData.quantity}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
+                  placeholder="e.g., 100 cartons of 500ml"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-cream">
+                  Additional Message
+                </label>
+                <textarea
+                  name="message"
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream resize-none"
+                  placeholder="Tell us about your requirements..."
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full bg-gold text-obsidian hover:bg-gold/90 text-lg font-semibold py-6"
+              >
+                Submit Inquiry
+              </Button>
+            </form>
+
+            <div className="mt-10 pt-10 border-t border-gold/20">
+              <p className="text-center text-cream/80 mb-6">Or reach us directly:</p>
+              <div className="grid md:grid-cols-3 gap-4">
+                <a
+                  href={`https://wa.me/919876543210?text=Hi, I'm interested in ${product.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 px-6 py-4 bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  <span className="font-semibold">WhatsApp</span>
+                </a>
+
+                <a
+                  href="tel:+919876543210"
+                  className="flex items-center justify-center gap-3 px-6 py-4 bg-charcoal hover:bg-charcoal/80 border border-gold/30 rounded-lg transition-colors"
+                >
+                  <Phone className="w-5 h-5 text-gold" />
+                  <span className="font-semibold">Call Now</span>
+                </a>
+
+                <a
+                  href="mailto:sales@ysevenfoods.com"
+                  className="flex items-center justify-center gap-3 px-6 py-4 bg-charcoal hover:bg-charcoal/80 border border-gold/30 rounded-lg transition-colors"
+                >
+                  <Mail className="w-5 h-5 text-gold" />
+                  <span className="font-semibold">Email Us</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-6 lg:px-12 py-16 bg-charcoal/20">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold mb-8 text-center">
+            Frequently Asked <span className="text-gradient-gold">Questions</span>
+          </h2>
+
+          <div className="space-y-4">
+            {product.faqs.map((faq, index) => (
+              <details
+                key={index}
+                className="group bg-charcoal/50 rounded-xl border border-gold/20 overflow-hidden hover:border-gold/40 transition-all"
+              >
+                <summary className="px-6 py-4 cursor-pointer list-none flex items-center justify-between font-semibold text-lg text-cream hover:text-gold transition-colors">
+                  <span>{faq.question}</span>
+                  <span className="text-gold group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="px-6 pb-4 text-cream/80 leading-relaxed">
+                  {faq.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default function ProductDetail() {
+  const { slug } = useParams();
 
   const product = productsData.find(p => p.slug === slug);
 
@@ -554,24 +1044,12 @@ export default function ProductDetail() {
     );
   }
 
-  const currentVariant = product.variants[selectedVariant];
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-  };
-
   const seoData = {
-    title: `${product.name} - ${product.tagline} | Y7 Premium Sauces`,
+    title: `${product.name} - ${product.tagline} | YSeven Foods Premium Products`,
     description: product.description,
-    keywords: `${product.name}, Y7 sauces, bulk supply, B2B, ${product.category}`,
+    keywords: `${product.name}, YSeven Foods, bulk supply, B2B, ${product.category}`,
     canonical: `/products/${product.slug}`,
-    ogTitle: `${product.name} - Y7 Premium Sauces`,
+    ogTitle: `${product.name} - YSeven Foods Premium Products`,
     ogDescription: product.description
   };
 
@@ -580,444 +1058,7 @@ export default function ProductDetail() {
       <SEOHead seo={seoData} />
       
       <div className="min-h-screen bg-obsidian text-cream">
-        {/* 1️⃣ Hero Section - Product Overview */}
-        <section className="container mx-auto px-6 lg:px-12 pt-16 pb-12">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Product Image */}
-            <div className="relative">
-              <div className="sticky top-16">
-                <div className="w-full h-96 rounded-2xl overflow-hidden border border-gold/20 bg-charcoal/50">
-                  {product.hasVideo && product.videoSrc ? (
-                    <ProductVideo
-                      videoSrc={product.videoSrc}
-                      fallbackImage={product.image}
-                      alt={product.name}
-                      className="w-full h-full"
-                    />
-                  ) : (
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Product Info */}
-            <div>
-              <Badge variant="outline" className="border-gold text-gold mb-4">
-                {product.category}
-              </Badge>
-              
-              <h1 className="text-5xl lg:text-6xl font-bold mb-4 text-gradient-gold">
-                {product.name}
-              </h1>
-              
-              <p className="text-2xl text-gold/80 font-semibold mb-6">
-                {product.tagline}
-              </p>
-              
-              <p className="text-lg text-cream/80 leading-relaxed mb-8">
-                {product.description}
-              </p>
-
-              {/* Variant Selector */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4">Available Sizes:</h3>
-                <div className="flex flex-wrap gap-3">
-                  {product.variants.map((variant, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedVariant(index)}
-                      className={`
-                        px-6 py-3 rounded-lg font-semibold transition-all duration-300
-                        ${selectedVariant === index
-                          ? 'bg-gold text-obsidian shadow-lg shadow-gold/30'
-                          : 'bg-charcoal border border-gold/30 text-gold hover:border-gold hover:bg-gold/10'
-                        }
-                      `}
-                    >
-                      {variant.size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Variant Details */}
-              <div className="grid grid-cols-2 gap-4 p-6 bg-charcoal/50 rounded-xl border border-gold/20 mb-8">
-                <div>
-                  <p className="text-cream/60 text-sm mb-1">Net Weight</p>
-                  <p className="text-xl font-semibold text-gold">{currentVariant.netWeight}</p>
-                </div>
-                <div>
-                  <p className="text-cream/60 text-sm mb-1">Packaging Type</p>
-                  <p className="text-xl font-semibold text-gold">{currentVariant.packaging}</p>
-                </div>
-                <div>
-                  <p className="text-cream/60 text-sm mb-1">Carton Quantity</p>
-                  <p className="text-xl font-semibold text-gold">{currentVariant.cartonQty}</p>
-                </div>
-                <div>
-                  <p className="text-cream/60 text-sm mb-1">MOQ</p>
-                  <p className="text-xl font-semibold text-gold">{product.moq}</p>
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div className="flex flex-wrap gap-4">
-                <a href="#bulk-inquiry">
-                  <Button size="lg" className="bg-gold text-obsidian hover:bg-gold/90">
-                    Request Bulk Quote
-                  </Button>
-                </a>
-                <a href={`https://wa.me/919876543210?text=Hi, I'm interested in ${product.name}`} target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" variant="outline" className="border-green-500 text-green-500 hover:bg-green-500/10">
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    WhatsApp
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 2️⃣ Product Description Section */}
-        <section className="container mx-auto px-6 lg:px-12 py-16 border-t border-gold/10">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-center">
-              Product <span className="text-gradient-gold">Information</span>
-            </h2>
-            
-            <div className="space-y-8">
-              {/* Key Features */}
-              <div className="bg-charcoal/30 rounded-xl p-8 border border-gold/20">
-                <h3 className="text-2xl font-semibold mb-6 flex items-center">
-                  <Award className="w-6 h-6 mr-3 text-gold" />
-                  Key Features
-                </h3>
-                <ul className="grid md:grid-cols-2 gap-4">
-                  {product.keyFeatures.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-gold mr-3">✓</span>
-                      <span className="text-cream/80">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Storage & Shelf Life */}
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-charcoal/30 rounded-xl p-6 border border-gold/20">
-                  <h4 className="text-xl font-semibold mb-3 text-gold">Shelf Life</h4>
-                  <p className="text-cream/80">{product.shelfLife}</p>
-                </div>
-                <div className="bg-charcoal/30 rounded-xl p-6 border border-gold/20">
-                  <h4 className="text-xl font-semibold mb-3 text-gold">Storage Instructions</h4>
-                  <p className="text-cream/80">{product.storage}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 3️⃣ Nutritional Information Table */}
-        <section className="container mx-auto px-6 lg:px-12 py-16 bg-charcoal/20">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-center">
-              Nutritional <span className="text-gradient-gold">Information</span>
-            </h2>
-            
-            <div className="bg-obsidian rounded-xl overflow-hidden border border-gold/20">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gold text-obsidian">
-                    <th className="px-6 py-4 text-left font-semibold">Nutrient</th>
-                    <th className="px-6 py-4 text-right font-semibold">Per 100g</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {product.nutritionalInfo.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={`border-t border-gold/10 ${
-                        index % 2 === 0 ? 'bg-charcoal/30' : 'bg-charcoal/10'
-                      }`}
-                    >
-                      <td className="px-6 py-4 text-cream">{item.nutrient}</td>
-                      <td className="px-6 py-4 text-right text-gold font-semibold">{item.per100g}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        {/* 4️⃣ Packaging & Bulk Supply Section */}
-        <section className="container mx-auto px-6 lg:px-12 py-16">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-center">
-              Packaging & <span className="text-gradient-gold">Bulk Supply</span>
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Available Sizes */}
-              <div className="bg-gradient-to-br from-charcoal/50 to-charcoal/30 rounded-xl p-8 border border-gold/20">
-                <div className="flex items-center mb-4">
-                  <Package className="w-6 h-6 text-gold mr-3" />
-                  <h3 className="text-xl font-semibold">Available Sizes</h3>
-                </div>
-                <ul className="space-y-2">
-                  {product.variants.map((variant, index) => (
-                    <li key={index} className="flex justify-between text-cream/80">
-                      <span>{variant.size}</span>
-                      <span className="text-gold">{variant.packaging}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Carton Details */}
-              <div className="bg-gradient-to-br from-charcoal/50 to-charcoal/30 rounded-xl p-8 border border-gold/20">
-                <div className="flex items-center mb-4">
-                  <Truck className="w-6 h-6 text-gold mr-3" />
-                  <h3 className="text-xl font-semibold">Carton Packing</h3>
-                </div>
-                <ul className="space-y-2">
-                  {product.variants.map((variant, index) => (
-                    <li key={index} className="flex justify-between text-cream/80">
-                      <span>{variant.size}</span>
-                      <span className="text-gold">{variant.cartonQty}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* MOQ */}
-              <div className="bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl p-8 border border-gold/30">
-                <h3 className="text-xl font-semibold mb-2 text-gold">Minimum Order Quantity</h3>
-                <p className="text-2xl font-bold text-cream">{product.moq}</p>
-              </div>
-
-              {/* Private Labeling */}
-              <div className="bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl p-8 border border-gold/30">
-                <h3 className="text-xl font-semibold mb-2 text-gold">Private Labeling</h3>
-                <p className="text-2xl font-bold text-cream">
-                  {product.privateLabeling ? 'Available ✓' : 'Not Available'}
-                </p>
-              </div>
-
-              {/* Export Quality */}
-              <div className="bg-gradient-to-br from-gold/20 to-gold/10 rounded-xl p-8 border border-gold/30 md:col-span-2">
-                <h3 className="text-xl font-semibold mb-2 text-gold">Export Quality</h3>
-                <p className="text-2xl font-bold text-cream">
-                  {product.exportQuality ? 'Available for International Markets ✓' : 'Domestic Only'}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 5️⃣ Usage Section */}
-        <section className="container mx-auto px-6 lg:px-12 py-16 bg-charcoal/20">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-center">
-              Perfect <span className="text-gradient-gold">Pairings</span>
-            </h2>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {product.usageImages.map((usage, index) => (
-                <div
-                  key={index}
-                  className="bg-charcoal/50 rounded-xl p-6 border border-gold/20 hover:border-gold/40 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10"
-                >
-                  <div className="w-full h-40 bg-gradient-to-br from-gold/20 to-gold/5 rounded-lg mb-4 flex items-center justify-center">
-                    <FileText className="w-16 h-16 text-gold/40" />
-                  </div>
-                  <h4 className="text-lg font-semibold mb-2 text-gold">{usage.title}</h4>
-                  <p className="text-sm text-cream/70">{usage.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 6️⃣ Bulk Inquiry Section */}
-        <section id="bulk-inquiry" className="container mx-auto px-6 lg:px-12 py-16">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-br from-gold/10 to-gold/5 rounded-2xl p-8 lg:p-12 border-2 border-gold/30">
-              <div className="text-center mb-10">
-                <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-                  Looking for <span className="text-gradient-gold">Bulk Orders?</span>
-                </h2>
-                <p className="text-lg text-cream/80">
-                  Fill out the form below and our team will get back to you within 24 hours with a customized quote.
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold mb-2 text-cream">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
-                      placeholder="John Doe"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold mb-2 text-cream">
-                      Company Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="company"
-                      required
-                      value={formData.company}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
-                      placeholder="Your Company"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold mb-2 text-cream">
-                      Phone Number *
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
-                      placeholder="+91 98765 43210"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold mb-2 text-cream">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
-                      placeholder="john@company.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-cream">
-                    Required Quantity *
-                  </label>
-                  <input
-                    type="text"
-                    name="quantity"
-                    required
-                    value={formData.quantity}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream"
-                    placeholder="e.g., 100 cartons of 500ml"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-cream">
-                    Additional Message
-                  </label>
-                  <textarea
-                    name="message"
-                    rows={4}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-obsidian border border-gold/30 rounded-lg focus:outline-none focus:border-gold text-cream resize-none"
-                    placeholder="Tell us about your requirements..."
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-gold text-obsidian hover:bg-gold/90 text-lg font-semibold py-6"
-                >
-                  Submit Inquiry
-                </Button>
-              </form>
-
-              {/* Contact Options */}
-              <div className="mt-10 pt-10 border-t border-gold/20">
-                <p className="text-center text-cream/80 mb-6">Or reach us directly:</p>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <a
-                    href={`https://wa.me/919876543210?text=Hi, I'm interested in ${product.name}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3 px-6 py-4 bg-green-600 hover:bg-green-700 rounded-lg transition-colors"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    <span className="font-semibold">WhatsApp</span>
-                  </a>
-
-                  <a
-                    href="tel:+919876543210"
-                    className="flex items-center justify-center gap-3 px-6 py-4 bg-charcoal hover:bg-charcoal/80 border border-gold/30 rounded-lg transition-colors"
-                  >
-                    <Phone className="w-5 h-5 text-gold" />
-                    <span className="font-semibold">Call Now</span>
-                  </a>
-
-                  <a
-                    href="mailto:sales@y7sauces.com"
-                    className="flex items-center justify-center gap-3 px-6 py-4 bg-charcoal hover:bg-charcoal/80 border border-gold/30 rounded-lg transition-colors"
-                  >
-                    <Mail className="w-5 h-5 text-gold" />
-                    <span className="font-semibold">Email Us</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 7️⃣ FAQ Section */}
-        <section className="container mx-auto px-6 lg:px-12 py-16 bg-charcoal/20">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-center">
-              Frequently Asked <span className="text-gradient-gold">Questions</span>
-            </h2>
-            
-            <div className="space-y-4">
-              {product.faqs.map((faq, index) => (
-                <details
-                  key={index}
-                  className="group bg-charcoal/50 rounded-xl border border-gold/20 overflow-hidden hover:border-gold/40 transition-all"
-                >
-                  <summary className="px-6 py-4 cursor-pointer list-none flex items-center justify-between font-semibold text-lg text-cream hover:text-gold transition-colors">
-                    <span>{faq.question}</span>
-                    <span className="text-gold group-open:rotate-180 transition-transform">▼</span>
-                  </summary>
-                  <div className="px-6 pb-4 text-cream/80 leading-relaxed">
-                    {faq.answer}
-                  </div>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ProductDetailsSections product={product} bulkInquiryId="bulk-inquiry" />
 
         {/* Related Products CTA */}
         <section className="container mx-auto px-6 lg:px-12 py-16">
@@ -1039,3 +1080,4 @@ export default function ProductDetail() {
     </>
   );
 }
+

@@ -57,7 +57,7 @@ export const prerenderMetaTags = (seoData: SEOData): string => {
     <meta property="og:type" content="${seoData.ogType || 'website'}" />
     ${seoData.ogImage ? `<meta property="og:image" content="${seoData.ogImage}" />` : ''}
     ${seoData.canonical ? `<meta property="og:url" content="${seoData.canonical}" />` : ''}
-    <meta property="og:site_name" content="Y7 Sauces" />
+    <meta property="og:site_name" content="YSeven Foods" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="${seoData.twitterCard || 'summary_large_image'}" />
@@ -158,7 +158,7 @@ export const generateStaticHTML = (
 </head>
 <body>
   <header class="header">
-    <div class="logo">Y7 Sauces</div>
+    <div class="logo">YSeven Foods</div>
     <nav class="nav">
       <a href="/">Home</a>
       <a href="/about">About</a>
@@ -174,7 +174,7 @@ export const generateStaticHTML = (
   </main>
   
   <footer class="footer">
-    <p>&copy; 2024 Y7 Sauces. One Brand. Endless Flavor.</p>
+    <p>&copy; 2024 YSeven Foods. One Brand. Endless Flavor.</p>
     <p>Premium sauces and condiments delivered worldwide.</p>
   </footer>
   
@@ -191,8 +191,8 @@ export const generateStaticHTML = (
 // Page-specific content generators
 export const generateHomeContent = (): string => {
   return `
-    <h1>Y7 Premium Sauces - One Brand. Endless Flavor</h1>
-    <p>Discover Y7's premium sauce collection featuring authentic international flavors. From peri-peri to sambal, mayonnaise to hot sauces, we craft gourmet condiments for bold kitchens worldwide.</p>
+    <h1>YSeven Foods Premium Products - One Brand. Endless Flavor</h1>
+    <p>Discover YSeven Foods' premium sauce collection featuring authentic international flavors. From peri-peri to sambal, mayonnaise to hot sauces, we craft gourmet condiments for bold kitchens worldwide.</p>
     
     <section>
       <h2>Featured Products</h2>
@@ -216,7 +216,7 @@ export const generateHomeContent = (): string => {
     </section>
     
     <section>
-      <h2>Why Choose Y7 Sauces?</h2>
+      <h2>Why Choose YSeven Foods?</h2>
       <ul>
         <li><strong>Premium Quality:</strong> Made with the finest ingredients and traditional recipes</li>
         <li><strong>Authentic Flavors:</strong> Genuine international taste profiles</li>
@@ -230,7 +230,7 @@ export const generateHomeContent = (): string => {
 export const generateProductsContent = (): string => {
   return `
     <h1>Premium Sauce Products</h1>
-    <p>Explore Y7's complete range of premium sauces and condiments. Each product is crafted with authentic recipes and the finest ingredients to deliver exceptional flavor experiences.</p>
+    <p>Explore YSeven Foods' complete range of premium sauces and condiments. Each product is crafted with authentic recipes and the finest ingredients to deliver exceptional flavor experiences.</p>
     
     <section>
       <h2>Hot Sauces</h2>
@@ -260,8 +260,8 @@ export const generateProductsContent = (): string => {
 
 export const generateAboutContent = (): string => {
   return `
-    <h1>About Y7 Sauces</h1>
-    <p>Y7 Sauces is a premium global sauce brand dedicated to redefining flavor through innovation, precision, and uncompromising quality. We craft authentic international condiments for bold kitchens worldwide.</p>
+    <h1>About YSeven Foods</h1>
+    <p>YSeven Foods is a premium global food brand dedicated to redefining flavor through innovation, precision, and uncompromising quality. We craft authentic international condiments for bold kitchens worldwide.</p>
     
     <section>
       <h2>Our Mission</h2>

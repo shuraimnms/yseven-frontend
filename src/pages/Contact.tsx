@@ -33,7 +33,7 @@ export default function Contact() {
   
   // Provide fallback values
   const safeContactContent = contactPageContent || 'Ready to elevate your culinary experience? Whether you\'re a home chef, restaurant owner, or looking for bulk orders, we\'re here to help.';
-  const safeOfficeAddress = officeAddress || 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India';
+  const safeOfficeAddress = officeAddress || 'YSeven Foods Pvt Ltd, Bangalore, Karnataka, India';
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -81,7 +81,7 @@ export default function Contact() {
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
             <img
               src={heroSauceImage}
-              alt="Contact Y7 Sauces - Premium Sauce Collection"
+              alt="Contact YSeven Foods - Premium Sauce Collection"
               className="w-full h-full object-cover"
             />
           </div>

@@ -38,17 +38,17 @@ export const useGlobalSettings = (autoFetch = true) => {
     siteTitle: settings?.siteTitle || 'Y7 Sauces',
     supportEmail: SUPPORT_EMAIL_FALLBACK,
     supportPhone: settings?.supportPhone || '+91 9876543210',
-    officeAddress: settings?.officeAddress || 'Y7 Sauces Pvt Ltd, Bangalore, Karnataka, India',
+    officeAddress: settings?.officeAddress || 'YSeven Foods Pvt Ltd, Bangalore, Karnataka, India',
     socialMedia: settings?.socialMedia || {
-      facebook: 'https://facebook.com/y7sauces',
-      instagram: 'https://instagram.com/y7sauces',
-      twitter: 'https://twitter.com/y7sauces',
-      youtube: 'https://youtube.com/@y7sauces'
+      facebook: 'https://facebook.com/ysevenfoods',
+      instagram: 'https://instagram.com/ysevenfoods',
+      twitter: 'https://twitter.com/ysevenfoods',
+      youtube: 'https://youtube.com/@ysevenfoods'
     },
     socialMediaHandles: settings?.socialMediaHandles || {
-      facebook: 'y7sauces',
-      instagram: 'y7sauces',
-      twitter: 'y7sauces',
+      facebook: 'ysevenfoods',
+      instagram: 'ysevenfoods',
+      twitter: 'ysevenfoods',
       youtube: 'y7sauces'
     },
     contactPageContent: settings?.contactPageContent || 'Get in touch with us for any queries or support. We are here to help you!',

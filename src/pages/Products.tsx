@@ -395,14 +395,14 @@ const Products = () => {
   };
 
   const seoData = {
-    title: "Y7 Premium Sauces - Master Product Catalog | One Brand. Endless Flavor.",
-    description: "Discover Y7's comprehensive range of premium sauces, condiments, and agro products. From classic tomato ketchup to exotic international sauces and nutritious fruit powders.",
-    keywords: "Y7 sauces, premium condiments, tomato ketchup, mayonnaise, chili sauce, banana powder, fruit powders, agro products",
+    title: "YSeven Foods Premium Products - Master Product Catalog | One Brand. Endless Flavor.",
+    description: "Discover YSeven Foods' comprehensive range of premium sauces, condiments, and agro products. From classic tomato ketchup to exotic international sauces and nutritious fruit powders.",
+    keywords: "YSeven Foods, premium condiments, tomato ketchup, mayonnaise, chili sauce, banana powder, fruit powders, agro products",
     canonical: "/products",
-    ogTitle: "Y7 Premium Sauces - Master Product Catalog",
-    ogDescription: "Discover Y7's comprehensive range of premium sauces, condiments, and agro products. From classic tomato ketchup to exotic international sauces and nutritious fruit powders.",
-    twitterTitle: "Y7 Premium Sauces - Master Product Catalog",
-    twitterDescription: "Discover Y7's comprehensive range of premium sauces, condiments, and agro products."
+    ogTitle: "YSeven Foods Premium Products - Master Product Catalog",
+    ogDescription: "Discover YSeven Foods' comprehensive range of premium sauces, condiments, and agro products. From classic tomato ketchup to exotic international sauces and nutritious fruit powders.",
+    twitterTitle: "YSeven Foods Premium Products - Master Product Catalog",
+    twitterDescription: "Discover YSeven Foods' comprehensive range of premium sauces, condiments, and agro products."
   };
 
   return (

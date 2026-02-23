@@ -204,7 +204,7 @@ export default function Checkout() {
         amount,
         currency,
         order_id: razorpayOrderId,
-        name: 'Y7 Sauces',
+        name: 'YSeven Foods',
         description: 'Premium Sauces & Condiments',
         image: '/favicon.ico',
         handler: async (response: any) => {
