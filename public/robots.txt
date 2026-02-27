@@ -1,36 +1,70 @@
+# Y7 Premium Sauces - Robots.txt
+# Updated: 2026-02-27
+
 User-agent: *
 Allow: /
+Allow: /products/
+Allow: /blog/
+Allow: /recipes/
 
-# Disallow admin and private areas
+# Block admin and sensitive areas
 Disallow: /admin/
 Disallow: /api/
 Disallow: /auth/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /profile/
+Disallow: /orders/
 Disallow: /_next/
 Disallow: /static/
 Disallow: /node_modules/
 Disallow: /src/
+Disallow: /*.json$
+Disallow: /*?*add-to-cart=
+Disallow: /*?*filter=
+Disallow: /*?*sort=
 
-# Allow important crawlers
+# Allow important crawlers full access
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
+
+User-agent: Googlebot-Image
+Allow: /
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Slurp
 Allow: /
+Crawl-delay: 1
 
 User-agent: DuckDuckBot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Baiduspider
 Allow: /
+Crawl-delay: 2
 
-# Crawl delay for respectful crawling
-Crawl-delay: 1
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
 
 # Sitemap locations
 Sitemap: https://ysevenfoods.com/sitemap.xml
+Sitemap: https://ysevenfoods.com/sitemap-enhanced.xml
 
 # Host directive
 Host: https://ysevenfoods.com

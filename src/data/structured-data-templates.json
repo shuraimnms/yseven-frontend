@@ -1,0 +1,42 @@
+{
+  "organization": {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Y7 Premium Sauces",
+    "alternateName": "Y Seven Foods",
+    "url": "https://ysevenfoods.com",
+    "logo": "https://ysevenfoods.com/logo.png",
+    "description": "Premium global sauce brand specializing in hot sauces, BBQ sauces, mayonnaise, and international condiments.",
+    "email": "contact@ysevenfoods.com",
+    "telephone": "+91-8762649999",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "IN",
+      "addressRegion": "India"
+    },
+    "sameAs": [
+      "https://www.facebook.com/ysevenfoods",
+      "https://www.instagram.com/ysevenfoods",
+      "https://twitter.com/ysevenfoods",
+      "https://www.linkedin.com/company/ysevenfoods"
+    ]
+  },
+  "productExample": {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Y7 Peri-Peri Hot Sauce",
+    "image": "https://ysevenfoods.com/images/products/peri-peri-sauce.jpg",
+    "description": "Authentic Peri-Peri hot sauce made with premium African Bird's Eye chillies.",
+    "brand": {
+      "@type": "Brand",
+      "name": "Y7 Premium Sauces"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://ysevenfoods.com/products/peri-peri-sauce",
+      "priceCurrency": "INR",
+      "price": "299",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+}
