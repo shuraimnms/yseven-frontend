@@ -21,9 +21,6 @@ import { initializeErrorHandling } from "./utils/errorHandler";
 // Import watermark image
 import watermarkImage from "./assets/y7-watermark.png";
 
-// Development helper (remove in production)
-import './utils/adminHelper';
-
 // Critical pages (loaded immediately)
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import { categoryData, Category, Product } from '../data/categoryData';
 import { productsData, ProductDetailsSections } from './ProductDetail';
+import { InfiniteAutoScroll } from '@/components/InfiniteAutoScroll';
 
 // Memoized product card component for better performance
 const ProductCard = memo(({ product, productRef }: {
@@ -42,7 +43,6 @@ const CategoryPage = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const productRefs = useRef<{ [key: string]: HTMLElement | null }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Get category data
   const category = categoryData.find((cat: Category) => cat.slug === slug);
@@ -293,18 +293,18 @@ const CategoryPage = () => {
           <div className="lg:grid lg:grid-cols-[25%_75%] lg:gap-12">
             {/* Left Sidebar - Desktop Only */}
             <aside className="hidden lg:block">
-              <div
-                ref={sidebarRef}
-                className="sticky top-32 max-h-[calc(100vh-200px)] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-gold/30 scrollbar-track-charcoal"
-              >
+              <div className="sticky top-32 max-h-[calc(100vh-200px)]">
                 <h2 className="text-xl font-bold text-cream mb-6">Products</h2>
-                <nav className="space-y-2">
-                  {category.products.map((product) => (
+                <InfiniteAutoScroll
+                  items={category.products.map(p => ({ id: p.id, name: p.name }))}
+                  speed={500}
+                  allowManualScroll={true}
+                  className="h-[calc(100vh-280px)]"
+                  renderItem={(product) => (
                     <button
-                      key={product.id}
                       onClick={() => scrollToProduct(product.id)}
                       className={`
-                        w-full text-left px-4 py-3 rounded-lg transition-all duration-300 relative
+                        w-full text-left px-4 py-3 rounded-lg transition-all duration-300 relative mb-2
                         ${activeProductId === product.id
                           ? 'bg-gradient-to-r from-gold/20 to-gold/10 border-l-4 border-gold font-semibold text-gold shadow-lg shadow-gold/20'
                           : 'hover:bg-charcoal/50 text-cream/70 hover:text-cream border-l-4 border-transparent hover:border-gold/30'
@@ -313,8 +313,8 @@ const CategoryPage = () => {
                     >
                       <span className="block">{product.name}</span>
                     </button>
-                  ))}
-                </nav>
+                  )}
+                />
               </div>
             </aside>
 

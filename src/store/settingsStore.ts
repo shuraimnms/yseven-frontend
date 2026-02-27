@@ -85,7 +85,6 @@ export const useSettingsStore = create<SettingsStore>()(
       lastFetch: 0,
 
       setSettings: (settings: GlobalSettings) => {
-        console.log('💾 Saving settings to store:', settings.siteTitle);
         set({ 
           settings: { ...settings, lastUpdated: new Date().toISOString() },
           lastFetch: Date.now()
@@ -99,8 +98,8 @@ export const useSettingsStore = create<SettingsStore>()(
       shouldRefresh: () => {
         const { lastFetch } = get();
         const now = Date.now();
-        // Always refresh if older than 30 seconds (very aggressive)
-        return now - lastFetch > 30 * 1000;
+        // Refresh if older than 5 minutes
+        return now - lastFetch > 5 * 60 * 1000;
       },
 
       fetchSettings: async (force = false) => {
@@ -109,12 +108,10 @@ export const useSettingsStore = create<SettingsStore>()(
 
           // Skip if recently fetched (unless forced)
           if (!force && !shouldRefresh()) {
-            console.log('⏭️ Skipping settings fetch (recently fetched)');
             return;
           }
 
           setLoading(true);
-          console.log('🔄 Fetching settings from API...');
 
           const response = await apiFetch('/admin/settings/public');
 
@@ -122,15 +119,11 @@ export const useSettingsStore = create<SettingsStore>()(
             const data = await response.json();
             if (data.data) {
               setSettings(data.data);
-              console.log('✅ Global settings updated across entire website:', data.data.siteTitle);              
               // Trigger a custom event to notify all components
               window.dispatchEvent(new CustomEvent('settingsUpdated', { detail: data.data }));
             }
-          } else {
-            console.warn('⚠️ Failed to fetch public settings, using cached/default');
           }
         } catch (error) {
-          console.error('❌ Settings fetch error:', error);
           // Keep existing settings on error
         } finally {
           set({ isLoading: false });
@@ -146,14 +139,12 @@ export const useSettingsStore = create<SettingsStore>()(
       // Force rehydration on every mount
       onRehydrateStorage: () => (state) => {
         if (state) {
-          console.log('🔄 Rehydrated settings from storage, will fetch fresh data...');
           // Force fetch after rehydration
           setTimeout(() => {
-            state.fetchSettings(true);
+            state.fetchSettings();
           }, 100);
         }
       },
     }
   )
 );
-

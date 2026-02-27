@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           await authAPI.logout();
         } catch (error) {
-          console.error('Logout error:', error);
+          // Silent error handling
         } finally {
           Cookies.remove('accessToken');
           Cookies.remove('refreshToken');
@@ -63,19 +63,14 @@ export const useAuthStore = create<AuthState>()(
       },
 
       checkAuth: async () => {
-        console.log('AuthStore: Starting checkAuth...');
-        
         // If already checking, don't check again
         if (get().isLoading) {
-          console.log('AuthStore: Already checking, skipping...');
           return;
         }
         
         const token = Cookies.get('accessToken');
-        console.log('AuthStore: Token found:', !!token);
         
         if (!token) {
-          console.log('AuthStore: No token, setting unauthenticated');
           set({ user: null, isAuthenticated: false, isLoading: false });
           return;
         }
@@ -83,36 +78,27 @@ export const useAuthStore = create<AuthState>()(
         // If we already have a user and are authenticated, don't check again unless forced
         const currentState = get();
         if (currentState.isAuthenticated && currentState.user) {
-          console.log('AuthStore: Already authenticated, skipping API call');
           return;
         }
 
         set({ isLoading: true });
         try {
-          console.log('AuthStore: Making API call to /auth/me');
           const response = await authAPI.getMe();
-          console.log('AuthStore: API response:', response.data);
           
           if (response.data.success) {
             const user = response.data.data.user;
-            console.log('AuthStore: User authenticated:', user);
             set({ user, isAuthenticated: true, isLoading: false });
           } else {
-            console.log('AuthStore: API returned success: false');
             // Don't immediately log out, might be a temporary issue
             set({ isLoading: false });
           }
-        } catch (error) {
-          console.error('AuthStore: Auth check error:', error);
-          
+        } catch (error: any) {
           // Only log out if it's a 401 (unauthorized) error
           if (error.response?.status === 401) {
-            console.log('AuthStore: 401 error, logging out');
             set({ user: null, isAuthenticated: false, isLoading: false });
             Cookies.remove('accessToken');
             Cookies.remove('refreshToken');
           } else {
-            console.log('AuthStore: Non-401 error, keeping current state');
             set({ isLoading: false });
           }
         }
