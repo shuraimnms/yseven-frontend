@@ -137,14 +137,49 @@ export const inlineCriticalCSS = (css: string) => {
   document.head.appendChild(style);
 };
 
-// Service Worker registration for caching
+// Service Worker registration with auto-reload on update
 export const registerServiceWorker = async () => {
-  if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+  if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('SW registered: ', registration);
-    } catch (registrationError) {
-      console.log('SW registration failed: ', registrationError);
+      const registration = await navigator.serviceWorker.register('/sw-ultra.js');
+      console.log('[App] SW registered:', registration);
+
+      // Listen for updates
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+              console.log('[App] New SW activated, reloading page...');
+              // Reload page to get new content
+              window.location.reload();
+            }
+          });
+        }
+      });
+
+      // Listen for messages from SW
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'SW_UPDATED') {
+          console.log('[App] SW updated to version:', event.data.version);
+          // Clear any app-level caches
+          if ('caches' in window) {
+            caches.keys().then(names => {
+              names.forEach(name => caches.delete(name));
+            });
+          }
+          // Reload after a short delay
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      });
+
+      // Check for updates every 60 seconds
+      setInterval(() => {
+        registration.update();
+      }, 60000);
+
+    } catch (error) {
+      console.error('[App] SW registration failed:', error);
     }
   }
 };

@@ -1,6 +1,6 @@
 // Ultra-optimized Service Worker for lightning-fast loading
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2'; // INCREMENT THIS ON EACH DEPLOYMENT
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
 const IMAGE_CACHE = `images-${CACHE_VERSION}`;
@@ -22,35 +22,38 @@ const STATIC_ASSETS = [
   '/offline.html',
 ];
 
-// Install event - cache static assets
+// Install event - cache static assets and force update
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing...');
+  console.log('[SW] Installing version:', CACHE_VERSION);
   
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
       console.log('[SW] Caching static assets');
       return cache.addAll(STATIC_ASSETS);
     }).then(() => {
+      // Force immediate activation
       return self.skipWaiting();
     })
   );
 });
 
-// Activate event - clean old caches
+// Activate event - clean old caches and take control immediately
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating...');
+  console.log('[SW] Activating version:', CACHE_VERSION);
   
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
           .filter((name) => {
+            // Delete ALL old caches
             return name.startsWith('static-') || 
                    name.startsWith('dynamic-') || 
                    name.startsWith('images-') || 
                    name.startsWith('api-');
           })
           .filter((name) => {
+            // Keep only current version
             return name !== STATIC_CACHE && 
                    name !== DYNAMIC_CACHE && 
                    name !== IMAGE_CACHE && 
@@ -62,7 +65,16 @@ self.addEventListener('activate', (event) => {
           })
       );
     }).then(() => {
+      console.log('[SW] Taking control of all clients');
+      // Take control of all pages immediately
       return self.clients.claim();
+    }).then(() => {
+      // Notify all clients to reload
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION });
+        });
+      });
     })
   );
 });

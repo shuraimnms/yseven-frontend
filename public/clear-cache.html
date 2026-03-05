@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache - Y7 Foods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        .button:active {
+            transform: translateY(0);
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .steps {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .steps h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .steps ol {
+            margin-left: 20px;
+        }
+        .steps li {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Clear Y7 Foods Cache</h1>
+        <p>If the website isn't loading properly, click the button below to clear all cached data and reload the site.</p>
+        
+        <button class="button" onclick="clearAllCache()">Clear Cache & Reload</button>
+        
+        <div id="status" class="status"></div>
+
+        <div class="steps">
+            <h3>What this does:</h3>
+            <ol>
+                <li>Unregisters all service workers</li>
+                <li>Clears all cached files</li>
+                <li>Clears localStorage and sessionStorage</li>
+                <li>Reloads the website with fresh content</li>
+            </ol>
+        </div>
+
+        <div class="steps">
+            <h3>Manual Hard Refresh:</h3>
+            <ol>
+                <li><strong>Windows:</strong> Press <code>Ctrl + Shift + R</code> or <code>Ctrl + F5</code></li>
+                <li><strong>Mac:</strong> Press <code>Cmd + Shift + R</code></li>
+                <li><strong>Mobile:</strong> Clear browser cache in settings</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        async function clearAllCache() {
+            const statusEl = document.getElementById('status');
+            statusEl.style.display = 'block';
+            statusEl.className = 'status info';
+            statusEl.textContent = 'Clearing cache...';
+
+            try {
+                // 1. Unregister all service workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                        console.log('Unregistered SW:', registration);
+                    }
+                }
+
+                // 2. Clear all caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (let name of cacheNames) {
+                        await caches.delete(name);
+                        console.log('Deleted cache:', name);
+                    }
+                }
+
+                // 3. Clear storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // 4. Clear cookies
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+
+                // 5. Show success and reload
+                statusEl.className = 'status success';
+                statusEl.textContent = '✅ Cache cleared! Reloading in 2 seconds...';
+
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+
+            } catch (error) {
+                statusEl.className = 'status info';
+                statusEl.textContent = '⚠️ Error: ' + error.message + '. Try manual hard refresh instead.';
+                console.error('Cache clear error:', error);
+            }
+        }
+
+        // Auto-clear on load if ?auto=1 parameter
+        if (window.location.search.includes('auto=1')) {
+            clearAllCache();
+        }
+    </script>
+</body>
+</html>

@@ -194,12 +194,38 @@
     
     <!-- Register Service Worker for ultra-fast caching -->
     <script>
+      // Clear old caches and register new service worker
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw-ultra.js')
-            .then(reg => console.log('SW registered:', reg))
-            .catch(err => console.log('SW registration failed:', err));
+        // Unregister old service workers first
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(reg => {
+            if (reg.active && reg.active.scriptURL.includes('/sw.js')) {
+              console.log('[App] Unregistering old SW:', reg.active.scriptURL);
+              reg.unregister();
+            }
+          });
         });
+
+        // Register new service worker
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw-ultra.js?v=2')
+            .then(reg => {
+              console.log('[App] SW registered:', reg);
+              // Check for updates immediately
+              reg.update();
+            })
+            .catch(err => console.log('[App] SW registration failed:', err));
+        });
+      }
+
+      // Clear old localStorage/sessionStorage on version change
+      const APP_VERSION = '2.0';
+      const storedVersion = localStorage.getItem('app_version');
+      if (storedVersion !== APP_VERSION) {
+        console.log('[App] Version changed, clearing storage');
+        localStorage.clear();
+        sessionStorage.clear();
+        localStorage.setItem('app_version', APP_VERSION);
       }
     </script>
     
