@@ -62,13 +62,14 @@ export const ImageOptimized = ({
     onLoad?.();
   };
 
-  // Generate WebP source
-  const webpSrc = src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+  // Don't generate WebP source since we don't have WebP versions
+  // Use original source only
+  const fallbackSrc = src;
   
-  // Generate srcset for responsive images
+  // Generate srcset for responsive images (original format only)
   const generateSrcSet = (baseSrc: string) => {
     const sizes = [320, 640, 1024, 1920];
-    const ext = baseSrc.match(/\.(webp|jpg|jpeg|png)$/i)?.[0] || '';
+    const ext = baseSrc.match(/\.(jpg|jpeg|png)$/i)?.[0] || '';
     const base = baseSrc.replace(ext, '');
     
     return sizes
@@ -80,11 +81,6 @@ export const ImageOptimized = ({
     <picture ref={imgRef}>
       {isInView && (
         <>
-          <source
-            type="image/webp"
-            srcSet={generateSrcSet(webpSrc)}
-            sizes={sizes}
-          />
           <source
             type="image/jpeg"
             srcSet={generateSrcSet(src)}

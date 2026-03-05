@@ -4,29 +4,15 @@
  */
 
 export const preloadCriticalResources = () => {
-  // Preload critical fonts
-  const fonts = [
-    '/fonts/inter-var.woff2',
-    '/fonts/playfair-display.woff2'
-  ];
+  // Skip font preloading - using Google Fonts instead
+  // Google Fonts are already preconnected in index.html
 
-  fonts.forEach(font => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'font';
-    link.type = 'font/woff2';
-    link.href = font;
-    link.crossOrigin = 'anonymous';
-    document.head.appendChild(link);
-  });
-
-  // Preload hero image
-  const heroImage = new Image();
-  heroImage.src = '/images/hero-sauce.webp';
-
-  // Preload logo
+  // Preload logo (exists in public folder)
   const logo = new Image();
   logo.src = '/logo.png';
+
+  // Note: hero-sauce.jpg is in src/assets and will be handled by Vite bundling
+  // No need to preload it here as it will have a hashed filename after build
 };
 
 /**

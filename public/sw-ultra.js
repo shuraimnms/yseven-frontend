@@ -68,14 +68,8 @@ self.addEventListener('activate', (event) => {
       console.log('[SW] Taking control of all clients');
       // Take control of all pages immediately
       return self.clients.claim();
-    }).then(() => {
-      // Notify all clients to reload
-      return self.clients.matchAll().then(clients => {
-        clients.forEach(client => {
-          client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION });
-        });
-      });
     })
+    // REMOVED: Auto-reload message that was causing refresh loops
   );
 });
 

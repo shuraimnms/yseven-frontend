@@ -5,10 +5,10 @@ const CRITICAL_HERO_URL = new URL('../assets/hero-sauce.jpg', import.meta.url).h
 
 // Preload critical resources
 export const preloadCriticalResources = () => {
-  // Preload critical images
+  // Preload critical images that exist in public folder
   const criticalImages = [
-    CRITICAL_LOGO_URL,
-    CRITICAL_HERO_URL
+    '/logo.png'  // This exists in public folder
+    // hero-sauce.jpg is in src/assets and will be bundled by Vite with hash
   ];
 
   criticalImages.forEach(src => {
@@ -20,7 +20,7 @@ export const preloadCriticalResources = () => {
   });
 };
 
-// Optimize images with lazy loading and WebP support
+// Optimize images with lazy loading and format support
 export const createOptimizedImage = (src: string, alt: string, options: {
   priority?: boolean;
   sizes?: string;
@@ -28,18 +28,10 @@ export const createOptimizedImage = (src: string, alt: string, options: {
 } = {}) => {
   const { priority = false, sizes, className } = options;
   
-  // Check WebP support
-  const supportsWebP = (() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-  })();
-
-  const webpSrc = supportsWebP ? src.replace(/\.(jpg|jpeg|png)$/i, '.webp') : src;
-
+  // Don't auto-convert to WebP since we don't have WebP versions
+  // Use the original source as-is
   return {
-    src: webpSrc,
+    src: src,
     alt,
     loading: priority ? 'eager' : 'lazy',
     decoding: 'async',
@@ -137,46 +129,38 @@ export const inlineCriticalCSS = (css: string) => {
   document.head.appendChild(style);
 };
 
-// Service Worker registration with auto-reload on update
+// Service Worker registration with controlled updates (NO AUTO-RELOAD)
 export const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw-ultra.js');
       console.log('[App] SW registered:', registration);
 
-      // Listen for updates
+      // Listen for updates but DON'T auto-reload
       registration.addEventListener('updatefound', () => {
         const newWorker = registration.installing;
         if (newWorker) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
-              console.log('[App] New SW activated, reloading page...');
-              // Reload page to get new content
-              window.location.reload();
+              console.log('[App] New SW activated - ready for next visit');
+              // DON'T reload automatically - let user continue
             }
           });
         }
       });
 
-      // Listen for messages from SW
+      // Listen for messages from SW but don't auto-reload
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'SW_UPDATED') {
           console.log('[App] SW updated to version:', event.data.version);
-          // Clear any app-level caches
-          if ('caches' in window) {
-            caches.keys().then(names => {
-              names.forEach(name => caches.delete(name));
-            });
-          }
-          // Reload after a short delay
-          setTimeout(() => window.location.reload(), 1000);
+          // Just log, don't reload
         }
       });
 
-      // Check for updates every 60 seconds
+      // Check for updates less frequently (every 10 minutes instead of 1 minute)
       setInterval(() => {
         registration.update();
-      }, 60000);
+      }, 10 * 60 * 1000);
 
     } catch (error) {
       console.error('[App] SW registration failed:', error);
