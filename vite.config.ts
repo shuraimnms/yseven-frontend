@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { visualizer } from 'rollup-plugin-visualizer';
 import { compression } from 'vite-plugin-compression2';
 
 // https://vitejs.dev/config/
@@ -141,10 +140,7 @@ export default defineConfig(({ mode }) => ({
     }
   },
   plugins: [
-    react({
-      fastRefresh: true,
-      jsxRuntime: 'automatic',
-    }),
+    react(),
     // Only compress in production
     mode === 'production' && compression({
       algorithm: 'brotliCompress',
@@ -198,7 +194,7 @@ export default defineConfig(({ mode }) => ({
   },
   // Experimental features for better performance
   experimental: {
-    renderBuiltUrl(filename) {
+    renderBuiltUrl() {
       // Use CDN for production assets if needed
       return { relative: true };
     }
