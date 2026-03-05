@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +17,8 @@ import { useAuthStore } from "./store/authStore";
 import { ChatBot } from "./components/chat/ChatBot";
 import FloatingContactButtons from "./components/FloatingContactButtons";
 import { initializeErrorHandling } from "./utils/errorHandler";
+import { initializeResourceHints } from "./utils/preloadCritical";
+import { lazyWithPreload } from "./utils/lazyWithPreload";
 
 // Import watermark image
 import watermarkImage from "./assets/y7-watermark.png";
@@ -25,64 +27,66 @@ import watermarkImage from "./assets/y7-watermark.png";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
-// Lazy load non-critical pages
-const About = lazy(() => import("./pages/About"));
-const Products = lazy(() => import("./pages/Products"));
-const Shop = lazy(() => import("./pages/Shop"));
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
-const Recipes = lazy(() => import("./pages/Recipes"));
-const Contact = lazy(() => import("./pages/Contact"));
-const BulkOrders = lazy(() => import("./pages/BulkOrders"));
-const Export = lazy(() => import("./pages/Export"));
-const Certifications = lazy(() => import("./pages/Certifications"));
-const Quality = lazy(() => import("./pages/Quality"));
-const FAQ = lazy(() => import("./pages/FAQ"));
-const Careers = lazy(() => import("./pages/Careers"));
-const Press = lazy(() => import("./pages/Press"));
-const Partnerships = lazy(() => import("./pages/Partnerships"));
-const Privacy = lazy(() => import("./pages/Privacy"));
-const Terms = lazy(() => import("./pages/Terms"));
-const Refund = lazy(() => import("./pages/Refund"));
-const Shipping = lazy(() => import("./pages/Shipping"));
+// Lazy load non-critical pages with preload capability
+const About = lazyWithPreload(() => import("./pages/About"));
+const Products = lazyWithPreload(() => import("./pages/Products"));
+const Shop = lazyWithPreload(() => import("./pages/Shop"));
+const Blog = lazyWithPreload(() => import("./pages/Blog"));
+const BlogPost = lazyWithPreload(() => import("./pages/BlogPost"));
+const Recipes = lazyWithPreload(() => import("./pages/Recipes"));
+const Contact = lazyWithPreload(() => import("./pages/Contact"));
+const BulkOrders = lazyWithPreload(() => import("./pages/BulkOrders"));
+const Export = lazyWithPreload(() => import("./pages/Export"));
+const Certifications = lazyWithPreload(() => import("./pages/Certifications"));
+const Quality = lazyWithPreload(() => import("./pages/Quality"));
+const FAQ = lazyWithPreload(() => import("./pages/FAQ"));
+const Careers = lazyWithPreload(() => import("./pages/Careers"));
+const Press = lazyWithPreload(() => import("./pages/Press"));
+const Partnerships = lazyWithPreload(() => import("./pages/Partnerships"));
+const Privacy = lazyWithPreload(() => import("./pages/Privacy"));
+const Terms = lazyWithPreload(() => import("./pages/Terms"));
+const Refund = lazyWithPreload(() => import("./pages/Refund"));
+const Shipping = lazyWithPreload(() => import("./pages/Shipping"));
 
-// Category Pages
-const HotSauces = lazy(() => import("./pages/categories/HotSauces"));
-const Mayonnaise = lazy(() => import("./pages/categories/Mayonnaise"));
-const International = lazy(() => import("./pages/categories/International"));
-const BBQSauces = lazy(() => import("./pages/categories/BBQSauces"));
+// Category Pages - HIGH PRIORITY with instant preload
+const HotSauces = lazyWithPreload(() => import("./pages/categories/HotSauces"));
+const Mayonnaise = lazyWithPreload(() => import("./pages/categories/Mayonnaise"));
+const International = lazyWithPreload(() => import("./pages/categories/International"));
+const BBQSauces = lazyWithPreload(() => import("./pages/categories/BBQSauces"));
 
 // Auth Pages
-const Login = lazy(() => import("./pages/auth/Login"));
-const Register = lazy(() => import("./pages/auth/Register"));
+const Login = lazyWithPreload(() => import("./pages/auth/Login"));
+const Register = lazyWithPreload(() => import("./pages/auth/Register"));
 
 // Protected Pages
-const Cart = lazy(() => import("./pages/Cart"));
-const Checkout = lazy(() => import("./pages/Checkout"));
-const Profile = lazy(() => import("./pages/Profile"));
-const Orders = lazy(() => import("./pages/Orders"));
-const Wishlist = lazy(() => import("./pages/Wishlist"));
+const Cart = lazyWithPreload(() => import("./pages/Cart"));
+const Checkout = lazyWithPreload(() => import("./pages/Checkout"));
+const Profile = lazyWithPreload(() => import("./pages/Profile"));
+const Orders = lazyWithPreload(() => import("./pages/Orders"));
+const Wishlist = lazyWithPreload(() => import("./pages/Wishlist"));
 
 // Admin Pages
-const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminDashboard = lazyWithPreload(() => import("./pages/admin/AdminDashboard"));
 
-// Product Pages
-const ProductDetail = lazy(() => import("./pages/ProductDetail"));
-const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+// Product Pages - HIGH PRIORITY
+const ProductDetail = lazyWithPreload(() => import("./pages/ProductDetail"));
+const CategoryPage = lazyWithPreload(() => import("./pages/CategoryPage"));
 
 // Payment Pages
-const PaymentSuccess = lazy(() => import("./pages/payment/PaymentSuccess"));
-const PaymentFailed = lazy(() => import("./pages/payment/PaymentFailed"));
-const PaymentLoading = lazy(() => import("./pages/payment/PaymentLoading"));
+const PaymentSuccess = lazyWithPreload(() => import("./pages/payment/PaymentSuccess"));
+const PaymentFailed = lazyWithPreload(() => import("./pages/payment/PaymentFailed"));
+const PaymentLoading = lazyWithPreload(() => import("./pages/payment/PaymentLoading"));
 
-// Optimized QueryClient with better defaults
+// Optimized QueryClient with aggressive caching
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
+      staleTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 30 * 60 * 1000, // 30 minutes
       retry: 1,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     },
   },
 });
@@ -95,7 +99,7 @@ const PageLoader = () => (
 );
 
 const App = () => {
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, isAuthenticated } = useAuthStore();
   const gaTrackingId = import.meta.env.VITE_GA_TRACKING_ID || '';
   const gtmId = import.meta.env.VITE_GTM_ID || '';
 
@@ -105,9 +109,98 @@ const App = () => {
     // Initialize error handling for browser extension errors
     initializeErrorHandling();
     
+    // Initialize resource hints and preloading
+    initializeResourceHints();
+    
+    // AGGRESSIVE PRELOADING STRATEGY - Preload ALL pages in priority order
+    // This makes the ENTIRE website feel instant
+    if ('requestIdleCallback' in window) {
+      // Priority 1: Category pages (most visited)
+      requestIdleCallback(() => {
+        HotSauces.preload();
+        Mayonnaise.preload();
+        International.preload();
+        BBQSauces.preload();
+      }, { timeout: 1000 });
+      
+      // Priority 2: Product & Shop pages
+      requestIdleCallback(() => {
+        Products.preload();
+        Shop.preload();
+        ProductDetail.preload();
+        CategoryPage.preload();
+      }, { timeout: 2000 });
+      
+      // Priority 3: Info pages
+      requestIdleCallback(() => {
+        About.preload();
+        Contact.preload();
+        FAQ.preload();
+        Blog.preload();
+      }, { timeout: 3000 });
+      
+      // Priority 4: Secondary pages
+      requestIdleCallback(() => {
+        Recipes.preload();
+        BulkOrders.preload();
+        Export.preload();
+        Certifications.preload();
+        Quality.preload();
+      }, { timeout: 4000 });
+      
+      // Priority 5: Legal & misc pages
+      requestIdleCallback(() => {
+        Privacy.preload();
+        Terms.preload();
+        Refund.preload();
+        Shipping.preload();
+        Careers.preload();
+        Press.preload();
+        Partnerships.preload();
+      }, { timeout: 5000 });
+      
+      // Priority 6: Auth pages (if not authenticated)
+      if (!isAuthenticated) {
+        requestIdleCallback(() => {
+          Login.preload();
+          Register.preload();
+        }, { timeout: 6000 });
+      }
+      
+      // Priority 7: User pages (if authenticated)
+      if (isAuthenticated) {
+        requestIdleCallback(() => {
+          Cart.preload();
+          Profile.preload();
+          Orders.preload();
+          Wishlist.preload();
+        }, { timeout: 6000 });
+      }
+    } else {
+      // Fallback for browsers without requestIdleCallback
+      setTimeout(() => {
+        HotSauces.preload();
+        Mayonnaise.preload();
+        International.preload();
+        BBQSauces.preload();
+        Products.preload();
+        Shop.preload();
+      }, 1000);
+    }
+    
     // Set watermark image as CSS custom property
     document.documentElement.style.setProperty('--watermark-image', `url(${watermarkImage})`);
-  }, [checkAuth]);
+    
+    // Performance optimization: Remove unused CSS
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        // Clean up any unused styles
+        document.querySelectorAll('style[data-vite-dev-id]').forEach(el => {
+          if (!el.textContent?.trim()) el.remove();
+        });
+      });
+    }
+  }, [checkAuth, isAuthenticated]);
 
   return (
     <QueryClientProvider client={queryClient}>

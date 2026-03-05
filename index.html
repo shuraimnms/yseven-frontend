@@ -54,11 +54,22 @@
     <!-- Critical CSS Inline (will be replaced by build process) -->
     <style>
       /* Critical above-the-fold styles */
-      body { margin: 0; padding: 0; background: #000; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
-      .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 0; background: #000; color: #fff; font-family: system-ui, -apple-system, sans-serif; overflow-x: hidden; }
+      .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #000; }
       .spinner { width: 40px; height: 40px; border: 3px solid #333; border-top: 3px solid #D4AF37; border-radius: 50%; animation: spin 1s linear infinite; }
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      /* Prevent layout shift */
+      img, video { max-width: 100%; height: auto; display: block; }
+      /* Font loading optimization */
+      @font-face { font-family: 'Inter'; font-display: swap; }
     </style>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" as="script" href="/src/main.tsx" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter.woff2" crossorigin />
+    <link rel="prefetch" as="script" href="/src/App.tsx" />
+    <link rel="prefetch" as="script" href="/src/pages/Index.tsx" />
 
     <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -186,6 +197,18 @@
         <div class="spinner"></div>
       </div>
     </div>
+    
+    <!-- Register Service Worker for ultra-fast caching -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw-ultra.js')
+            .then(reg => console.log('SW registered:', reg))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+    
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

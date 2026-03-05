@@ -130,7 +130,6 @@ const ChatLeads: React.FC = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${Cookies.get('accessToken')}`
         },
-        credentials: 'include',
         body: JSON.stringify({ status })
       });
 

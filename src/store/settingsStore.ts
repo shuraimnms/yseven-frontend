@@ -41,7 +41,7 @@ interface SettingsStore {
   lastFetch: number;
   setSettings: (settings: GlobalSettings) => void;
   setLoading: (loading: boolean) => void;
-  fetchSettings: () => Promise<void>;
+  fetchSettings: (force?: boolean) => Promise<void>;
   shouldRefresh: () => boolean;
 }
 
@@ -104,21 +104,21 @@ export const useSettingsStore = create<SettingsStore>()(
 
       fetchSettings: async (force = false) => {
         try {
-          const { setLoading, setSettings, shouldRefresh } = get();
+          const state = get();
 
           // Skip if recently fetched (unless forced)
-          if (!force && !shouldRefresh()) {
+          if (!force && !state.shouldRefresh()) {
             return;
           }
 
-          setLoading(true);
+          state.setLoading(true);
 
           const response = await apiFetch('/admin/settings/public');
 
           if (response.ok) {
             const data = await response.json();
             if (data.data) {
-              setSettings(data.data);
+              state.setSettings(data.data);
               // Trigger a custom event to notify all components
               window.dispatchEvent(new CustomEvent('settingsUpdated', { detail: data.data }));
             }
