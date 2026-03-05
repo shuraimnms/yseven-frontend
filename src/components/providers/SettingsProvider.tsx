@@ -9,21 +9,18 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   const { fetchSettings, setSettings } = useSettingsStore();
 
   useEffect(() => {
-    // ALWAYS fetch fresh settings on mount
-    console.log('🚀 SettingsProvider mounted, fetching fresh settings...');
-    fetchSettings(true);
+    // Fetch on mount, but do not force hard refresh every time.
+    fetchSettings();
 
-    // Set up aggressive periodic refresh every 30 seconds
+    // Periodic refresh (5 min) to reduce noisy retries on temporary API errors.
     const interval = setInterval(() => {
-      console.log('⏰ Periodic settings refresh...');
-      fetchSettings(true);
-    }, 30 * 1000); // 30 seconds
+      fetchSettings();
+    }, 5 * 60 * 1000);
 
     // Listen for visibility change to refresh when user returns
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        console.log('👁️ Tab visible again, refreshing settings...');
-        fetchSettings(true); // Force refresh when tab becomes visible
+        fetchSettings();
       }
     };
 
@@ -41,7 +38,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === 'settingsUpdate' && event.newValue) {
         try {
-          const { settings: newSettings, action } = JSON.parse(event.newValue);
+          const { settings: newSettings } = JSON.parse(event.newValue);
           console.log('🔄 Settings updated from another tab, syncing...');
           console.log('📧 New settings from storage:', newSettings);
           setSettings(newSettings);
@@ -64,15 +61,13 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
 
     // Listen for focus event to refresh settings
     const handleFocus = () => {
-      console.log('🎯 Window focused, fetching fresh settings...');
-      fetchSettings(true);
+      fetchSettings();
     };
 
     // Listen for page show event (back/forward navigation)
     const handlePageShow = (event: PageTransitionEvent) => {
       if (event.persisted) {
-        console.log('🔙 Page restored from cache, fetching fresh settings...');
-        fetchSettings(true);
+        fetchSettings();
       }
     };
 

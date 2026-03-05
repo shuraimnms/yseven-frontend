@@ -1,8 +1,19 @@
 // Utility functions for API calls
 
-// Get the API base URL from environment or fallback to local development
+// Get the API base URL from environment.
+// In production, default to same-origin API path to avoid localhost fallback issues.
 export const getApiBaseUrl = () => {
-  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+  const configuredBase = import.meta.env.VITE_API_BASE_URL;
+
+  if (configuredBase) {
+    return configuredBase;
+  }
+
+  if (import.meta.env.DEV) {
+    return 'http://localhost:4000/api/v1';
+  }
+
+  return '/api/v1';
 };
 
 // Create a fetch wrapper that automatically uses the correct base URL with better error handling

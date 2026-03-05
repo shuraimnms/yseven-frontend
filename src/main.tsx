@@ -11,8 +11,11 @@ import {
 preloadCriticalResources();
 addResourceHints();
 
-// Register service worker for caching
-registerServiceWorker();
+// Register service worker only when explicitly enabled in production.
+// This prevents stale-cache boot issues during frequent deployments.
+if (import.meta.env.PROD && import.meta.env.VITE_ENABLE_SW === 'true') {
+  registerServiceWorker();
+}
 
 // Create root with concurrent features
 const root = createRoot(document.getElementById("root")!, {
