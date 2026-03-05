@@ -131,6 +131,12 @@ export const inlineCriticalCSS = (css: string) => {
 
 // Service Worker registration with controlled updates (NO AUTO-RELOAD)
 export const registerServiceWorker = async () => {
+  // Skip service worker in development mode to avoid conflicts
+  if (import.meta.env.DEV) {
+    console.log('[App] Skipping SW registration in development mode');
+    return;
+  }
+
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw-ultra.js');

@@ -28,8 +28,21 @@
 /* Optimize scrolling performance */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 100px; /* Account for fixed header */
 }
 
+/* Enhanced smooth scrolling for better performance */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Optimize scroll performance on mobile */
+body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Service Worker Cache - Y7 Foods</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+        }
+        .container {
+            background: #111;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        button {
+            background: #D4AF37;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #B8941F;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background: #222;
+        }
+        .success { border-left: 4px solid #4CAF50; }
+        .error { border-left: 4px solid #f44336; }
+        .info { border-left: 4px solid #2196F3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Service Worker Cache Manager</h1>
+        <p>Use this tool to clear service worker cache and fix caching issues.</p>
+        
+        <div id="status" class="status info">
+            <strong>Status:</strong> Ready to clear cache
+        </div>
+        
+        <button onclick="clearServiceWorker()">🗑️ Clear Service Worker</button>
+        <button onclick="clearAllCaches()">🧹 Clear All Caches</button>
+        <button onclick="reloadPage()">🔄 Reload Page</button>
+        <button onclick="goHome()">🏠 Go to Homepage</button>
+        
+        <h3>What this does:</h3>
+        <ul>
+            <li><strong>Clear Service Worker:</strong> Unregisters the service worker and clears its cache</li>
+            <li><strong>Clear All Caches:</strong> Removes all cached data including localStorage</li>
+            <li><strong>Reload Page:</strong> Hard refresh to get fresh content</li>
+        </ul>
+        
+        <h3>When to use:</h3>
+        <ul>
+            <li>Site showing old content</li>
+            <li>Getting 404 errors for assets</li>
+            <li>Service worker cache errors</li>
+            <li>Multiple page refreshes on load</li>
+        </ul>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        
+        function updateStatus(message, type = 'info') {
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = `<strong>Status:</strong> ${message}`;
+        }
+        
+        async function clearServiceWorker() {
+            updateStatus('Clearing service worker...', 'info');
+            
+            try {
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                        console.log('Unregistered SW:', registration.scope);
+                    }
+                    
+                    updateStatus(`Cleared ${registrations.length} service worker(s)`, 'success');
+                } else {
+                    updateStatus('Service Worker not supported', 'error');
+                }
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function clearAllCaches() {
+            updateStatus('Clearing all caches...', 'info');
+            
+            try {
+                // Clear service worker
+                await clearServiceWorker();
+                
+                // Clear Cache API
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(
+                        cacheNames.map(name => caches.delete(name))
+                    );
+                    console.log('Cleared Cache API:', cacheNames);
+                }
+                
+                // Clear localStorage
+                localStorage.clear();
+                
+                // Clear sessionStorage
+                sessionStorage.clear();
+                
+                // Clear IndexedDB (if any)
+                if ('indexedDB' in window) {
+                    // This is more complex, but for most apps clearing localStorage is enough
+                }
+                
+                updateStatus('All caches cleared successfully!', 'success');
+                
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function reloadPage() {
+            updateStatus('Reloading page...', 'info');
+            // Hard reload
+            window.location.reload(true);
+        }
+        
+        function goHome() {
+            updateStatus('Redirecting to homepage...', 'info');
+            window.location.href = '/';
+        }
+        
+        // Auto-detect issues
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    if (regs.length > 1) {
+                        updateStatus(`Warning: ${regs.length} service workers found. Consider clearing.`, 'error');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -99,21 +99,23 @@ const Header = () => {
           : "bg-obsidian/90 backdrop-blur-sm"
       )}
     >
-      <nav className="container mx-auto px-6 lg:px-12">
+      <nav className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20 lg:h-20">
-          {/* Logo */}
-          <button 
-            onClick={() => handleNavigation("/")} 
-            className="flex items-center space-x-3 group cursor-pointer"
-          >
-            <Logo size="3xl" priority />
-            <span className="hidden sm:block text-cream/60 text-xs tracking-luxury uppercase">
-              Premium Sauces
-            </span>
-          </button>
+          {/* Logo - Positioned more to the left */}
+          <div className="flex-shrink-0 mr-8">
+            <button 
+              onClick={() => handleNavigation("/")} 
+              className="flex items-center space-x-2 group cursor-pointer"
+            >
+              <Logo size="3xl" priority />
+              <span className="hidden sm:block text-cream/60 text-xs tracking-luxury uppercase">
+                Premium Sauces
+              </span>
+            </button>
+          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-10">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden lg:flex items-center justify-center flex-1 space-x-10">
             {navigation.map((item) => (
               <button
                 key={item.name}
@@ -131,7 +133,7 @@ const Header = () => {
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             {/* Mobile Menu Toggle */}
             <button
               className="lg:hidden text-white bg-gold/50 hover:bg-gold/70 p-4 transition-all duration-300 relative z-[110] rounded-lg border-2 border-gold shadow-xl"

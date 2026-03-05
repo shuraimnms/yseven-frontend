@@ -192,7 +192,7 @@
       </div>
     </div>
     
-    <!-- Version check only - SW registration moved to main.tsx -->
+    <!-- Version check only - SW registration moved to main.tsx and disabled in dev -->
     <script>
       // Clear old localStorage/sessionStorage on version change
       const APP_VERSION = '2.0';
@@ -202,6 +202,16 @@
         localStorage.clear();
         sessionStorage.clear();
         localStorage.setItem('app_version', APP_VERSION);
+      }
+
+      // Clear any existing service workers in development
+      if (window.location.hostname === 'localhost' && 'serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(reg => {
+            console.log('[App] Unregistering SW for development:', reg.scope);
+            reg.unregister();
+          });
+        });
       }
     </script>
     

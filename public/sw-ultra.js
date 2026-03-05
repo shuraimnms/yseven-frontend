@@ -1,6 +1,6 @@
 // Ultra-optimized Service Worker for lightning-fast loading
 
-const CACHE_VERSION = 'v2'; // INCREMENT THIS ON EACH DEPLOYMENT
+const CACHE_VERSION = 'v3'; // INCREMENT THIS ON EACH DEPLOYMENT
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
 const IMAGE_CACHE = `images-${CACHE_VERSION}`;
@@ -78,11 +78,22 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Skip service worker entirely in development
+  if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+    return; // Let browser handle normally
+  }
+
   // Skip non-GET requests
   if (request.method !== 'GET') return;
 
   // Skip chrome-extension and other non-http(s) requests
   if (!url.protocol.startsWith('http')) return;
+
+  // Skip large media files that might cause partial responses (206)
+  if (url.pathname.match(/\.(mp4|webm|ogg|mp3|wav|flac|aac|mov|avi|mkv)$/i)) {
+    // Let browser handle media files directly without caching
+    return;
+  }
 
   // API requests - network first, cache fallback with timeout
   if (url.pathname.startsWith('/api/')) {
@@ -125,10 +136,14 @@ async function handleAPIRequest(request) {
       )
     ]);
 
-    // Cache successful responses
-    if (response.ok) {
-      const cache = await caches.open(API_CACHE);
-      cache.put(request, response.clone());
+    // Only cache successful, complete API responses
+    if (response.ok && response.status === 200 && response.type !== 'opaque') {
+      try {
+        const cache = await caches.open(API_CACHE);
+        await cache.put(request, response.clone());
+      } catch (cacheError) {
+        console.log('[SW] API cache put failed:', cacheError.message);
+      }
     }
 
     return response;
@@ -163,10 +178,15 @@ async function handleImageRequest(request) {
   try {
     const response = await fetch(request);
     
-    if (response.ok) {
-      const cache = await caches.open(IMAGE_CACHE);
-      cache.put(request, response.clone());
-      await setCacheTime(IMAGE_CACHE, request.url);
+    // Only cache successful, complete image responses
+    if (response.ok && response.status === 200 && response.type !== 'opaque') {
+      try {
+        const cache = await caches.open(IMAGE_CACHE);
+        await cache.put(request, response.clone());
+        await setCacheTime(IMAGE_CACHE, request.url);
+      } catch (cacheError) {
+        console.log('[SW] Image cache put failed:', cacheError.message);
+      }
     }
 
     return response;
@@ -190,9 +210,14 @@ async function handleStaticRequest(request) {
   try {
     const response = await fetch(request);
     
-    if (response.ok) {
-      const cache = await caches.open(STATIC_CACHE);
-      cache.put(request, response.clone());
+    // Only cache successful, complete responses
+    if (response.ok && response.status === 200 && response.type !== 'opaque') {
+      try {
+        const cache = await caches.open(STATIC_CACHE);
+        await cache.put(request, response.clone());
+      } catch (cacheError) {
+        console.log('[SW] Static cache put failed:', cacheError.message);
+      }
     }
 
     return response;
@@ -207,9 +232,14 @@ async function handleDocumentRequest(request) {
   try {
     const response = await fetch(request);
     
-    if (response.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE);
-      cache.put(request, response.clone());
+    // Only cache successful, complete HTML responses
+    if (response.ok && response.status === 200 && response.type !== 'opaque') {
+      try {
+        const cache = await caches.open(DYNAMIC_CACHE);
+        await cache.put(request, response.clone());
+      } catch (cacheError) {
+        console.log('[SW] Document cache put failed:', cacheError.message);
+      }
     }
 
     return response;
@@ -230,9 +260,16 @@ async function handleDefaultRequest(request) {
   try {
     const response = await fetch(request);
     
-    if (response.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE);
-      cache.put(request, response.clone());
+    // Only cache successful, complete responses (not partial content)
+    if (response.ok && response.status === 200 && response.type !== 'opaque') {
+      try {
+        const cache = await caches.open(DYNAMIC_CACHE);
+        // Clone the response before caching to avoid consuming the stream
+        await cache.put(request, response.clone());
+      } catch (cacheError) {
+        // Silently fail cache operations - don't break the response
+        console.log('[SW] Cache put failed:', cacheError.message);
+      }
     }
 
     return response;
