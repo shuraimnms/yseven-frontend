@@ -29,70 +29,7 @@ export default defineConfig(({ mode }) => ({
     cssMinify: true,
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // More aggressive code splitting
-          if (id.includes('node_modules')) {
-            // Core React
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-core';
-            }
-            // Router
-            if (id.includes('react-router')) {
-              return 'router';
-            }
-            // Radix UI - split by component
-            if (id.includes('@radix-ui')) {
-              if (id.includes('dialog') || id.includes('dropdown') || id.includes('select')) {
-                return 'ui-core';
-              }
-              return 'ui-extended';
-            }
-            // Heavy libraries
-            if (id.includes('framer-motion')) {
-              return 'animations';
-            }
-            if (id.includes('recharts')) {
-              return 'charts';
-            }
-            if (id.includes('lucide-react')) {
-              return 'icons';
-            }
-            // Utilities
-            if (id.includes('axios') || id.includes('zustand') || id.includes('zod')) {
-              return 'utils';
-            }
-            if (id.includes('@tanstack/react-query')) {
-              return 'query';
-            }
-            if (id.includes('react-helmet')) {
-              return 'seo';
-            }
-            if (id.includes('react-hook-form')) {
-              return 'forms';
-            }
-            if (id.includes('date-fns')) {
-              return 'date';
-            }
-            // Other node_modules
-            return 'vendor';
-          }
-          // Split pages by route
-          if (id.includes('/pages/')) {
-            if (id.includes('/admin/')) {
-              return 'admin';
-            }
-            if (id.includes('/auth/')) {
-              return 'auth';
-            }
-            if (id.includes('/categories/')) {
-              return 'categories';
-            }
-            if (id.includes('/payment/')) {
-              return 'payment';
-            }
-          }
-        },
-        // Optimize chunk naming for better caching
+        // Let Vite handle chunking automatically
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
@@ -113,26 +50,17 @@ export default defineConfig(({ mode }) => ({
           return `assets/[name]-[hash][extname]`;
         }
       },
-      // Tree-shaking optimizations
-      treeshake: {
-        moduleSideEffects: false,
-        propertyReadSideEffects: false,
-        tryCatchDeoptimization: false
-      }
+      // Simplified tree-shaking
+      treeshake: true
     },
     chunkSizeWarningLimit: 800,
     reportCompressedSize: false, // Faster builds
     assetsInlineLimit: 8192, // Inline smaller assets
-    // Terser options for maximum compression
+    // Simplified terser options
     terserOptions: {
       compress: {
         drop_console: mode === 'production',
         drop_debugger: mode === 'production',
-        pure_funcs: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
-        passes: 2
-      },
-      mangle: {
-        safari10: true
       },
       format: {
         comments: false
@@ -187,16 +115,8 @@ export default defineConfig(({ mode }) => ({
   },
   // Performance optimizations
   esbuild: {
-    drop: mode === 'production' ? ['console', 'debugger'] : [],
+    logOverride: { 'this-is-undefined-in-esm': 'silent' },
     target: 'es2020',
     legalComments: 'none',
-    treeShaking: true
   },
-  // Experimental features for better performance
-  experimental: {
-    renderBuiltUrl() {
-      // Use CDN for production assets if needed
-      return { relative: true };
-    }
-  }
 }));
