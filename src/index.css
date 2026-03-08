@@ -92,15 +92,10 @@ body {
   @apply py-16 lg:py-20;
 }
 
-/* Prevent zooming and touch manipulation */
+/* Prevent zooming and touch manipulation - FIXED for mobile buttons */
 * {
   touch-action: manipulation;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  -webkit-tap-highlight-color: rgba(217, 165, 32, 0.1);
 }
 
 /* Allow text selection for inputs and content areas */
@@ -110,6 +105,14 @@ input, textarea, [contenteditable], p, span, h1, h2, h3, h4, h5, h6 {
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+/* Ensure buttons and interactive elements work properly on mobile */
+button, a, [role="button"], [type="button"], [type="submit"] {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(217, 165, 32, 0.2);
 }
 
 /* Prevent zoom on double tap */
@@ -866,16 +869,35 @@ video {
   }
 }
 
-/* Disable zoom on double tap for all elements */
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
+/* Ensure proper touch behavior for interactive elements */
+button, a, [role="button"], [type="button"], [type="submit"], input[type="button"] {
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(217, 165, 32, 0.2);
+  position: relative;
+  /* Ensure minimum touch target size for mobile */
+  min-height: 44px;
+  min-width: 44px;
 }
 
-/* Ensure buttons and interactive elements don't zoom */
-button, a, [role="button"] {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+/* Add active state feedback for better mobile UX */
+button:active, a:active, [role="button"]:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Ensure links inside buttons work properly */
+a button, button a {
+  pointer-events: auto;
+}
+
+/* Fix for nested interactive elements */
+button *, a * {
+  pointer-events: none;
+}
+
+button svg, a svg {
+  pointer-events: none;
 }
 
 /* Category Page Custom Styles */
@@ -1013,5 +1035,54 @@ button, a, [role="button"] {
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+/* Mobile Touch Optimizations */
+@media (max-width: 768px) {
+  /* Ensure all clickable elements have proper touch targets */
+  button, a, [role="button"], [type="button"], [type="submit"] {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Improve button visibility and feedback on mobile */
+  button:active, a:active {
+    opacity: 0.8;
+    transform: scale(0.97);
+  }
+
+  /* Ensure proper spacing for touch targets */
+  .flex > button, .flex > a {
+    margin: 4px;
+  }
+
+  /* Fix for horizontal scroll buttons */
+  .overflow-x-auto button {
+    flex-shrink: 0;
+  }
+
+  /* Ensure category pills are easily tappable */
+  .rounded-full {
+    padding: 10px 16px !important;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  button, a, [role="button"] {
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: rgba(217, 165, 32, 0.2);
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (max-width: 768px) and (hover: none) {
+  button:hover, a:hover {
+    background-color: inherit;
+  }
+  
+  button:active, a:active {
+    background-color: rgba(217, 165, 32, 0.1);
   }
 }

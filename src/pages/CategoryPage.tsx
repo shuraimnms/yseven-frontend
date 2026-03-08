@@ -273,8 +273,10 @@ const CategoryPage = () => {
                   key={product.id}
                   id={`pill-${product.id}`}
                   onClick={() => scrollToProduct(product.id)}
+                  type="button"
+                  style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
                   className={`
-                    px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-all duration-300
+                    px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-all duration-300 cursor-pointer
                     ${activeProductId === product.id
                       ? 'bg-gold text-obsidian shadow-lg scale-105'
                       : 'bg-obsidian/50 text-cream hover:bg-obsidian/70 border border-gold/20'
@@ -303,8 +305,10 @@ const CategoryPage = () => {
                   renderItem={(product) => (
                     <button
                       onClick={() => scrollToProduct(product.id)}
+                      type="button"
+                      style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
                       className={`
-                        w-full text-left px-4 py-3 rounded-lg transition-all duration-300 relative mb-2
+                        w-full text-left px-4 py-3 rounded-lg transition-all duration-300 relative mb-2 cursor-pointer
                         ${activeProductId === product.id
                           ? 'bg-gradient-to-r from-gold/20 to-gold/10 border-l-4 border-gold font-semibold text-gold shadow-lg shadow-gold/20'
                           : 'hover:bg-charcoal/50 text-cream/70 hover:text-cream border-l-4 border-transparent hover:border-gold/30'

@@ -673,12 +673,14 @@ const Products = () => {
                       variant={selectedCategory === category ? "default" : "outline"}
                       onClick={() => scrollToCategory(category)}
                       disabled={isLoading}
+                      type="button"
+                      style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
                       className={`
                         ${selectedCategory === category 
                           ? "bg-gold text-obsidian hover:bg-gold/90" 
                           : "border-gold/30 text-gold hover:bg-gold/10"
                         }
-                        transition-all duration-300
+                        transition-all duration-300 cursor-pointer
                       `}
                     >
                       {isLoading && selectedCategory === category ? (
@@ -717,7 +719,9 @@ const Products = () => {
                     variant="outline"
                     onClick={() => scrollToCategory(category)}
                     disabled={isLoading}
-                    className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300"
+                    type="button"
+                    style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
+                    className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300 cursor-pointer"
                   >
                     {category}
                     <Badge 
@@ -765,7 +769,9 @@ const Products = () => {
                   <Button
                     variant="outline"
                     onClick={() => scrollToCategory("All")}
-                    className="border-gold/30 text-gold hover:bg-gold/10"
+                    type="button"
+                    style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
+                    className="border-gold/30 text-gold hover:bg-gold/10 cursor-pointer"
                   >
                     View All Products
                   </Button>
