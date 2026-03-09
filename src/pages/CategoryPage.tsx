@@ -19,7 +19,7 @@ const ProductCard = memo(({ product, productRef }: {
       ref={productRef}
       id={product.id}
       data-product-id={product.id}
-      className="scroll-mt-24" // Reduced from scroll-mt-32 for better detection
+      className="scroll-mt-36 lg:scroll-mt-24" // Mobile: 144px (header 80 + nav 64), Desktop: 96px
     >
       {fullProduct ? (
         <ProductDetailsSections product={fullProduct} bulkInquiryId={`bulk-inquiry-${product.slug}`} />
@@ -185,21 +185,56 @@ const CategoryPage = () => {
     };
   }, []);
 
-  // Smooth scroll to product
+  // Smooth scroll to product - FIXED for mobile with multiple fallbacks
   const scrollToProduct = (productId: string) => {
     const element = productRefs.current[productId];
-    if (element) {
-      // Update active product immediately for better UX
-      setActiveProductId(productId);
-      
-      const offset = 100; // Reduced offset to match scroll-mt-24
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+    if (!element) {
+      console.warn(`Product element not found for ID: ${productId}`);
+      return;
+    }
 
+    // Update active product immediately for better UX
+    setActiveProductId(productId);
+    
+    // Calculate proper offset for mobile and desktop
+    // Mobile: Header (80px) + Sticky nav (~60px with padding) = ~140px
+    // Desktop: Header (80px) + some padding = ~100px
+    const isMobile = window.innerWidth < 1024;
+    const offset = isMobile ? 150 : 100;
+    
+    // Try multiple scroll methods for better compatibility
+    try {
+      // Method 1: Modern scrollIntoView with offset (best for mobile)
+      const elementTop = element.getBoundingClientRect().top + window.scrollY;
+      const targetPosition = elementTop - offset;
+      
       window.scrollTo({
-        top: offsetPosition,
+        top: targetPosition,
         behavior: 'smooth'
       });
+
+      // Debug log for troubleshooting
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Scroll to product:', {
+          productId,
+          elementTop,
+          offset,
+          targetPosition,
+          isMobile
+        });
+      }
+    } catch (error) {
+      // Fallback: Use basic scrollIntoView
+      console.error('Scroll error, using fallback:', error);
+      element.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+      
+      // Adjust for sticky header after scroll
+      setTimeout(() => {
+        window.scrollBy(0, -offset);
+      }, 100);
     }
   };
 
@@ -265,14 +300,18 @@ const CategoryPage = () => {
       {/* Main Content Layout */}
       <section className="bg-obsidian min-h-screen">
         {/* Mobile Horizontal Scroll Navigation */}
-        <div className="lg:hidden sticky top-16 z-40 bg-charcoal border-b border-gold/20 shadow-sm">
+        <div className="lg:hidden sticky top-20 z-40 bg-charcoal border-b border-gold/20 shadow-sm">
           <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-2 px-4 py-4 min-w-max">
               {category.products.map((product) => (
                 <button
                   key={product.id}
                   id={`pill-${product.id}`}
-                  onClick={() => scrollToProduct(product.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    scrollToProduct(product.id);
+                  }}
                   type="button"
                   style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
                   className={`
@@ -304,7 +343,11 @@ const CategoryPage = () => {
                   className="h-[calc(100vh-280px)]"
                   renderItem={(product) => (
                     <button
-                      onClick={() => scrollToProduct(product.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        scrollToProduct(product.id);
+                      }}
                       type="button"
                       style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
                       className={`
