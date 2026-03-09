@@ -1,5 +1,5 @@
-# Netlify SPA routing configuration
-# Simple catch-all: serve index.html for all routes that don't match existing files
-# Netlify automatically serves static files if they exist, so we don't need explicit rules
+# Redirect old category pages to products page
+/category/* /products 301
 
-/*    /index.html   200
+# SPA fallback
+/* /index.html 200

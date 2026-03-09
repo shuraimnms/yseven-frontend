@@ -49,6 +49,7 @@ const Refund = lazyWithPreload(() => import("./pages/Refund"));
 const Shipping = lazyWithPreload(() => import("./pages/Shipping"));
 
 // Category Pages - HIGH PRIORITY with instant preload
+const CategoryPage = lazyWithPreload(() => import("./pages/CategoryPage"));
 const HotSauces = lazyWithPreload(() => import("./pages/categories/HotSauces"));
 const Mayonnaise = lazyWithPreload(() => import("./pages/categories/Mayonnaise"));
 const International = lazyWithPreload(() => import("./pages/categories/International"));
@@ -70,7 +71,6 @@ const AdminDashboard = lazyWithPreload(() => import("./pages/admin/AdminDashboar
 
 // Product Pages - HIGH PRIORITY
 const ProductDetail = lazyWithPreload(() => import("./pages/ProductDetail"));
-const CategoryPage = lazyWithPreload(() => import("./pages/CategoryPage"));
 
 // Payment Pages
 const PaymentSuccess = lazyWithPreload(() => import("./pages/payment/PaymentSuccess"));
@@ -117,6 +117,7 @@ const App = () => {
     if ('requestIdleCallback' in window) {
       // Priority 1: Category pages (most visited)
       requestIdleCallback(() => {
+        CategoryPage.preload();
         HotSauces.preload();
         Mayonnaise.preload();
         International.preload();
@@ -128,7 +129,6 @@ const App = () => {
         Products.preload();
         Shop.preload();
         ProductDetail.preload();
-        CategoryPage.preload();
       }, { timeout: 2000 });
       
       // Priority 3: Info pages
@@ -258,13 +258,6 @@ const App = () => {
                   </Suspense>
                 </Layout>
               } />
-              <Route path="/category/:slug" element={
-                <Layout>
-                  <Suspense fallback={<PageLoader />}>
-                    <CategoryPage />
-                  </Suspense>
-                </Layout>
-              } />
               <Route path="/shop" element={
                 <Layout>
                   <Suspense fallback={<PageLoader />}>
@@ -385,7 +378,14 @@ const App = () => {
                 </Layout>
               } />
 
-              {/* Category Routes */}
+              // Category Routes
+              <Route path="/category/:category" element={
+                <Layout>
+                  <Suspense fallback={<PageLoader />}>
+                    <CategoryPage />
+                  </Suspense>
+                </Layout>
+              } />
               <Route path="/hot-sauces" element={
                 <Layout>
                   <Suspense fallback={<PageLoader />}>

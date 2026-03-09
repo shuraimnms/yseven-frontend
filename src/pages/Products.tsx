@@ -1,807 +1,744 @@
+import { useState, useRef, useEffect, memo } from "react";
 import { Link } from "react-router-dom";
-import { useState, useRef, useEffect, useMemo, memo, useCallback, lazy, Suspense } from "react";
-import { ArrowRight, Filter } from "lucide-react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import {
+  ArrowRight,
+  Filter,
+  SlidersHorizontal,
+  Star,
+  Award,
+  Shield,
+  TrendingUp,
+  Package,
+  Users,
+  Building2,
+  Factory,
+  MessageCircle,
+  X,
+  ChevronRight,
+  Sparkles,
+  CheckCircle2
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import SEOHead from "@/components/SEOHead";
+import { allProducts, getCategoryNames } from "@/data/products";
 
-// Lazy load ProductVideo for better performance
-const ProductVideo = lazy(() => import("@/components/ProductVideo"));
-
-// Import all product images
-import tomatoKetchup from "@/assets/Tomato-Ketchup.png";
-import tomatoSauce from "@/assets/Tomato-Sauce.png";
-import snackSauce from "@/assets/Snack-Sauce.png";
-import greenChilliSauce from "@/assets/Green-Chilli-Sauce.png";
-import redChilliSauce from "@/assets/Red-Chilli-Sauce.png";
-import soyaSauce from "@/assets/Soya-Sauce.png";
-import vinegar from "@/assets/Vinegar.png";
-import hotSpicySauce from "@/assets/Hot-&-Spicy-Sauce.png";
-import garlicSauce from "@/assets/Garlic-Sauce.png";
-import schezwanSauce from "@/assets/Schezwan-Sauce.png";
-import liteMayonnaise from "@/assets/Lite-Mayonnaise.png";
-import classicMayonnaise from "@/assets/Classic-Mayonnaise.png";
-import cheeseBlend from "@/assets/Cheese-Blend.png";
-import periPeriSauce from "@/assets/Peri-Peri-Sauce.png";
-import romescoSauce from "@/assets/Romesco-Sauce.png";
-import sambalSauce from "@/assets/Sambal-Sauce.png";
-import greenChilliFlakesFallback from "@/assets/Green-Chilli-Flakes.png";
-import greenChilliPowder from "@/assets/Green-Chilli-Powder.png";
-import yelkahiBananaPowderFallback from "@/assets/Yelkahi-Banana-Powde.png";
-import rasabaleBananaPowder from "@/assets/Rasabale-Banana-Powder.png";
-import g9BananaPowder from "@/assets/G9-Banana-Powder.png";
-import rawPapayaPowderFallback from "@/assets/Raw-Papaya-Powder.png";
-import mangoPowder from "@/assets/Mango-Powder.png";
-import guavaPowder from "@/assets/Guava-Powder.png";
-import sweetPotatoPowder from "@/assets/Sweet-Potato-Powder.png";
-import chikooSapotaPowder from "@/assets/Chikoo(Sapota)-Powder.png";
-
-// Import videos
-import tomatoKetchupVideo from "@/assets/Tomato-Ketchup.mp4";
-import greenChilliFlakesVideo from "@/assets/Green-Chilli-Flakes.mp4";
-import yelkahiBananaPowderVideo from "@/assets/Yelkahi-Banana-Powde.mp4";
-import rawPapayaPowderVideo from "@/assets/Raw-Papaya-Powder.mp4";
-
-// Map category names to category page slugs
-const categorySlugMap: { [key: string]: string } = {
-  "Sauces & Condiments": "sauces-condiments",
-  "Flakes & Powders (Agro Products)": "flakes-powders",
-  "Raw Banana Powders": "banana-powders",
-  "Fruit & Vegetable Powders": "fruit-vegetable-powders"
-};
-
-// Optimized Image Component with Intersection Observer
-const OptimizedImage = memo(({ src, alt, className, hasVideo = false, videoSrc = null }: {
-  src: string;
-  alt: string;
-  className?: string;
-  hasVideo?: boolean;
-  videoSrc?: string | null;
-}) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const imgRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { 
-        threshold: 0.1,
-        rootMargin: '100px' // Load images 100px before they come into view
-      }
-    );
-
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+// Optimized Image Component
+const OptimizedImage = memo(({ src, alt, className }: { src: string; alt: string; className?: string }) => {
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   return (
-    <div ref={imgRef} className={className}>
-      {isVisible ? (
-        hasVideo && videoSrc ? (
-          <Suspense fallback={
-            <img
-              src={src}
-              alt={alt}
-              className="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          }>
-            <ProductVideo
-              videoSrc={videoSrc}
-              fallbackImage={src}
-              alt={alt}
-              className="w-full h-full"
-            />
-          </Suspense>
-        ) : (
-          <img
-            src={src}
-            alt={alt}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-            decoding="async"
-            onLoad={() => setImageLoaded(true)}
-            style={{ opacity: imageLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
-          />
-        )
-      ) : (
-        <div className="w-full h-full bg-obsidian/50 animate-pulse flex items-center justify-center">
-          <div className="text-cream/30 text-sm">Loading...</div>
-        </div>
+    <div className={`relative overflow-hidden ${className}`}>
+      {!loaded && (
+        <div className="absolute inset-0 bg-obsidian/50 animate-pulse" />
       )}
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        className={`w-full h-full object-cover transition-all duration-700 ${
+          loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+        }`}
+        onLoad={() => setLoaded(true)}
+        loading="lazy"
+      />
     </div>
   );
 });
 
 OptimizedImage.displayName = 'OptimizedImage';
 
-// Optimized Product Card
-const ProductCard = memo(({ product, index }: { product: any; index: number }) => {
-  const hasVideo = ['Tomato Ketchup', 'Green Chilli Flakes', 'Yelkahi Banana Powder', 'Raw Papaya Powder'].includes(product.name);
-  
-  const getVideoSrc = () => {
-    switch (product.name) {
-      case 'Tomato Ketchup': return tomatoKetchupVideo;
-      case 'Green Chilli Flakes': return greenChilliFlakesVideo;
-      case 'Yelkahi Banana Powder': return yelkahiBananaPowderVideo;
-      case 'Raw Papaya Powder': return rawPapayaPowderVideo;
-      default: return null;
-    }
-  };
+// Product Card Component
+const ProductCard = memo(({ product, onClick }: { product: any; onClick?: () => void }) => {
+  const cardRef = useRef(null);
+  const isInView = useInView(cardRef, { once: true, margin: '-50px' });
 
   return (
-    <div
-      className={`grid lg:grid-cols-2 gap-12 items-center transition-all duration-500 ${
-        index % 2 === 1 ? "lg:flex-row-reverse" : ""
-      }`}
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5 }}
+      className="group"
     >
-      {/* Product Image/Video */}
-      <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-        <div className="relative group">
-          <div className="w-full h-96 overflow-hidden rounded-lg border border-gold/20">
-            <OptimizedImage
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full"
-              hasVideo={hasVideo}
-              videoSrc={getVideoSrc()}
-            />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-obsidian/60 via-transparent to-transparent rounded-lg" />
-        </div>
-      </div>
-
-      {/* Product Details */}
-      <div className={index % 2 === 1 ? "lg:order-1" : ""}>
-        <Badge variant="outline" className="border-gold text-gold mb-4">
-          {product.category}
-        </Badge>
-        
-        <h3 className="text-product-title mb-4">
-          {product.name}
-        </h3>
-
-        <p className="text-body-premium mb-6">
-          {product.description}
-        </p>
-
-        {/* Stock Status */}
-        <div className="mb-6">
-          {product.inStock ? (
-            <Badge variant="outline" className="border-green-500 text-green-500">
-              In Stock
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="border-red-500 text-red-500">
-              Out of Stock
-            </Badge>
-          )}
-        </div>
-
-        {/* Key Benefits */}
-        <div className="mb-6">
-          <h4 className="font-body-semibold text-cream mb-3">Key Benefits:</h4>
-          <div className="flex flex-wrap gap-2">
-            {product.benefits.map((benefit: string, benefitIndex: number) => (
-              <Badge
-                key={benefitIndex}
-                variant="outline"
-                className="border-gold/30 text-gold bg-gold/10"
-              >
-                {benefit}
+      <Card 
+        className="bg-black border-gold/20 hover:border-gold/40 transition-all duration-300 overflow-hidden h-full cursor-pointer"
+        onClick={onClick}
+      >
+        {/* Product Image */}
+        <div className="relative aspect-square overflow-hidden">
+          <OptimizedImage
+            src={product.image}
+            alt={product.name}
+            className="group-hover:scale-110 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+          
+          {/* Badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-2">
+            {product.isBestSeller && (
+              <Badge className="bg-gold text-black text-xs">
+                <Star className="w-3 h-3 mr-1" />
+                Best Seller
               </Badge>
-            ))}
+            )}
+            {product.isNew && (
+              <Badge className="bg-green-500 text-white text-xs">
+                <Sparkles className="w-3 h-3 mr-1" />
+                New
+              </Badge>
+            )}
+          </div>
+
+          {/* Category Tag */}
+          <div className="absolute bottom-3 left-3">
+            <Badge variant="outline" className="border-gold/30 text-gold bg-black/60 backdrop-blur-sm text-xs">
+              {product.category}
+            </Badge>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3">
-          {product.slug && (
-            <Link to={`/products/${product.slug}`}>
-              <Button 
-                variant="default" 
-                className="bg-gold text-obsidian hover:bg-gold/90 transition-all duration-300"
+        <CardContent className="p-4">
+          {/* Product Name */}
+          <h3 className="font-display text-cream text-base font-semibold mb-2 line-clamp-2">
+            {product.name}
+          </h3>
+          
+          {/* Tagline */}
+          <p className="text-cream/60 text-xs mb-4 line-clamp-2">
+            {product.tagline || product.description}
+          </p>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <Link to={`/products/${product.slug}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full border-gold/30 text-gold hover:bg-gold/10 h-10 text-xs"
               >
-                <ArrowRight className="w-4 h-4 mr-2" />
                 View Details
               </Button>
             </Link>
-          )}
-          <Link to="/bulk-orders">
-            <Button 
-              variant="outline" 
-              className="border-gold text-gold hover:bg-gold/10 transition-all duration-300"
-            >
-              Bulk Order
-            </Button>
-          </Link>
-          <Link to="/contact">
-            <Button 
-              variant="outline" 
-              className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300"
-            >
-              Get Quote
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </div>
+            <Link to="/contact" className="flex-1" onClick={(e) => e.stopPropagation()}>
+              <Button
+                size="sm"
+                className="w-full bg-gold text-black hover:bg-gold/90 h-10 text-xs"
+              >
+                Get Quote
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 });
 
 ProductCard.displayName = 'ProductCard';
 
-// All 26 products data
-const allProducts = [
-  {
-    id: 1,
-    name: "Tomato Ketchup",
-    slug: "tomato-ketchup",
-    description: "Classic tomato ketchup made from ripe, high-quality tomatoes, blended with a balanced mix of spices for rich flavor and smooth texture.",
-    benefits: ["Rich tomato antioxidants (lycopene)", "Enhances taste instantly", "Low-fat condiment", "Kid-friendly flavor"],
-    uses: "Burgers, fries, sandwiches, snacks, wraps",
-    category: "Sauces & Condiments",
-    image: tomatoKetchup,
-    inStock: true
-  },
-  {
-    id: 2,
-    name: "Tomato Sauce / Continental Sauce",
-    slug: "tomato-sauce-continental",
-    description: "A tangy, mildly spiced tomato-based sauce ideal for continental dishes and fusion recipes.",
-    benefits: ["Improves digestion", "Adds depth of flavor", "Low calorie", "Versatile use"],
-    uses: "Pasta, pizzas, sandwiches, gravies",
-    category: "Sauces & Condiments",
-    image: tomatoSauce,
-    inStock: true
-  },
-  {
-    id: 3,
-    name: "Snack Sauce",
-    slug: "snack-sauce",
-    description: "A bold, tangy, spicy sauce crafted for Indian snacks and street food flavors.",
-    benefits: ["Bold tangy flavor", "Perfect for Indian snacks", "Appetite stimulant", "No artificial flavors"],
-    uses: "Samosas, pakoras, chaat, fries",
-    category: "Sauces & Condiments",
-    image: snackSauce,
-    inStock: true
-  },
-  {
-    id: 4,
-    name: "Green Chilli Sauce",
-    slug: "green-chilli-sauce",
-    description: "Spicy sauce made from fresh green chilies, delivering sharp heat and bold aroma.",
-    benefits: ["Made from fresh green chilies", "Sharp heat level", "Rich in Vitamin C", "Boosts metabolism"],
-    uses: "Noodles, momos, stir-fries",
-    category: "Sauces & Condiments",
-    image: greenChilliSauce,
-    inStock: true
-  },
-  {
-    id: 5,
-    name: "Red Chilli Sauce",
-    slug: "red-chilli-sauce",
-    description: "Fiery red chili sauce with rich color and intense flavor for spicy food lovers.",
-    benefits: ["Intense red chili flavor", "Rich color", "Enhances metabolism", "Antioxidant rich"],
-    uses: "Chinese dishes, snacks, spring rolls",
-    category: "Sauces & Condiments",
-    image: redChilliSauce,
-    inStock: true
-  },
-  {
-    id: 6,
-    name: "Soya Sauce",
-    slug: "soya-sauce",
-    description: "Fermented soy-based sauce delivering deep umami flavor for Asian cuisines.",
-    benefits: ["Authentic umami flavor", "Fermented goodness", "Low calorie", "Versatile use"],
-    uses: "Fried rice, noodles, marinades",
-    category: "Sauces & Condiments",
-    image: soyaSauce,
-    inStock: true
-  },
-  {
-    id: 7,
-    name: "Vinegar",
-    slug: "vinegar",
-    description: "Naturally fermented vinegar for culinary and health applications.",
-    benefits: ["Natural fermentation", "Aids digestion", "Preservative properties", "Tangy flavor"],
-    uses: "Salads, pickling, marinades",
-    category: "Sauces & Condiments",
-    image: vinegar,
-    inStock: true
-  },
-  {
-    id: 8,
-    name: "Hot & Spicy Sauce",
-    slug: "hot-spicy-sauce",
-    description: "A powerful blend of chilies and spices for intense heat lovers.",
-    benefits: ["Intense heat", "Bold flavor", "Metabolism booster", "Appetite enhancer"],
-    uses: "Grills, wraps, burgers",
-    category: "Sauces & Condiments",
-    image: hotSpicySauce,
-    inStock: true
-  },
-  {
-    id: 9,
-    name: "Garlic Sauce",
-    slug: "garlic-sauce",
-    description: "Creamy garlic-based sauce with bold aroma and savory richness.",
-    benefits: ["Bold garlic flavor", "Creamy texture", "Heart health support", "Immunity booster"],
-    uses: "Shawarma, wraps, dips",
-    category: "Sauces & Condiments",
-    image: garlicSauce,
-    inStock: true
-  },
-  {
-    id: 10,
-    name: "Schezwan Sauce",
-    slug: "schezwan-sauce",
-    description: "Authentic Schezwan sauce made with red chilies, garlic, and aromatic spices.",
-    benefits: ["Authentic Indo-Chinese flavor", "Perfect heat level", "Rich garlic blend", "Versatile cooking sauce"],
-    uses: "Fried rice, noodles, momos",
-    category: "Sauces & Condiments",
-    image: schezwanSauce,
-    inStock: true
-  },
-  {
-    id: 11,
-    name: "Lite Mayonnaise",
-    slug: "lite-mayonnaise",
-    description: "Low-fat creamy mayonnaise with smooth texture and mild flavor.",
-    benefits: ["Low-fat formula", "Smooth texture", "Mild flavor", "Healthier option"],
-    uses: "Sandwiches, burgers, dips",
-    category: "Sauces & Condiments",
-    image: liteMayonnaise,
-    inStock: true
-  },
-  {
-    id: 12,
-    name: "Classic Mayonnaise",
-    slug: "classic-mayonnaise",
-    description: "Rich and creamy mayonnaise made from premium quality oils and fresh eggs.",
-    benefits: ["Premium quality", "Creamy texture", "Fresh egg-based", "No trans fats"],
-    uses: "Sandwiches, burgers, salads",
-    category: "Sauces & Condiments",
-    image: classicMayonnaise,
-    inStock: true
-  },
-  {
-    id: 13,
-    name: "Cheese Blend",
-    slug: "cheese-blend",
-    description: "Creamy cheese-flavored sauce for rich, savory dishes.",
-    benefits: ["Rich cheesy flavor", "Creamy texture", "Versatile use", "Kid-friendly"],
-    uses: "Nachos, fries, pasta",
-    category: "Sauces & Condiments",
-    image: cheeseBlend,
-    inStock: true
-  },
-  {
-    id: 14,
-    name: "Peri Peri Sauce",
-    slug: "peri-peri-sauce",
-    description: "Tangy, spicy African-style sauce made with bird's eye chilies.",
-    benefits: ["African fire & flavor", "Tangy and spicy", "Rich in Vitamin C", "Metabolism booster"],
-    uses: "Grilled chicken, fries",
-    category: "Sauces & Condiments",
-    image: periPeriSauce,
-    inStock: true
-  },
-  {
-    id: 15,
-    name: "Romesco Sauce",
-    slug: "romesco-sauce",
-    description: "Spanish-style nutty tomato-based sauce with rich smoky flavor.",
-    benefits: ["Spanish nutty delight", "Smoky flavor", "Rich in antioxidants", "Unique taste"],
-    uses: "Grilled vegetables, pasta",
-    category: "Sauces & Condiments",
-    image: romescoSauce,
-    inStock: true
-  },
-  {
-    id: 16,
-    name: "Sambal Sauce",
-    slug: "sambal-sauce",
-    description: "Indonesian-style chili sauce with bold spice and tangy notes.",
-    benefits: ["Indonesian spicy tang", "Bold spice", "Tangy notes", "Authentic flavor"],
-    uses: "Rice, noodles, stir-fries",
-    category: "Sauces & Condiments",
-    image: sambalSauce,
-    inStock: true
-  },
-  {
-    id: 17,
-    name: "Green Chilli Flakes",
-    slug: "green-chilli-flakes",
-    description: "Dried green chilies crushed into flakes for bold heat and aroma.",
-    benefits: ["Boosts metabolism", "Rich in Vitamin C", "Improves digestion", "Bold heat"],
-    uses: "Pizza topping, spice blends",
-    category: "Flakes & Powders (Agro Products)",
-    image: greenChilliFlakesFallback,
-    inStock: true
-  },
-  {
-    id: 18,
-    name: "Green Chilli Powder",
-    slug: "green-chilli-powder",
-    description: "Finely ground green chili powder with intense flavor.",
-    benefits: ["Intense flavor", "Rich in Vitamin C", "Metabolism booster", "Versatile spice"],
-    uses: "Curries, marinades",
-    category: "Flakes & Powders (Agro Products)",
-    image: greenChilliPowder,
-    inStock: true
-  },
-  {
-    id: 19,
-    name: "Yelkahi Banana Powder",
-    slug: "yelkahi-banana-powder",
-    description: "Made from premium Yelkahi bananas grown near Tungabhadra River.",
-    benefits: ["Resistant starch", "Gut health support", "Low glycemic index", "Energy booster"],
-    uses: "Smoothies, porridge",
-    category: "Raw Banana Powders",
-    image: yelkahiBananaPowderFallback,
-    inStock: true
-  },
-  {
-    id: 20,
-    name: "Rasabale Banana Powder",
-    slug: "rasabale-banana-powder",
-    description: "Powdered aromatic bananas from Cauvery river belt.",
-    benefits: ["Energy boosting", "Rich in potassium", "Aromatic flavor", "Digestive support"],
-    uses: "Smoothies, health drinks",
-    category: "Raw Banana Powders",
-    image: rasabaleBananaPowder,
-    inStock: true
-  },
-  {
-    id: 21,
-    name: "G9 Banana Powder",
-    slug: "g9-banana-powder",
-    description: "Powder made from export-grade Grand Naine bananas.",
-    benefits: ["Export-grade quality", "Rich in fiber", "Energy booster", "Nutrient-rich"],
-    uses: "Smoothies, baking",
-    category: "Raw Banana Powders",
-    image: g9BananaPowder,
-    inStock: true
-  },
-  {
-    id: 22,
-    name: "Raw Papaya Powder",
-    slug: "raw-papaya-powder",
-    description: "Unripe papaya powder rich in papain enzyme.",
-    benefits: ["Improves digestion", "Anti-inflammatory", "Detox support", "Enzyme-rich"],
-    uses: "Health drinks, cooking",
-    category: "Fruit & Vegetable Powders",
-    image: rawPapayaPowderFallback,
-    inStock: true
-  },
-  {
-    id: 23,
-    name: "Mango Powder",
-    slug: "mango-powder",
-    description: "Naturally sweet mango powder from ripe mangoes.",
-    benefits: ["Rich in Vitamin A & C", "Immunity booster", "Natural sweetness", "Antioxidant-rich"],
-    uses: "Smoothies, desserts",
-    category: "Fruit & Vegetable Powders",
-    image: mangoPowder,
-    inStock: true
-  },
-  {
-    id: 24,
-    name: "Guava Powder",
-    slug: "guava-powder",
-    description: "Powdered guava rich in fiber and antioxidants.",
-    benefits: ["Fiber-rich", "Improves digestion", "Boosts immunity", "Antioxidant power"],
-    uses: "Health drinks, smoothies",
-    category: "Fruit & Vegetable Powders",
-    image: guavaPowder,
-    inStock: true
-  },
-  {
-    id: 25,
-    name: "Sweet Potato Powder",
-    slug: "sweet-potato-powder",
-    description: "Naturally sweet powder made from dried sweet potatoes.",
-    benefits: ["Rich in fiber", "Blood sugar control", "Natural sweetness", "Nutrient-dense"],
-    uses: "Baking, smoothies",
-    category: "Fruit & Vegetable Powders",
-    image: sweetPotatoPowder,
-    inStock: true
-  },
-  {
-    id: 26,
-    name: "Chikoo (Sapota) Powder",
-    slug: "chikoo-sapota-powder",
-    description: "Sweet, nutrient-rich sapota powder.",
-    benefits: ["Energy booster", "Digestive support", "Antioxidant rich", "Natural sweetness"],
-    uses: "Smoothies, desserts",
-    category: "Fruit & Vegetable Powders",
-    image: chikooSapotaPowder,
-    inStock: true
-  }
-];
+// Quick Preview Modal Component
+const QuickPreviewModal = ({ product, onClose }: { product: any; onClose: () => void }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
+        transition={{ type: "spring", damping: 25 }}
+        className="bg-obsidian border border-gold/30 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-cream hover:bg-gold/20 transition-colors z-10"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-const Products = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [isLoading, setIsLoading] = useState(false);
+        {/* Product Image */}
+        <div className="relative h-64 md:h-80 overflow-hidden rounded-t-2xl">
+          <OptimizedImage src={product.image} alt={product.name} />
+          <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-transparent" />
+        </div>
 
-  // Memoize categories for performance
-  const categories = useMemo(() => 
-    ["All", ...Array.from(new Set(allProducts.map(product => product.category)))],
-    []
+        {/* Content */}
+        <div className="p-6">
+          {/* Badges */}
+          <div className="flex gap-2 mb-4">
+            {product.isBestSeller && (
+              <Badge className="bg-gold text-black">
+                <Star className="w-3 h-3 mr-1" />
+                Best Seller
+              </Badge>
+            )}
+            <Badge variant="outline" className="border-gold/30 text-gold">
+              {product.category}
+            </Badge>
+          </div>
+
+          {/* Product Name */}
+          <h2 className="font-display text-3xl font-bold text-cream mb-3">
+            {product.name}
+          </h2>
+
+          {/* Description */}
+          <p className="text-cream/70 text-base mb-6 leading-relaxed">
+            {product.description}
+          </p>
+
+          {/* Benefits */}
+          <div className="mb-6">
+            <h3 className="font-semibold text-cream mb-3 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-gold" />
+              Key Benefits
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {product.benefits.map((benefit: string, index: number) => (
+                <div key={index} className="flex items-start gap-2 text-sm text-cream/60">
+                  <span className="text-gold mt-1">•</span>
+                  <span>{benefit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <Link to={`/products/${product.slug}`} className="flex-1">
+              <Button className="w-full bg-gold text-black hover:bg-gold/90 h-12">
+                View Full Product
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+            <Link to="/contact" className="flex-1">
+              <Button variant="outline" className="w-full border-gold text-gold hover:bg-gold/10 h-12">
+                Get Quote
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
+};
 
-  // Memoize filtered products
-  const filteredProducts = useMemo(() => 
-    selectedCategory === "All" 
-      ? allProducts 
-      : allProducts.filter(product => product.category === selectedCategory),
-    [selectedCategory]
-  );
+// Main Products Component
+export default function Products() {
+  const [selectedCategory, setSelectedCategory] = useState<string>(getCategoryNames()[0]);
+  const [sortBy, setSortBy] = useState<string>("best-selling");
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
-  // Optimized scroll function with requestAnimationFrame
-  const smoothScrollTo = useCallback((targetY: number) => {
-    const startY = window.pageYOffset;
-    const distance = targetY - startY;
-    const duration = 800;
-    let start: number;
+  const categories = getCategoryNames();
 
-    const step = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const progress = Math.min((timestamp - start) / duration, 1);
-      const ease = 0.5 - Math.cos(progress * Math.PI) / 2; // easeInOutSine
-      window.scrollTo(0, startY + distance * ease);
-      
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      }
-    };
+  // Helper function to convert category name to URL slug
+  const categoryToSlug = (category: string): string => {
+    return category
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[()]/g, '')
+      .replace(/&/g, 'and');
+  };
 
-    requestAnimationFrame(step);
+  // Filter and sort products
+  const filteredProducts = allProducts.filter(p => p.category === selectedCategory);
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === "best-selling") {
+      if (a.isBestSeller && !b.isBestSeller) return -1;
+      if (!a.isBestSeller && b.isBestSeller) return 1;
+      return 0;
+    }
+    if (sortBy === "newest") {
+      if (a.isNew && !b.isNew) return -1;
+      if (!a.isNew && b.isNew) return 1;
+      return 0;
+    }
+    return 0;
+  });
+
+  // Featured products (best sellers)
+  const featuredProducts = allProducts.filter(p => p.isBestSeller).slice(0, 4);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
-  // Optimized category scroll
-  const scrollToCategory = useCallback((category: string) => {
-    setIsLoading(true);
-    setSelectedCategory(category);
-    
-    // Use requestAnimationFrame for smooth UI updates
-    requestAnimationFrame(() => {
-      const productsSection = document.getElementById('products-section');
-      if (productsSection) {
-        const offset = 100;
-        const elementPosition = productsSection.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-        smoothScrollTo(offsetPosition);
-      }
-      setIsLoading(false);
-    });
-  }, [smoothScrollTo]);
-
   const seoData = {
-    title: "YSeven Foods Premium Products - Master Product Catalog | One Brand. Endless Flavor.",
-    description: "Discover YSeven Foods' comprehensive range of premium sauces, condiments, and agro products. From classic tomato ketchup to exotic international sauces and nutritious fruit powders.",
-    keywords: "YSeven Foods, premium condiments, tomato ketchup, mayonnaise, chili sauce, banana powder, fruit powders, agro products",
-    canonical: "/products",
-    ogTitle: "YSeven Foods Premium Products - Master Product Catalog",
-    ogDescription: "Discover YSeven Foods' comprehensive range of premium sauces, condiments, and agro products. From classic tomato ketchup to exotic international sauces and nutritious fruit powders.",
-    twitterTitle: "YSeven Foods Premium Products - Master Product Catalog",
-    twitterDescription: "Discover YSeven Foods' comprehensive range of premium sauces, condiments, and agro products."
+    title: "Premium Products - Y7 Foods | Sauces, Condiments & Agro Products",
+    description: "Discover Y7's complete range of premium sauces, condiments, and agro products. From classic ketchup to exotic international flavors.",
+    keywords: "Y7 products, premium sauces, condiments, agro products, food products"
   };
 
   return (
     <>
       <SEOHead seo={seoData} />
 
-      {/* Individual Products Section */}
-      <section className="pt-20 pb-12 lg:pb-16 bg-obsidian">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="text-center mb-16">
-            <h2 className="text-section-title mb-6">
-              Master <span className="text-gradient-gold">Product Catalog</span>
-            </h2>
+      <div className="min-h-screen bg-black text-cream">
+
+        {/* PREMIUM HERO SECTION */}
+        <section className="relative h-[35vh] md:h-[40vh] overflow-hidden">
+          {/* Background Video/Image */}
+          <div className="absolute inset-0">
+            <div className="w-full h-full bg-gradient-to-br from-obsidian via-black to-obsidian" />
+            <div className="absolute inset-0 opacity-20" style={{
+              backgroundImage: 'url(/placeholder.svg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }} />
           </div>
 
-          {/* Category Filter Section */}
-          <div className="mb-16">
-            <div className="flex items-center justify-center mb-8">
-              <Filter className="w-5 h-5 text-gold mr-2" />
-              <h3 className="text-nav font-body-semibold text-cream">Filter by Category</h3>
-            </div>
-            
-            {/* Category Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {categories.slice(1).map((category) => {
-                const categoryProducts = allProducts.filter(p => p.category === category);
-                const firstProduct = categoryProducts[0];
-                const categoryImage = firstProduct?.image;
-                const categorySlug = categorySlugMap[category];
-                
-                return (
-                  <Link
-                    key={category}
-                    to={categorySlug ? `/category/${categorySlug}` : '#'}
-                    className="relative overflow-hidden rounded-lg border cursor-pointer transition-all duration-300 group block border-gold/20 hover:border-gold/40"
-                  >
-                    <div className="w-full h-64 overflow-hidden">
-                      <OptimizedImage
-                        src={categoryImage}
-                        alt={category}
-                        className="w-full h-full"
-                        hasVideo={firstProduct?.name === "Tomato Ketchup"}
-                        videoSrc={firstProduct?.name === "Tomato Ketchup" ? tomatoKetchupVideo : null}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-obsidian/20 to-transparent" />
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h4 className="font-body-semibold text-cream text-sm mb-1">{category}</h4>
-                      <p className="text-cream/60 text-xs">
-                        {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''}
-                      </p>
-                      {categorySlug && (
-                        <div className="mt-2 flex items-center text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span>View Collection</span>
-                          <ArrowRight className="w-3 h-3 ml-1" />
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-            
-            {/* Filter Buttons */}
-            <div className="flex flex-wrap justify-center gap-3">
-              {categories.map((category) => {
-                const categorySlug = categorySlugMap[category];
-                const isAll = category === "All";
-                
-                if (isAll) {
-                  return (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
-                      onClick={() => scrollToCategory(category)}
-                      disabled={isLoading}
-                      type="button"
-                      style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
-                      className={`
-                        ${selectedCategory === category 
-                          ? "bg-gold text-obsidian hover:bg-gold/90" 
-                          : "border-gold/30 text-gold hover:bg-gold/10"
-                        }
-                        transition-all duration-300 cursor-pointer
-                      `}
-                    >
-                      {isLoading && selectedCategory === category ? (
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                      ) : null}
-                      {category}
-                      <Badge 
-                        variant="secondary" 
-                        className="ml-2 bg-obsidian/20 text-xs"
-                      >
-                        {allProducts.length}
-                      </Badge>
-                    </Button>
-                  );
-                }
-                
-                return categorySlug ? (
-                  <Link key={category} to={`/category/${categorySlug}`}>
-                    <Button
-                      variant="outline"
-                      className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300 group"
-                    >
-                      {category}
-                      <Badge 
-                        variant="secondary" 
-                        className="ml-2 bg-obsidian/20 text-xs"
-                      >
-                        {allProducts.filter(p => p.category === category).length}
-                      </Badge>
-                      <ArrowRight className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button
-                    key={category}
-                    variant="outline"
-                    onClick={() => scrollToCategory(category)}
-                    disabled={isLoading}
-                    type="button"
-                    style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
-                    className="border-gold/30 text-gold hover:bg-gold/10 transition-all duration-300 cursor-pointer"
-                  >
-                    {category}
-                    <Badge 
-                      variant="secondary" 
-                      className="ml-2 bg-obsidian/20 text-xs"
-                    >
-                      {allProducts.filter(p => p.category === category).length}
-                    </Badge>
-                  </Button>
-                );
-              })}
-            </div>
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/40" />
 
-            {/* Results Count */}
-            <div className="text-center mt-6">
-              <p className="text-cream/60">
-                Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} 
-                {selectedCategory !== "All" && ` in "${selectedCategory}"`}
+          {/* Hero Content */}
+          <div className="relative h-full flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center max-w-3xl"
+            >
+              <h1 className="font-display text-4xl md:text-5xl font-bold text-cream mb-4">
+                Y7 Product <span className="text-gold">Collection</span>
+              </h1>
+              <p className="text-cream/80 text-base md:text-lg mb-8 max-w-2xl mx-auto">
+                Crafted flavors. Premium ingredients. Explore our full range of sauces, agro powders, and specialty food products.
               </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  size="lg"
+                  className="bg-gold text-black hover:bg-gold/90 h-12"
+                  onClick={() => document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Explore Categories
+                  <ChevronRight className="w-5 h-5 ml-2" />
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-gold text-gold hover:bg-gold/10 h-12"
+                  onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  View All Products
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* CATEGORY EXPLORER - Infinite Auto-Scrolling Carousel */}
+        <section id="categories" className="py-12 px-4 bg-obsidian overflow-hidden">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-8"
+            >
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-cream mb-3">
+                Explore by <span className="text-gold">Category</span>
+              </h2>
+              <p className="text-cream/60 text-base">Discover our premium product categories</p>
+            </motion.div>
+
+            {/* Infinite Auto-Scrolling Categories Carousel */}
+            <div className="relative">
+              {/* Gradient Overlays */}
+              <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-obsidian via-obsidian/80 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-obsidian via-obsidian/80 to-transparent z-10 pointer-events-none" />
+              
+              {/* Scrolling Container */}
+              <div 
+                className="carousel-container overflow-x-auto scrollbar-hide"
+                style={{
+                  scrollBehavior: 'smooth',
+                  WebkitOverflowScrolling: 'touch'
+                }}
+              >
+                <div className="carousel-track inline-flex gap-4 animate-scroll-categories hover:pause-animation">
+                  {/* Triple the categories for infinite loop effect */}
+                  {[...categories, ...categories, ...categories].map((category, index) => {
+                    const categoryProducts = allProducts.filter(p => p.category === category);
+                    const firstProduct = categoryProducts[0];
+                    const categorySlug = categoryToSlug(category);
+                    const originalIndex = index % categories.length;
+
+                    return (
+                      <motion.div
+                        key={`${category}-${index}`}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4, delay: originalIndex * 0.1 }}
+                        viewport={{ once: true }}
+                        className="flex-shrink-0 w-72"
+                      >
+                        <Link to={`/category/${categorySlug}`}>
+                          <Card className="bg-black border-gold/20 hover:border-gold hover:shadow-lg hover:shadow-gold/20 transition-all duration-300 overflow-hidden group cursor-pointer h-full">
+                            <div className="relative h-48 overflow-hidden">
+                              {firstProduct && (
+                                <OptimizedImage
+                                  src={firstProduct.image}
+                                  alt={category}
+                                  className="group-hover:scale-110 transition-transform duration-700"
+                                />
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                              
+                              {/* Best Category Badge */}
+                              {categoryProducts.some(p => p.isBestSeller) && (
+                                <div className="absolute top-3 right-3">
+                                  <Badge className="bg-gold text-black text-xs">
+                                    <Star className="w-3 h-3 mr-1" />
+                                    Top Category
+                                  </Badge>
+                                </div>
+                              )}
+                              
+                              <div className="absolute bottom-0 left-0 right-0 p-4">
+                                <h3 className="font-display text-xl font-bold text-cream mb-1">
+                                  {category}
+                                </h3>
+                                <p className="text-cream/60 text-sm mb-2">
+                                  {categoryProducts.length} Product{categoryProducts.length !== 1 ? 's' : ''}
+                                </p>
+                                <div className="flex items-center text-gold text-sm opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1">
+                                  <span>Explore Category</span>
+                                  <ArrowRight className="w-4 h-4 ml-1" />
+                                </div>
+                              </div>
+                            </div>
+                          </Card>
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Scroll Hints */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 1 }}
+              className="flex items-center justify-center gap-6 mt-6"
+            >
+              <div className="flex items-center gap-2 text-cream/40 text-xs">
+                <motion.div
+                  animate={{ x: [-5, 5, -5] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="text-gold"
+                >
+                  ←
+                </motion.div>
+                <span>Drag to scroll</span>
+                <motion.div
+                  animate={{ x: [-5, 5, -5] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="text-gold"
+                >
+                  →
+                </motion.div>
+              </div>
+              <div className="h-4 w-px bg-gold/20" />
+              <div className="flex items-center gap-2 text-cream/40 text-xs">
+                <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+                <span>Auto-scrolling</span>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* FEATURED PRODUCTS SECTION */}
+        <section className="py-12 px-4 bg-black">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-8"
+            >
+              <Badge className="bg-gold/20 text-gold border-gold/30 mb-4">
+                <Star className="w-4 h-4 mr-2" />
+                Featured Products
+              </Badge>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-cream mb-3">
+                Our <span className="text-gold">Best Sellers</span>
+              </h2>
+              <p className="text-cream/60 text-base">Premium products loved by chefs and food enthusiasts</p>
+            </motion.div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {featuredProducts.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onClick={() => setSelectedProduct(product)}
+                />
+              ))}
             </div>
           </div>
+        </section>
 
-          {/* Individual Product Cards */}
-          <div id="products-section">
-            {filteredProducts.length > 0 ? (
-              <div className="space-y-24">
-                {filteredProducts.map((product, index) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    index={index}
-                  />
-                ))}
-              </div>
-            ) : (
+        {/* STICKY SMART FILTER BAR */}
+        <div className="sticky top-0 z-40 bg-black/95 backdrop-blur-lg border-b border-gold/20 py-3 px-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-1">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-gold/30 text-gold hover:bg-gold/10 h-10"
+                onClick={() => setShowFilterModal(true)}
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filter
+              </Button>
+              
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-black border border-gold/30 text-gold rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-gold h-10"
+              >
+                <option value="best-selling">Best Selling</option>
+                <option value="newest">Newest</option>
+                <option value="popular">Popular</option>
+              </select>
+            </div>
+
+            <Badge variant="outline" className="border-gold/30 text-gold">
+              {sortedProducts.length} Products
+            </Badge>
+          </div>
+        </div>
+
+        {/* PRODUCT GRID - Main Section */}
+        <section id="products" className="py-12 px-4 bg-obsidian">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {sortedProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onClick={() => setSelectedProduct(product)}
+                />
+              ))}
+            </div>
+
+            {sortedProducts.length === 0 && (
               <div className="text-center py-16">
-                <div className="max-w-md mx-auto">
-                  <Filter className="w-16 h-16 text-gold/30 mx-auto mb-6" />
-                  <h3 className="text-section-title mb-4">
-                    No Products Found
-                  </h3>
-                  <p className="text-body-large mb-6">
-                    No products available in the "{selectedCategory}" category at the moment.
-                  </p>
-                  <Button
-                    variant="outline"
-                    onClick={() => scrollToCategory("All")}
-                    type="button"
-                    style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
-                    className="border-gold/30 text-gold hover:bg-gold/10 cursor-pointer"
-                  >
-                    View All Products
-                  </Button>
-                </div>
+                <Package className="w-16 h-16 text-gold/30 mx-auto mb-4" />
+                <p className="text-cream/60 text-lg">No products found</p>
               </div>
             )}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="py-12 lg:py-16 bg-gradient-section">
-        <div className="container mx-auto px-6 lg:px-12 text-center">
-          <h2 className="text-section-title mb-6">
-            Interested in <span className="text-gradient-gold">Bulk Orders?</span>
-          </h2>
-          <p className="text-body-large max-w-2xl mx-auto mb-10">
-            Partner with Y7 for your restaurant, hotel, or retail business. 
-            Premium pricing for premium partners.
-          </p>
-          <Link to="/bulk-orders">
-            <Button variant="gold" size="lg">
-              Request B2B Pricing
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
+        {/* TRUST / QUALITY SECTION */}
+        <section className="py-12 px-4 bg-black">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-8"
+            >
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-cream mb-3">
+                Why Choose <span className="text-gold">Y7</span>
+              </h2>
+              <p className="text-cream/60 text-base">Premium quality you can trust</p>
+            </motion.div>
+
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x pb-4">
+              {[
+                { icon: Award, title: "Premium Ingredients", desc: "Sourced from the finest suppliers" },
+                { icon: Shield, title: "Export Quality", desc: "International standards certified" },
+                { icon: TrendingUp, title: "Restaurant Grade", desc: "Trusted by professional chefs" },
+                { icon: CheckCircle2, title: "Quality Tested", desc: "Rigorous quality control" }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="flex-shrink-0 snap-center w-64"
+                >
+                  <Card className="bg-gradient-to-br from-obsidian to-black border-gold/20 hover:border-gold/40 transition-all duration-300 h-full">
+                    <CardContent className="p-6 text-center">
+                      <div className="w-14 h-14 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <item.icon className="w-7 h-7 text-gold" />
+                      </div>
+                      <h3 className="font-semibold text-cream text-lg mb-2">{item.title}</h3>
+                      <p className="text-cream/60 text-sm">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* BULK ORDER SECTION */}
+        <section className="py-16 px-4 bg-gradient-to-b from-obsidian to-black">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <h2 className="font-display text-3xl md:text-5xl font-bold text-cream mb-4">
+                Wholesale & Bulk Orders <span className="text-gold">Available</span>
+              </h2>
+              <p className="text-cream/70 text-lg mb-8 max-w-2xl mx-auto">
+                Partner with Y7 for premium pricing and reliable supply
+              </p>
+
+              {/* Target Buyers */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-4xl mx-auto">
+                {[
+                  { icon: Users, label: 'Restaurants' },
+                  { icon: Building2, label: 'Retailers' },
+                  { icon: Package, label: 'Distributors' },
+                  { icon: Factory, label: 'Food Manufacturers' }
+                ].map((buyer, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <Card className="bg-black border-gold/20 hover:border-gold/40 transition-all duration-300">
+                      <CardContent className="p-6 text-center">
+                        <buyer.icon className="w-8 h-8 text-gold mx-auto mb-3" />
+                        <p className="text-cream font-medium text-sm">{buyer.label}</p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* CTA Button */}
+              <Link to="/bulk-orders">
+                <Button size="lg" className="bg-gold text-black hover:bg-gold/90 font-bold h-14 px-10 text-base">
+                  Get Wholesale Quote
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* STICKY MOBILE CTA BAR */}
+        <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gold/20 p-4 z-50 md:hidden">
+          <div className="flex gap-3">
+            <a
+              href="https://wa.me/1234567890"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button size="lg" className="w-full bg-green-600 text-white hover:bg-green-700 h-12">
+                <MessageCircle className="w-5 h-5 mr-2" />
+                WhatsApp Inquiry
+              </Button>
+            </a>
+            <Link to="/contact" className="flex-1">
+              <Button size="lg" className="w-full bg-gold text-black hover:bg-gold/90 h-12">
+                Get Quote
+              </Button>
+            </Link>
+          </div>
         </div>
-      </section>
+
+        {/* Add padding at bottom for mobile sticky bar */}
+        <div className="h-20 md:hidden" />
+
+        {/* Quick Preview Modal */}
+        <AnimatePresence>
+          {selectedProduct && (
+            <QuickPreviewModal
+              product={selectedProduct}
+              onClose={() => setSelectedProduct(null)}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Filter Modal (Bottom Sheet) */}
+        <AnimatePresence>
+          {showFilterModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end"
+              onClick={() => setShowFilterModal(false)}
+            >
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25 }}
+                className="bg-obsidian border-t border-gold/30 rounded-t-3xl w-full max-h-[80vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-display text-2xl font-bold text-cream">Filter Products</h3>
+                    <button
+                      onClick={() => setShowFilterModal(false)}
+                      className="w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-cream"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-cream mb-3">Category</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {categories.map((category) => (
+                          <button
+                            key={category}
+                            onClick={() => {
+                              setSelectedCategory(category);
+                              setShowFilterModal(false);
+                            }}
+                            className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                              selectedCategory === category
+                                ? 'bg-gold text-black'
+                                : 'bg-black border border-gold/30 text-gold hover:bg-gold/10'
+                            }`}
+                          >
+                            {category}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </>
   );
-};
-
-export default Products;
+}

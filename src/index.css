@@ -1086,3 +1086,112 @@ button svg, a svg {
     background-color: rgba(217, 165, 32, 0.1);
   }
 }
+
+
+/* Infinite Carousel Animation for Category Page */
+@keyframes scroll-infinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-infinite {
+  animation: scroll-infinite 45s linear infinite;
+  will-change: transform;
+}
+
+.animate-scroll-infinite:hover,
+.carousel-container:hover .animate-scroll-infinite {
+  animation-play-state: paused;
+}
+
+/* Categories Carousel Animation */
+@keyframes scroll-categories {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-categories {
+  animation: scroll-categories 40s linear infinite;
+  will-change: transform;
+}
+
+.animate-scroll-categories:hover,
+.carousel-container:hover .animate-scroll-categories {
+  animation-play-state: paused;
+}
+
+.pause-animation {
+  animation-play-state: paused;
+}
+
+/* Carousel container styles */
+.carousel-container {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.carousel-container:active {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: inline-flex;
+  gap: 0.75rem;
+}
+
+/* Smooth transitions for carousel items */
+.carousel-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.carousel-item:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+
+/* Products Page Enhancements */
+.carousel-item:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Product card hover effects */
+.product-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+}
+
+/* Modal backdrop blur */
+.modal-backdrop {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Bottom sheet animation */
+.bottom-sheet {
+  touch-action: pan-y;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
