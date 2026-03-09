@@ -140,66 +140,70 @@ const ProductCard = memo(({ product }: { product: Product }) => {
       transition={{ duration: 0.5 }}
       className="group"
     >
-      <Card className="bg-black border-gold/20 hover:border-gold/40 transition-all duration-300 overflow-hidden h-full">
-        {/* Product Image */}
-        <div className="relative aspect-square overflow-hidden">
-          <OptimizedImage
-            src={product.image}
-            alt={product.name}
-            className="group-hover:scale-110 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-          
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {product.isBestSeller && (
-              <Badge className="bg-gold text-black text-xs">
-                <Star className="w-3 h-3 mr-1" />
-                Best Seller
-              </Badge>
-            )}
-            {product.isNew && (
-              <Badge className="bg-green-500 text-white text-xs">
-                <Sparkles className="w-3 h-3 mr-1" />
-                New
-              </Badge>
-            )}
+      <Link to={`/products/${product.slug}`}>
+        <Card className="bg-black border-gold/20 hover:border-gold/40 transition-all duration-300 overflow-hidden h-full cursor-pointer hover:shadow-lg hover:shadow-gold/20">
+          {/* Product Image */}
+          <div className="relative aspect-square overflow-hidden">
+            <OptimizedImage
+              src={product.image}
+              alt={product.name}
+              className="group-hover:scale-110 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            
+            {/* Badges */}
+            <div className="absolute top-3 left-3 flex flex-col gap-2">
+              {product.isBestSeller && (
+                <Badge className="bg-gold text-black text-xs font-semibold">
+                  <Star className="w-3 h-3 mr-1 fill-black" />
+                  Best Seller
+                </Badge>
+              )}
+              {product.isNew && (
+                <Badge className="bg-green-500 text-white text-xs font-semibold">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  New
+                </Badge>
+              )}
+            </div>
           </div>
-        </div>
 
-        <CardContent className="p-4">
-          {/* Product Name */}
-          <h3 className="font-display text-cream text-lg font-semibold mb-2 line-clamp-1">
-            {product.name}
-          </h3>
-          
-          {/* Tagline */}
-          <p className="text-cream/60 text-sm mb-4 line-clamp-2">
-            {product.tagline || product.description}
-          </p>
+          <CardContent className="p-4">
+            {/* Product Name */}
+            <h3 className="font-display text-cream text-base font-semibold mb-2 line-clamp-2 min-h-[3rem]">
+              {product.name}
+            </h3>
+            
+            {/* Tagline */}
+            <p className="text-cream/60 text-xs mb-4 line-clamp-2 min-h-[2.5rem]">
+              {product.tagline || product.description}
+            </p>
 
-          {/* Action Buttons */}
-          <div className="flex gap-2">
-            <Link to={`/products/${product.slug}`} className="flex-1">
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full border-gold/30 text-gold hover:bg-gold/10 h-12"
+            {/* Action Buttons */}
+            <div className="flex gap-2.5 mt-4">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                className="flex-[0.4] min-w-[100px] h-[42px] rounded-lg border border-gold/40 text-gold text-xs font-medium transition-all duration-300 hover:bg-gold hover:text-black flex items-center justify-center"
               >
-                View
-              </Button>
-            </Link>
-            <Link to="/contact" className="flex-1">
-              <Button
-                size="sm"
-                className="w-full bg-gold text-black hover:bg-gold/90 h-12"
+                View Details
+              </button>
+              <Link 
+                to="/contact" 
+                onClick={(e) => e.stopPropagation()}
+                className="flex-[0.6] min-w-[120px]"
               >
-                Quote
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+                <button className="w-full h-[42px] rounded-lg bg-gold text-black text-xs font-semibold transition-all duration-300 hover:bg-[#e6c35a] flex items-center justify-center gap-1.5">
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  GET QUOTE
+                </button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
     </motion.div>
   );
 });
@@ -211,6 +215,7 @@ export default function CategoryPage() {
   const [sortBy, setSortBy] = useState('best-selling');
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const categoryData = getCategoryData(category || 'sauces-condiments');
 
@@ -218,6 +223,52 @@ export default function CategoryPage() {
     // Scroll to top on mount
     window.scrollTo(0, 0);
   }, [category]);
+
+  // Infinite scroll effect for carousel
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    let animationId: number;
+    let scrollPosition = 0;
+    const scrollSpeed = 0.5; // pixels per frame
+
+    const animate = () => {
+      scrollPosition += scrollSpeed;
+      
+      // Get the width of one set of items
+      const scrollWidth = carousel.scrollWidth / 2;
+      
+      // Reset position when we've scrolled through one complete set
+      if (scrollPosition >= scrollWidth) {
+        scrollPosition = 0;
+      }
+      
+      carousel.scrollLeft = scrollPosition;
+      animationId = requestAnimationFrame(animate);
+    };
+
+    // Start animation
+    animationId = requestAnimationFrame(animate);
+
+    // Pause on hover
+    const handleMouseEnter = () => {
+      cancelAnimationFrame(animationId);
+    };
+
+    const handleMouseLeave = () => {
+      animationId = requestAnimationFrame(animate);
+    };
+
+    carousel.addEventListener('mouseenter', handleMouseEnter);
+    carousel.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      carousel.removeEventListener('mouseenter', handleMouseEnter);
+      carousel.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [categoryData.products]);
 
   // All products (no filtering by subcategory)
   const filteredProducts = categoryData.products;
@@ -345,14 +396,14 @@ export default function CategoryPage() {
               
               {/* Scrolling Container */}
               <div 
+                ref={carouselRef}
                 className="carousel-container overflow-x-auto scrollbar-hide"
                 style={{
-                  scrollBehavior: 'smooth',
                   WebkitOverflowScrolling: 'touch'
                 }}
               >
-                <div className="carousel-track inline-flex gap-3 animate-scroll-infinite hover:pause-animation">
-                  {/* Sort products: Best sellers first, then rest */}
+                <div className="inline-flex gap-3">
+                  {/* Sort products: Best sellers first, then rest - Triple for true infinite loop */}
                   {[...categoryData.products]
                     .sort((a, b) => {
                       if (a.isBestSeller && !b.isBestSeller) return -1;
@@ -445,7 +496,7 @@ export default function CategoryPage() {
                 >
                   ←
                 </motion.div>
-                <span>Drag to scroll</span>
+                <span>Seamless loop</span>
                 <motion.div
                   animate={{ x: [-5, 5, -5] }}
                   transition={{ repeat: Infinity, duration: 2 }}
@@ -648,36 +699,6 @@ export default function CategoryPage() {
             </motion.div>
           </div>
         </section>
-
-        {/* STICKY MOBILE CTA BAR */}
-        <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gold/20 p-4 z-50 md:hidden">
-          <div className="flex gap-3">
-            <Link to="/products" className="flex-1">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full border-gold text-gold hover:bg-gold/10 h-12"
-              >
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                View Products
-              </Button>
-            </Link>
-            <a
-              href="https://wa.me/1234567890"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1"
-            >
-              <Button size="lg" className="w-full bg-gold text-black hover:bg-gold/90 h-12">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                WhatsApp Order
-              </Button>
-            </a>
-          </div>
-        </div>
-
-        {/* Add padding at bottom for mobile sticky bar */}
-        <div className="h-20 md:hidden" />
       </div>
     </>
   );

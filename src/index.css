@@ -1088,7 +1088,47 @@ button svg, a svg {
 }
 
 
-/* Infinite Carousel Animation for Category Page */
+/* Seamless Infinite Carousel Animations */
+
+/* Products Carousel - Seamless Loop */
+@keyframes scroll-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-seamless {
+  animation: scroll-seamless 30s linear infinite;
+  will-change: transform;
+}
+
+.carousel-container:hover .animate-scroll-seamless {
+  animation-play-state: paused;
+}
+
+/* Categories Carousel - Seamless Loop */
+@keyframes scroll-categories-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-categories-seamless {
+  animation: scroll-categories-seamless 25s linear infinite;
+  will-change: transform;
+}
+
+.carousel-container:hover .animate-scroll-categories-seamless {
+  animation-play-state: paused;
+}
+
+/* Legacy animations - keeping for backward compatibility */
 @keyframes scroll-infinite {
   0% {
     transform: translateX(0);
@@ -1135,14 +1175,44 @@ button svg, a svg {
 /* Carousel container styles */
 .carousel-container {
   cursor: grab;
-  user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  position: relative;
 }
 
 .carousel-container:active {
   cursor: grabbing;
+}
+
+/* Enable text selection globally */
+body, * {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+/* Disable text selection only for interactive elements */
+button, a, .carousel-container, [role="button"] {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Allow text selection in specific content areas */
+p, h1, h2, h3, h4, h5, h6, span, div {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+/* Pause animation when user is scrolling manually */
+.carousel-container:active .animate-scroll-seamless,
+.carousel-container:active .animate-scroll-categories-seamless {
+  animation-play-state: paused;
 }
 
 .carousel-track {
@@ -1170,6 +1240,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Enable smooth scrolling for all elements */
+* {
+  scroll-behavior: smooth;
+}
+
 /* Product card hover effects */
 .product-card-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1194,4 +1269,12 @@ html {
 /* Prevent body scroll when modal is open */
 body.modal-open {
   overflow: hidden;
+}
+
+/* Smooth scrolling for webkit browsers */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
 }
