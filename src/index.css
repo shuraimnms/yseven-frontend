@@ -1183,7 +1183,7 @@ button svg, a svg {
   overflow-y: hidden;
   scroll-behavior: auto !important;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  touch-action: pan-y pan-x; /* Allow both vertical and horizontal scrolling */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

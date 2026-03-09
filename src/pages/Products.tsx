@@ -286,32 +286,44 @@ export default function Products() {
 
     let animationId: number;
     let scrollPosition = 0;
-    const scrollSpeed = 1.2;
+    const scrollSpeed = 0.5;
     let isPaused = false;
-    let lastScrollLeft = 0;
     let scrollTimeout: NodeJS.Timeout;
+    let touchStartX = 0;
+    let touchStartY = 0;
 
     const animate = () => {
       if (!isPaused) {
         scrollPosition += scrollSpeed;
         
-        // Get the width of one set of items
         const scrollWidth = carousel.scrollWidth / 3;
         
-        // Reset position when we've scrolled through one complete set
         if (scrollPosition >= scrollWidth) {
           scrollPosition = 0;
         }
         
         carousel.scrollLeft = scrollPosition;
-        lastScrollLeft = scrollPosition;
       }
       animationId = requestAnimationFrame(animate);
     };
 
-    // Detect manual scrolling on mobile
-    const handleTouchStart = () => {
-      isPaused = true;
+    // Detect scroll direction on touch start
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    // Only pause if horizontal scroll is intended
+    const handleTouchMove = (e: TouchEvent) => {
+      const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
+      const deltaX = Math.abs(touchX - touchStartX);
+      const deltaY = Math.abs(touchY - touchStartY);
+      
+      // If horizontal movement is greater than vertical, pause auto-scroll
+      if (deltaX > deltaY && deltaX > 10) {
+        isPaused = true;
+      }
     };
 
     const handleTouchEnd = () => {
@@ -319,24 +331,24 @@ export default function Products() {
       scrollTimeout = setTimeout(() => {
         isPaused = false;
         scrollPosition = carousel.scrollLeft;
-      }, 1000);
+      }, 1500);
     };
 
-    // Start animation
     animationId = requestAnimationFrame(animate);
 
-    // Pause on hover (desktop)
     const handleMouseEnter = () => {
       isPaused = true;
     };
 
     const handleMouseLeave = () => {
       isPaused = false;
+      scrollPosition = carousel.scrollLeft;
     };
 
     carousel.addEventListener('mouseenter', handleMouseEnter);
     carousel.addEventListener('mouseleave', handleMouseLeave);
     carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+    carousel.addEventListener('touchmove', handleTouchMove, { passive: true });
     carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
@@ -345,6 +357,7 @@ export default function Products() {
       carousel.removeEventListener('mouseenter', handleMouseEnter);
       carousel.removeEventListener('mouseleave', handleMouseLeave);
       carousel.removeEventListener('touchstart', handleTouchStart);
+      carousel.removeEventListener('touchmove', handleTouchMove);
       carousel.removeEventListener('touchend', handleTouchEnd);
     };
   }, [categories]);
