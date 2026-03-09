@@ -25,15 +25,15 @@
   text-rendering: optimizeLegibility;
 }
 
-/* Optimize scrolling performance */
+/* Disable smooth scrolling - instant jump */
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 100px; /* Account for fixed header */
+  scroll-behavior: auto !important;
+  scroll-padding-top: 0;
 }
 
-/* Enhanced smooth scrolling for better performance */
+/* Disable smooth scrolling for all elements */
 * {
-  scroll-behavior: smooth;
+  scroll-behavior: auto !important;
 }
 
 /* Optimize scroll performance on mobile */
@@ -213,7 +213,7 @@ select {
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto !important;
   }
 
   body {
@@ -1179,6 +1179,17 @@ button svg, a svg {
   -moz-user-select: none;
   -ms-user-select: none;
   position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-container:active {
@@ -1237,12 +1248,12 @@ p, h1, h2, h3, h4, h5, h6, span, div {
 
 /* Smooth scroll behavior */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto !important;
 }
 
-/* Enable smooth scrolling for all elements */
+/* Disable smooth scrolling for all elements */
 * {
-  scroll-behavior: smooth;
+  scroll-behavior: auto !important;
 }
 
 /* Product card hover effects */
@@ -1271,10 +1282,10 @@ body.modal-open {
   overflow: hidden;
 }
 
-/* Smooth scrolling for webkit browsers */
+/* Smooth scrolling for webkit browsers - DISABLED for instant jump */
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto !important;
     -webkit-overflow-scrolling: touch;
   }
 }

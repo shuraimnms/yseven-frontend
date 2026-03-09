@@ -98,6 +98,7 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('250ml');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
+  const [isLoading, setIsLoading] = useState(true);
   const galleryRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
 
@@ -106,6 +107,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setIsLoading(false);
   }, [slug]);
 
   // Handle pack size change
@@ -128,16 +130,41 @@ export default function ProductDetail() {
     }
   };
 
-  if (!product) {
+  // Loading state
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-cream mb-4">Product Not Found</h1>
-          <Link to="/products">
-            <Button className="bg-gold text-black hover:bg-gold/90">
-              Back to Products
-            </Button>
-          </Link>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
+          <p className="text-cream/60">Loading product...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Product not found
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-4">😕</div>
+          <h1 className="text-3xl font-bold text-cream mb-3">Product Not Found</h1>
+          <p className="text-cream/60 mb-6">
+            Sorry, we couldn't find the product you're looking for.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Link to="/products">
+              <Button className="bg-gold text-black hover:bg-gold/90">
+                <ChevronRight className="w-4 h-4 mr-2 rotate-180" />
+                Back to Products
+              </Button>
+            </Link>
+            <Link to="/">
+              <Button variant="outline" className="border-gold text-gold hover:bg-gold/10">
+                Go Home
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -187,15 +214,21 @@ export default function ProductDetail() {
           <div 
             ref={galleryRef}
             className="h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide flex"
+            onScroll={(e) => {
+              const scrollLeft = e.currentTarget.scrollLeft;
+              const width = e.currentTarget.offsetWidth;
+              const newIndex = Math.round(scrollLeft / width);
+              setCurrentImageIndex(newIndex);
+            }}
           >
             {productImages.map((image, index) => (
-              <div key={index} className="min-w-full h-full snap-center relative">
+              <div key={`${selectedSize}-${index}`} className="min-w-full h-full snap-center relative">
                 <img
                   src={image}
-                  alt={`${product.name} - Image ${index + 1}`}
+                  alt={`${product.name} - ${selectedSize} - Image ${index + 1}`}
                   className="w-full h-full object-contain"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
               </div>
             ))}
           </div>
@@ -210,28 +243,34 @@ export default function ProductDetail() {
 
           {/* Pack Size Badge */}
           {selectedPackDetails && (
-            <div className="absolute top-4 right-4 z-10">
+            <motion.div
+              key={selectedSize}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-4 right-4 z-10"
+            >
               <Badge className="bg-black/80 backdrop-blur-sm text-gold border border-gold/30 font-semibold">
                 {selectedPackDetails.label} {selectedPackDetails.type}
               </Badge>
-            </div>
+            </motion.div>
           )}
 
-          {/* Image Indicators */}
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-            {productImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setCurrentImageIndex(index);
-                  galleryRef.current?.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' });
-                }}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  currentImageIndex === index ? 'bg-gold w-6' : 'bg-cream/30'
-                }`}
-              />
-            ))}
-          </div>
+          {/* Tap to Zoom Hint - Only show on first image */}
+          {currentImageIndex === 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.5 }}
+              className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10"
+            >
+              <div className="bg-black/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gold/30 flex items-center gap-2">
+                <span className="text-gold text-xs">👆 Swipe to see more</span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Image Indicators - Removed as per user request */}
         </section>
 
         <div className="max-w-7xl mx-auto px-4 py-6">
@@ -297,7 +336,7 @@ export default function ProductDetail() {
                     className={`flex-1 h-[44px] rounded-lg font-medium text-sm transition-all duration-300 ${
                       selectedSize === pack.size
                         ? 'bg-gold text-black border-2 border-gold shadow-lg shadow-gold/30'
-                        : 'bg-black border border-gold/30 text-gold hover:bg-gold/10'
+                        : 'bg-black border border-gold/30 text-gold hover:bg-gold hover:text-black'
                     }`}
                   >
                     {pack.label}
@@ -317,7 +356,7 @@ export default function ProductDetail() {
                     className={`h-[44px] rounded-lg font-medium text-sm transition-all duration-300 ${
                       selectedSize === pack.size
                         ? 'bg-gold text-black border-2 border-gold scale-105 shadow-lg shadow-gold/30'
-                        : 'bg-black border border-gold/30 text-gold hover:bg-gold/10'
+                        : 'bg-black border border-gold/30 text-gold hover:bg-gold hover:text-black'
                     }`}
                   >
                     {pack.label}
@@ -505,21 +544,21 @@ export default function ProductDetail() {
         </div>
 
         {/* 10. STICKY MOBILE CTA */}
-        <div className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gold/20 p-4 z-50">
-          <div className="max-w-7xl mx-auto flex gap-3">
+        <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gold/20 p-3 z-50">
+          <div className="max-w-7xl mx-auto flex gap-2">
             <a
-              href="https://wa.me/1234567890"
+              href={`https://wa.me/1234567890?text=Hi, I'm interested in ${product.name} (${selectedSize})`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1"
             >
-              <Button className="w-full bg-green-600 text-white hover:bg-green-700 h-[60px] font-semibold text-base">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                WhatsApp Inquiry
+              <Button className="w-full bg-green-600 text-white hover:bg-green-700 h-[56px] font-semibold text-sm">
+                <MessageCircle className="w-4 h-4 mr-2" />
+                WhatsApp
               </Button>
             </a>
-            <Link to="/contact" className="flex-1">
-              <Button className="w-full bg-gold text-black hover:bg-gold/90 h-[60px] font-semibold text-base">
+            <Link to="/contact" state={{ product: product.name, size: selectedSize }} className="flex-1">
+              <Button className="w-full bg-gold text-black hover:bg-gold/90 h-[56px] font-semibold text-sm">
                 Get Quote
               </Button>
             </Link>

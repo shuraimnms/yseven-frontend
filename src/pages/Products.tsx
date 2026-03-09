@@ -111,26 +111,28 @@ const ProductCard = memo(({ product, onClick }: { product: any; onClick?: () => 
             </p>
 
             {/* Action Buttons */}
-            <div className="flex gap-2.5 mt-4">
+            <div className="flex flex-col gap-2.5 mt-4">
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  window.location.href = `/products/${product.slug}`;
                 }}
-                className="flex-[0.4] min-w-[100px] h-[42px] rounded-lg border border-gold/40 text-gold text-xs font-medium transition-all duration-300 hover:bg-gold hover:text-black flex items-center justify-center"
+                className="w-full h-[42px] rounded-lg border border-gold/40 text-gold text-sm font-medium transition-all duration-300 hover:bg-gold hover:text-black flex items-center justify-center"
               >
                 View Details
               </button>
-              <Link 
-                to="/contact" 
-                onClick={(e) => e.stopPropagation()}
-                className="flex-[0.6] min-w-[120px]"
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.location.href = '/contact';
+                }}
+                className="w-full h-[42px] rounded-lg bg-gold text-black text-sm font-semibold transition-all duration-300 hover:bg-[#e6c35a] flex items-center justify-center gap-1.5"
               >
-                <button className="w-full h-[42px] rounded-lg bg-gold text-black text-xs font-semibold transition-all duration-300 hover:bg-[#e6c35a] flex items-center justify-center gap-1.5">
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  GET QUOTE
-                </button>
-              </Link>
+                <MessageCircle className="w-4 h-4" />
+                GET QUOTE
+              </button>
             </div>
           </CardContent>
         </Card>
@@ -284,42 +286,66 @@ export default function Products() {
 
     let animationId: number;
     let scrollPosition = 0;
-    const scrollSpeed = 0.7; // pixels per frame
+    const scrollSpeed = 1.2;
+    let isPaused = false;
+    let lastScrollLeft = 0;
+    let scrollTimeout: NodeJS.Timeout;
 
     const animate = () => {
-      scrollPosition += scrollSpeed;
-      
-      // Get the width of one set of items
-      const scrollWidth = carousel.scrollWidth / 3;
-      
-      // Reset position when we've scrolled through one complete set
-      if (scrollPosition >= scrollWidth) {
-        scrollPosition = 0;
+      if (!isPaused) {
+        scrollPosition += scrollSpeed;
+        
+        // Get the width of one set of items
+        const scrollWidth = carousel.scrollWidth / 3;
+        
+        // Reset position when we've scrolled through one complete set
+        if (scrollPosition >= scrollWidth) {
+          scrollPosition = 0;
+        }
+        
+        carousel.scrollLeft = scrollPosition;
+        lastScrollLeft = scrollPosition;
       }
-      
-      carousel.scrollLeft = scrollPosition;
       animationId = requestAnimationFrame(animate);
+    };
+
+    // Detect manual scrolling on mobile
+    const handleTouchStart = () => {
+      isPaused = true;
+    };
+
+    const handleTouchEnd = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isPaused = false;
+        scrollPosition = carousel.scrollLeft;
+      }, 1000);
     };
 
     // Start animation
     animationId = requestAnimationFrame(animate);
 
-    // Pause on hover
+    // Pause on hover (desktop)
     const handleMouseEnter = () => {
-      cancelAnimationFrame(animationId);
+      isPaused = true;
     };
 
     const handleMouseLeave = () => {
-      animationId = requestAnimationFrame(animate);
+      isPaused = false;
     };
 
     carousel.addEventListener('mouseenter', handleMouseEnter);
     carousel.addEventListener('mouseleave', handleMouseLeave);
+    carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+    carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       cancelAnimationFrame(animationId);
+      clearTimeout(scrollTimeout);
       carousel.removeEventListener('mouseenter', handleMouseEnter);
       carousel.removeEventListener('mouseleave', handleMouseLeave);
+      carousel.removeEventListener('touchstart', handleTouchStart);
+      carousel.removeEventListener('touchend', handleTouchEnd);
     };
   }, [categories]);
 
