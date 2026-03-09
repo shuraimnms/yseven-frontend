@@ -63,6 +63,15 @@ const CategoryPage = () => {
     }
   }, [category.products, activeProductId]);
 
+  // Debug: Log when refs are ready
+  useEffect(() => {
+    console.log('📦 Product refs updated:', {
+      count: Object.keys(productRefs.current).length,
+      ids: Object.keys(productRefs.current),
+      products: category.products.map(p => p.id)
+    });
+  }, [category.products]);
+
   // Intersection Observer for scroll spy
   useEffect(() => {
     // Clean up previous observer
@@ -185,57 +194,42 @@ const CategoryPage = () => {
     };
   }, []);
 
-  // Smooth scroll to product - FIXED for mobile with multiple fallbacks
+  // INSTANT JUMP to product - NO smooth scroll
   const scrollToProduct = (productId: string) => {
+    console.log('=== JUMP TO PRODUCT ===', productId);
+    
     const element = productRefs.current[productId];
     if (!element) {
-      console.warn(`Product element not found for ID: ${productId}`);
+      console.error(`❌ Product not found:`, productId);
+      console.log('Available:', Object.keys(productRefs.current));
       return;
     }
 
-    // Update active product immediately for better UX
+    console.log('✅ Found element, jumping now...');
+
+    // Update active immediately
     setActiveProductId(productId);
     
-    // Calculate proper offset for mobile and desktop
-    // Mobile: Header (80px) + Sticky nav (~60px with padding) = ~140px
-    // Desktop: Header (80px) + some padding = ~100px
+    // Calculate offset
     const isMobile = window.innerWidth < 1024;
-    const offset = isMobile ? 150 : 100;
+    const headerHeight = 80;
+    const stickyNavHeight = isMobile ? 68 : 0;
+    const padding = 20;
+    const totalOffset = headerHeight + stickyNavHeight + padding;
     
-    // Try multiple scroll methods for better compatibility
-    try {
-      // Method 1: Modern scrollIntoView with offset (best for mobile)
-      const elementTop = element.getBoundingClientRect().top + window.scrollY;
-      const targetPosition = elementTop - offset;
-      
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
-
-      // Debug log for troubleshooting
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Scroll to product:', {
-          productId,
-          elementTop,
-          offset,
-          targetPosition,
-          isMobile
-        });
-      }
-    } catch (error) {
-      // Fallback: Use basic scrollIntoView
-      console.error('Scroll error, using fallback:', error);
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-      
-      // Adjust for sticky header after scroll
-      setTimeout(() => {
-        window.scrollBy(0, -offset);
-      }, 100);
-    }
+    // Get position and JUMP immediately (no smooth)
+    const rect = element.getBoundingClientRect();
+    const targetPosition = Math.max(0, rect.top + window.scrollY - totalOffset);
+    
+    console.log('Jumping to:', targetPosition, 'Current:', window.scrollY);
+    
+    // INSTANT JUMP - behavior: 'auto' means NO animation
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'auto' // INSTANT, no smooth scroll
+    });
+    
+    console.log('✅ JUMPED! New position:', window.scrollY);
   };
 
   // Auto-scroll active pill into view (mobile)
@@ -308,12 +302,16 @@ const CategoryPage = () => {
                   key={product.id}
                   id={`pill-${product.id}`}
                   onClick={(e) => {
+                    console.log('🔘 Button clicked:', product.name, product.id);
                     e.preventDefault();
                     e.stopPropagation();
                     scrollToProduct(product.id);
                   }}
                   type="button"
-                  style={{ WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)' }}
+                  style={{ 
+                    WebkitTapHighlightColor: 'rgba(217, 165, 32, 0.2)',
+                    touchAction: 'manipulation'
+                  }}
                   className={`
                     px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-all duration-300 cursor-pointer
                     ${activeProductId === product.id
