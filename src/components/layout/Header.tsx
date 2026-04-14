@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, ChevronDown, User, LogOut, Package, Heart, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,7 +27,7 @@ const Header = () => {
   
   // Get auth state and global settings
   const { user, isAuthenticated, logout } = useAuthStore();
-  const { siteTitle } = useGlobalSettings();
+  useGlobalSettings();
 
   // Handle navigation with proper scroll behavior
   const handleNavigation = (href: string) => {
@@ -91,7 +92,8 @@ const Header = () => {
   }, []);
 
   return (
-    <header
+    <>
+      <header
       className={cn(
         "fixed top-0 left-0 right-0 z-[100] transition-all duration-500",
         isScrolled
@@ -243,93 +245,73 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        <div
-          className={cn(
-            "lg:hidden overflow-hidden transition-all duration-500 bg-obsidian/95 backdrop-blur-md border-t border-gold/20",
-            isMobileMenuOpen ? "max-h-96 pb-6" : "max-h-0"
-          )}
-        >
-          <div className="flex flex-col space-y-4 pt-4 border-t border-gold/10">
-            {navigation.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => handleNavigation(item.href)}
-                className={cn(
-                  "text-lg font-medium tracking-wide transition-colors text-left",
-                  location.pathname === item.href
-                    ? "text-gold"
-                    : "text-cream/80 hover:text-gold"
-                )}
-              >
-                {item.name}
-              </button>
-            ))}
-            
-            {/* Mobile Auth/Profile Section */}
-            {isAuthenticated && user && (
-              // Profile Section for Authenticated Users - Mobile
-              <div className="border-t border-gold/10 pt-4 mt-4">
-                <div className="flex items-center space-x-3 p-4 border border-gold/20 rounded-lg bg-obsidian/30 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
-                    <User className="w-5 h-5 text-gold" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-cream">{user.name}</div>
-                    <div className="text-sm text-cream/60">{user.email}</div>
-                    <div className="text-xs text-gold capitalize">{user.role} Account</div>
-                  </div>
+        {/* Mobile Menu - Full screen overlay via portal */}
+        </nav>
+    </header>
+
+    {isMobileMenuOpen && createPortal(
+      <div className="lg:hidden fixed inset-0 top-20 z-[200] bg-obsidian overflow-y-auto">
+        <div className="flex flex-col px-6 py-6 space-y-2 min-h-full border-t border-gold/20">
+          {navigation.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => handleNavigation(item.href)}
+              className={cn(
+                "text-lg font-medium tracking-wide transition-colors text-left py-4 border-b border-gold/10",
+                location.pathname === item.href
+                  ? "text-gold"
+                  : "text-cream/80 hover:text-gold"
+              )}
+            >
+              {item.name}
+            </button>
+          ))}
+
+          {/* Mobile Auth/Profile Section */}
+          {isAuthenticated && user && (
+            <div className="pt-4 mt-2">
+              <div className="flex items-center space-x-3 p-4 border border-gold/20 rounded-lg bg-charcoal/50 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+                  <User className="w-5 h-5 text-gold" />
                 </div>
-                
-                <div className="space-y-3">
-                  <button
-                    onClick={() => handleProfileNavigation("/profile")}
-                    className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left"
-                  >
-                    <Settings className="w-4 h-4 text-cream/60" />
-                    <span className="text-cream">Profile Settings</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => handleProfileNavigation("/orders")}
-                    className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left"
-                  >
-                    <Package className="w-4 h-4 text-cream/60" />
-                    <span className="text-cream">My Orders</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => handleProfileNavigation("/wishlist")}
-                    className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left"
-                  >
-                    <Heart className="w-4 h-4 text-cream/60" />
-                    <span className="text-cream">Wishlist</span>
-                  </button>
-                  
-                  {user.role === 'admin' && (
-                    <button
-                      onClick={() => handleProfileNavigation("/admin")}
-                      className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left"
-                    >
-                      <Settings className="w-4 h-4 text-cream/60" />
-                      <span className="text-cream">Admin Dashboard</span>
-                    </button>
-                  )}
-                  
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-red-500/10 transition-all duration-300 text-left"
-                  >
-                    <LogOut className="w-4 h-4 text-cream/60" />
-                    <span className="text-cream">Sign Out</span>
-                  </button>
+                <div>
+                  <div className="font-medium text-cream">{user.name}</div>
+                  <div className="text-sm text-cream/60">{user.email}</div>
+                  <div className="text-xs text-gold capitalize">{user.role} Account</div>
                 </div>
               </div>
-            )}
-          </div>
+
+              <div className="space-y-1">
+                <button onClick={() => handleProfileNavigation("/profile")} className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left">
+                  <Settings className="w-4 h-4 text-cream/60" />
+                  <span className="text-cream">Profile Settings</span>
+                </button>
+                <button onClick={() => handleProfileNavigation("/orders")} className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left">
+                  <Package className="w-4 h-4 text-cream/60" />
+                  <span className="text-cream">My Orders</span>
+                </button>
+                <button onClick={() => handleProfileNavigation("/wishlist")} className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left">
+                  <Heart className="w-4 h-4 text-cream/60" />
+                  <span className="text-cream">Wishlist</span>
+                </button>
+                {user.role === 'admin' && (
+                  <button onClick={() => handleProfileNavigation("/admin")} className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gold/10 transition-all duration-300 text-left">
+                    <Settings className="w-4 h-4 text-cream/60" />
+                    <span className="text-cream">Admin Dashboard</span>
+                  </button>
+                )}
+                <button onClick={handleLogout} className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-red-500/10 transition-all duration-300 text-left">
+                  <LogOut className="w-4 h-4 text-cream/60" />
+                  <span className="text-cream">Sign Out</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      </nav>
-    </header>
+      </div>,
+      document.body
+    )}
+  </>
   );
 };
 
