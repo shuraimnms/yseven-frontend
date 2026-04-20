@@ -19,87 +19,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import SEOHead from '@/components/SEOHead';
-import { allProducts, getProductsByCategory, type ProductData } from '@/data/products';
+import { useProductsByCategory, useCategory } from '@/hooks/useSupabaseProducts';
+import type { NormalizedProduct } from '@/types/supabase';
 
-// Product data structure - using shared type
-interface Product extends ProductData {}
-
-// Category data structure
-interface CategoryData {
-  slug: string;
-  name: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  videoUrl: string;
-  videoPoster: string;
-  highlights: Array<{ icon: string; text: string }>;
-  subcategories: string[];
-  products: Product[];
-  featuredProduct?: Product;
-  recipes: Array<{ title: string; image: string }>;
-  seo: {
-    title: string;
-    description: string;
-    keywords: string;
-  };
-}
-
-// Mock category data - Replace with actual data from API/props
-const getCategoryData = (slug: string): CategoryData => {
-  // Map of category slugs to display names
-  const categoryMap: Record<string, string> = {
-    'sauces-condiments': 'Sauces & Condiments',
-    'sauces-and-condiments': 'Sauces & Condiments',
-    'flakes-powders-agro-products': 'Flakes & Powders (Agro Products)',
-    'flakes-and-powders-agro-products': 'Flakes & Powders (Agro Products)',
-    'raw-banana-powders': 'Raw Banana Powders',
-    'fruit-vegetable-powders': 'Fruit & Vegetable Powders',
-    'fruit-and-vegetable-powders': 'Fruit & Vegetable Powders'
-  };
-
-  const categoryName = categoryMap[slug] || slug.split('-').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ');
-
-  // Get products for this category
-  const categoryProducts = getProductsByCategory(categoryName);
-  
-  // Find featured product (best seller)
-  const featuredProduct = categoryProducts.find(p => p.isBestSeller) || categoryProducts[0];
-
-  // This would come from your backend or data file
-  return {
-    slug: slug,
-    name: categoryName,
-    title: categoryName.toUpperCase(),
-    subtitle: 'Bold Flavor. Premium Ingredients.',
-    description: 'Crafted sauces designed for restaurants, chefs, and everyday kitchens.',
-    videoUrl: '/Green-Chilli-Flakes.mp4',
-    videoPoster: '/placeholder.svg',
-    highlights: [
-      { icon: 'leaf', text: 'Natural Ingredients' },
-      { icon: 'star', text: 'Rich Flavor Profile' },
-      { icon: 'tomato', text: 'Fresh Tomato Base' },
-      { icon: 'package', text: 'Bulk Supply Available' },
-      { icon: 'award', text: 'Export Quality' }
-    ],
-    subcategories: ['All'],
-    products: categoryProducts,
-    featuredProduct: featuredProduct,
-    recipes: [
-      { title: 'Pasta Recipe', image: '/placeholder.svg' },
-      { title: 'Pizza Sauce Use', image: '/placeholder.svg' },
-      { title: 'Burger Sauce', image: '/placeholder.svg' },
-      { title: 'Street Food Use', image: '/placeholder.svg' }
-    ],
-    seo: {
-      title: `Premium ${categoryName} | Y7 Foods`,
-      description: `Discover Y7's premium ${categoryName.toLowerCase()} crafted with natural ingredients for restaurants and home kitchens.`,
-      keywords: `premium ${categoryName.toLowerCase()}, Y7 foods, condiments, sauces`
-    }
-  };
-};
+// Product data structure
+interface Product extends NormalizedProduct {}
 
 // Optimized Image Component
 const OptimizedImage = memo(({ src, alt, className }: { src: string; alt: string; className?: string }) => {
@@ -219,10 +143,37 @@ export default function CategoryPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  const categoryData = getCategoryData(category || 'sauces-condiments');
+  // Dynamic data from Supabase (with static fallback)
+  const { products: dynamicProducts, loading: productsLoading } = useProductsByCategory(category);
+  const { category: dynamicCategory } = useCategory(category);
+
+  const categoryName = dynamicCategory?.name || (category || '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const categoryTitle = dynamicCategory?.title || categoryName.toUpperCase();
+
+  const highlights = [
+    { icon: 'leaf', text: 'Natural Ingredients' },
+    { icon: 'star', text: 'Rich Flavor Profile' },
+    { icon: 'tomato', text: 'Fresh Tomato Base' },
+    { icon: 'package', text: 'Bulk Supply Available' },
+    { icon: 'award', text: 'Export Quality' },
+  ];
+
+  const recipes = [
+    { title: 'Pasta Recipe', image: '/placeholder.svg' },
+    { title: 'Pizza Sauce Use', image: '/placeholder.svg' },
+    { title: 'Burger Sauce', image: '/placeholder.svg' },
+    { title: 'Street Food Use', image: '/placeholder.svg' },
+  ];
+
+  const seo = {
+    title: `Premium ${categoryName} | Y7 Foods`,
+    description: `Discover Y7's premium ${categoryName.toLowerCase()} crafted with natural ingredients for restaurants and home kitchens.`,
+    keywords: `premium ${categoryName.toLowerCase()}, Y7 foods, condiments, sauces`,
+  };
+
+  const featuredProduct = dynamicProducts.find(p => p.isBestSeller) || dynamicProducts[0];
 
   useEffect(() => {
-    // Scroll to top on mount
     window.scrollTo(0, 0);
   }, [category]);
 
@@ -243,7 +194,7 @@ export default function CategoryPage() {
       if (!isPaused) {
         scrollPosition += scrollSpeed;
         
-        const scrollWidth = carousel.scrollWidth / 2;
+        const scrollWidth = carousel.scrollWidth / 3;
         
         if (scrollPosition >= scrollWidth) {
           scrollPosition = 0;
@@ -307,36 +258,43 @@ export default function CategoryPage() {
       carousel.removeEventListener('touchmove', handleTouchMove);
       carousel.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [categoryData.products]);
+  }, [dynamicProducts]);
 
   // All products (no filtering by subcategory)
-  const filteredProducts = categoryData.products;
+  const filteredProducts = dynamicProducts;
 
   return (
     <>
-      <SEOHead seo={categoryData.seo} />
+      <SEOHead seo={seo} />
 
       <div className="min-h-screen bg-black text-cream">
-        {/* HERO VIDEO SECTION */}
+        {/* HERO SECTION */}
         <section className="relative h-[55vh] overflow-hidden">
-          {/* Video Background */}
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={categoryData.videoPoster}
-            onLoadedData={() => setVideoLoaded(true)}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <source src={categoryData.videoUrl} type="video/mp4" />
-          </video>
+          {/* Background: video if available, else cover image, else gradient */}
+          {dynamicCategory?.cover_video ? (
+            <video
+              ref={videoRef}
+              autoPlay muted loop playsInline
+              poster={dynamicCategory.cover_image || undefined}
+              onLoadedData={() => setVideoLoaded(true)}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                videoLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <source src={dynamicCategory.cover_video} type="video/mp4" />
+            </video>
+          ) : dynamicCategory?.cover_image ? (
+            <img
+              src={dynamicCategory.cover_image}
+              alt={categoryName}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-obsidian via-black to-obsidian" />
+          )}
 
-          {/* Dark Gradient Overlay (60%) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/60 to-black/40" />
+          {/* Dark Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/30" />
 
           {/* Hero Content */}
           <div className="relative h-full flex items-center justify-center px-4">
@@ -347,17 +305,12 @@ export default function CategoryPage() {
               className="text-center max-w-3xl"
             >
               <h1 className="font-display text-4xl md:text-6xl font-bold text-cream mb-4 tracking-wide">
-                {categoryData.title}
+                {categoryTitle}
               </h1>
-              <p className="text-gold text-xl md:text-2xl font-semibold mb-3">
-                {categoryData.subtitle}
-              </p>
-              <p className="text-cream/80 text-base md:text-lg mb-8 max-w-2xl mx-auto">
-                {categoryData.description}
-              </p>
               <Button
                 size="lg"
                 className="bg-gold text-black hover:bg-gold/90 font-semibold h-12 px-8"
+                onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Explore Products
                 <ChevronRight className="w-5 h-5 ml-2" />
@@ -366,8 +319,9 @@ export default function CategoryPage() {
           </div>
         </section>
 
-        {/* CATEGORY INTRO SECTION */}
-        <section className="py-12 px-4 bg-black">
+        {/* CATEGORY INTRO — shows description from Supabase */}
+        {(dynamicCategory?.description) && (
+        <section className="py-10 px-4 bg-black">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -376,17 +330,17 @@ export default function CategoryPage() {
             className="max-w-4xl mx-auto text-center"
           >
             <p className="font-body text-cream/85 text-base md:text-lg leading-relaxed">
-              Our sauces are crafted with carefully selected ingredients to deliver rich flavor, 
-              vibrant color, and restaurant-quality taste. Perfect for cooking, dipping, and fusion recipes.
+              {dynamicCategory.description}
             </p>
           </motion.div>
         </section>
+        )}
 
         {/* QUICK HIGHLIGHTS - Horizontal Scroll Cards */}
         <section className="py-8 px-4 bg-obsidian">
           <div className="max-w-7xl mx-auto">
             <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x pb-4">
-              {categoryData.highlights.map((highlight, index) => (
+              {highlights.map((highlight, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: 20 }}
@@ -423,7 +377,7 @@ export default function CategoryPage() {
                 Explore Our <span className="text-gold">Collection</span>
               </h3>
               <p className="text-cream/60 text-sm">
-                {categoryData.products.length} premium products in this category
+                {dynamicProducts.length} premium products in this category
               </p>
             </motion.div>
 
@@ -443,18 +397,18 @@ export default function CategoryPage() {
               >
                 <div className="inline-flex gap-3">
                   {/* Sort products: Best sellers first, then rest - Triple for true infinite loop */}
-                  {[...categoryData.products]
+                  {[...dynamicProducts]
                     .sort((a, b) => {
                       if (a.isBestSeller && !b.isBestSeller) return -1;
                       if (!a.isBestSeller && b.isBestSeller) return 1;
                       return 0;
                     })
-                    .concat([...categoryData.products].sort((a, b) => {
+                    .concat([...dynamicProducts].sort((a, b) => {
                       if (a.isBestSeller && !b.isBestSeller) return -1;
                       if (!a.isBestSeller && b.isBestSeller) return 1;
                       return 0;
                     }))
-                    .concat([...categoryData.products].sort((a, b) => {
+                    .concat([...dynamicProducts].sort((a, b) => {
                       if (a.isBestSeller && !b.isBestSeller) return -1;
                       if (!a.isBestSeller && b.isBestSeller) return 1;
                       return 0;
@@ -464,7 +418,7 @@ export default function CategoryPage() {
                         key={`${product.id}-${index}`}
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.4, delay: (index % categoryData.products.length) * 0.02 }}
+                        transition={{ duration: 0.4, delay: (index % dynamicProducts.length) * 0.02 }}
                         viewport={{ once: true }}
                         className="flex-shrink-0"
                       >
@@ -481,7 +435,7 @@ export default function CategoryPage() {
                               {/* Product Number Badge */}
                               <div className="w-7 h-7 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mb-2 group-hover:bg-gold/20 group-hover:border-gold transition-all">
                                 <span className="text-gold text-xs font-bold">
-                                  {String((index % categoryData.products.length) + 1).padStart(2, '0')}
+                                  {String((index % dynamicProducts.length) + 1).padStart(2, '0')}
                                 </span>
                               </div>
                               
@@ -591,7 +545,7 @@ export default function CategoryPage() {
         </section>
 
         {/* FEATURED PRODUCT SECTION */}
-        {categoryData.featuredProduct && (
+        {featuredProduct && (
           <section className="py-16 px-4 bg-gradient-to-b from-obsidian to-black">
             <div className="max-w-6xl mx-auto">
               <motion.div
@@ -605,8 +559,8 @@ export default function CategoryPage() {
                     {/* Image */}
                     <div className="relative aspect-square rounded-lg overflow-hidden">
                       <OptimizedImage
-                        src={categoryData.featuredProduct.image}
-                        alt={categoryData.featuredProduct.name}
+                        src={featuredProduct.image}
+                        alt={featuredProduct.name}
                       />
                       <Badge className="absolute top-4 left-4 bg-gold text-black">
                         <Star className="w-4 h-4 mr-1" />
@@ -620,12 +574,12 @@ export default function CategoryPage() {
                         Featured Product
                       </Badge>
                       <h2 className="font-display text-3xl md:text-4xl font-bold text-cream mb-4">
-                        {categoryData.featuredProduct.name}
+                        {featuredProduct.name}
                       </h2>
                       <p className="text-cream/70 text-base md:text-lg mb-6 leading-relaxed">
-                        {categoryData.featuredProduct.description}
+                        {featuredProduct.description}
                       </p>
-                      <Link to={`/products/${categoryData.featuredProduct.slug}`}>
+                      <Link to={`/products/${featuredProduct.slug}`}>
                         <Button size="lg" className="bg-gold text-black hover:bg-gold/90 w-full md:w-auto">
                           View Product
                           <ArrowRight className="w-5 h-5 ml-2" />
@@ -656,7 +610,7 @@ export default function CategoryPage() {
             </motion.div>
 
             <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x pb-4">
-              {categoryData.recipes.map((recipe, index) => (
+              {recipes.map((recipe, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: 20 }}

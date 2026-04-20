@@ -7,12 +7,16 @@ import PaymentsPage from '@/pages/admin/Payments';
 import ContactRequestsPage from '@/pages/admin/ContactRequests';
 import ChatLeadsPage from '@/pages/admin/ChatLeads';
 import SettingsPage from '@/pages/admin/Settings';
+import CategoriesAdmin from '@/pages/admin/Categories';
+import SupabaseProductsAdmin from '@/pages/admin/SupabaseProducts';
 
 const AdminRoutes = () => {
   return (
     <Routes>
       <Route index element={<AdminDashboard />} />
       <Route path="products" element={<ProductsPage />} />
+      <Route path="supabase-products" element={<SupabaseProductsAdmin />} />
+      <Route path="categories" element={<CategoriesAdmin />} />
       <Route path="orders" element={<OrdersPage />} />
       <Route path="users" element={<UsersPage />} />
       <Route path="payments" element={<PaymentsPage />} />

@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import SEOHead from '@/components/SEOHead';
-import { allProducts } from '@/data/products';
+import { useProduct, useRelatedProducts } from '@/hooks/useSupabaseProducts';
 
 // Pack sizes data with image variants
 const packSizes = {
@@ -98,16 +98,20 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('250ml');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
-  const [isLoading, setIsLoading] = useState(true);
   const galleryRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
 
-  // Find product
-  const product = allProducts.find(p => p.slug === slug);
+  // Fetch product dynamically (Supabase with static fallback)
+  const { product, loading: isLoading } = useProduct(slug);
+
+  // Derive category slug for related products
+  const categorySlug = product?.category
+    ? product.category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    : undefined;
+  const { products: relatedProducts } = useRelatedProducts(categorySlug, slug);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setIsLoading(false);
   }, [slug]);
 
   // Handle pack size change
@@ -170,32 +174,51 @@ export default function ProductDetail() {
     );
   }
 
-  // Get image based on selected size
-  const getImageForSize = (size: string) => {
-    // In a real app, you'd have different images for each size
-    // For now, we'll use the same image but you can add logic here
-    return product.image;
-  };
+  // Build image gallery from product data
+  const productImages = product.gallery_images?.length
+    ? product.gallery_images
+    : [product.image, product.image, product.image];
 
-  // Mock multiple images based on selected size
-  const productImages = [
-    getImageForSize(selectedSize),
-    product.image,
-    product.image
-  ];
-
-  // Related products
-  const relatedProducts = allProducts
-    .filter(p => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
+  // Pack sizes: use product's pack_sizes if available, else defaults
+  const activePacks = product.pack_sizes?.length ? product.pack_sizes : null;
+  const sachetPacks = activePacks
+    ? activePacks.filter(p => p.type === 'Sachet')
+    : packSizes.sachets;
+  const bottlePacks = activePacks
+    ? activePacks.filter(p => p.type !== 'Sachet')
+    : packSizes.bottles;
 
   // Get pack size details
   const getPackSizeDetails = (size: string) => {
-    const allPacks = [...packSizes.sachets, ...packSizes.bottles];
+    const allPacks = [...sachetPacks, ...bottlePacks];
     return allPacks.find(p => p.size === size);
   };
 
   const selectedPackDetails = getPackSizeDetails(selectedSize);
+
+  // Specifications from product data
+  const productSpecs = [
+    {
+      title: 'Ingredients',
+      content: product.ingredients || 'Natural ingredients. See packaging for full details.'
+    },
+    {
+      title: 'Shelf Life',
+      content: '12 months from date of manufacture'
+    },
+    {
+      title: 'Storage Instructions',
+      content: 'Store in a cool, dry place. Refrigerate after opening and consume within 30 days.'
+    },
+    {
+      title: 'Packaging Type',
+      content: 'PET Bottles, Glass Bottles, Sachets, Pouches'
+    },
+    {
+      title: 'Country of Origin',
+      content: 'Made in India'
+    }
+  ];
 
   const seoData = {
     title: `${product.name} - Premium ${product.category} | Y7 Foods`,
@@ -329,7 +352,7 @@ export default function ProductDetail() {
                 </Badge>
               </div>
               <div className="flex gap-3">
-                {packSizes.sachets.map((pack) => (
+                {sachetPacks.map((pack) => (
                   <button
                     key={pack.size}
                     onClick={() => handleSizeChange(pack.size)}
@@ -349,7 +372,7 @@ export default function ProductDetail() {
             <div>
               <h3 className="text-sm font-semibold text-cream/80 mb-3">Bottle / Pouch Packs</h3>
               <div className="grid grid-cols-2 gap-3">
-                {packSizes.bottles.map((pack) => (
+                {bottlePacks.map((pack) => (
                   <button
                     key={pack.size}
                     onClick={() => handleSizeChange(pack.size)}
@@ -424,14 +447,14 @@ export default function ProductDetail() {
               Perfect For
             </h2>
             <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-              {usageIdeas.map((idea, index) => (
+              {(product.perfect_for?.length ? product.perfect_for : usageIdeas.map(u => u.label)).map((item, index) => (
                 <Card
                   key={index}
                   className="flex-shrink-0 w-28 bg-obsidian border-gold/20 hover:border-gold/40 transition-all duration-300"
                 >
                   <CardContent className="p-4 text-center">
-                    <div className="text-3xl mb-2">{idea.icon}</div>
-                    <p className="text-sm text-cream font-medium">{idea.label}</p>
+                    <div className="text-3xl mb-2">{usageIdeas[index % usageIdeas.length]?.icon || '🍽️'}</div>
+                    <p className="text-sm text-cream font-medium">{item}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -488,7 +511,7 @@ export default function ProductDetail() {
               Specifications
             </h2>
             <div className="bg-obsidian rounded-2xl border border-gold/20 overflow-hidden">
-              {specifications.map((spec, index) => (
+              {productSpecs.map((spec, index) => (
                 <Accordion
                   key={index}
                   title={spec.title}

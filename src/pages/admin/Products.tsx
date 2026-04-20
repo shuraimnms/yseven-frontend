@@ -74,19 +74,14 @@ const ProductsPage = () => {
     try {
       setIsLoading(true);
       const response = await adminAPI.products.getAll();
-      
       if (response.data.success) {
         const productsData = response.data.data.products || response.data.data || [];
         setProducts(productsData);
-        console.log(`Loaded ${productsData.length} products`);
       }
     } catch (error: any) {
-      console.error('Failed to fetch products:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch products. Please try again.',
-        variant: 'destructive',
-      });
+      // Backend unavailable — silently show empty state
+      // Use the Supabase Products page (/admin/supabase-products) instead
+      setProducts([]);
     } finally {
       setIsLoading(false);
     }

@@ -17,6 +17,15 @@ export default defineConfig(({ mode }) => ({
         target: 'http://localhost:4000',
         changeOrigin: true,
         secure: false,
+      },
+      '/ai-proxy': {
+        target: 'https://integrate.api.nvidia.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/ai-proxy/, ''),
+        headers: {
+          'Origin': 'https://integrate.api.nvidia.com',
+        }
       }
     } : undefined
   },

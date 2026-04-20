@@ -4,7 +4,6 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Filter,
-  SlidersHorizontal,
   Star,
   Award,
   Shield,
@@ -23,7 +22,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import SEOHead from "@/components/SEOHead";
-import { allProducts, getCategoryNames } from "@/data/products";
+import { useAllProducts } from "@/hooks/useSupabaseProducts";
+import type { NormalizedProduct } from "@/types/supabase";
+import CategoryCarousel from "@/components/CategoryCarousel";
 
 // Optimized Image Component
 const OptimizedImage = memo(({ src, alt, className }: { src: string; alt: string; className?: string }) => {
@@ -52,7 +53,7 @@ const OptimizedImage = memo(({ src, alt, className }: { src: string; alt: string
 OptimizedImage.displayName = 'OptimizedImage';
 
 // Product Card Component
-const ProductCard = memo(({ product, onClick }: { product: any; onClick?: () => void }) => {
+const ProductCard = memo(({ product, onClick }: { product: NormalizedProduct; onClick?: () => void }) => {
   const cardRef = useRef(null);
   const isInView = useInView(cardRef, { once: true, margin: '-50px' });
 
@@ -144,7 +145,7 @@ const ProductCard = memo(({ product, onClick }: { product: any; onClick?: () => 
 ProductCard.displayName = 'ProductCard';
 
 // Quick Preview Modal Component
-const QuickPreviewModal = ({ product, onClose }: { product: any; onClose: () => void }) => {
+const QuickPreviewModal = ({ product, onClose }: { product: NormalizedProduct; onClose: () => void }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -238,129 +239,41 @@ const QuickPreviewModal = ({ product, onClose }: { product: any; onClose: () => 
 
 // Main Products Component
 export default function Products() {
-  const [selectedCategory, setSelectedCategory] = useState<string>(getCategoryNames()[0]);
+  const { products: allProducts, loading } = useAllProducts();
+
+  const categoryNames = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>("best-selling");
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const categoriesCarouselRef = useRef<HTMLDivElement>(null);
+  const [selectedProduct, setSelectedProduct] = useState<NormalizedProduct | null>(null);
 
-  const categories = getCategoryNames();
+  // Set default category once products load
+  useEffect(() => {
+    if (categoryNames.length > 0 && !selectedCategory) {
+      setSelectedCategory(categoryNames[0]);
+    }
+  }, [categoryNames.length]);
 
-  // Helper function to convert category name to URL slug
-  const categoryToSlug = (category: string): string => {
-    return category
-      .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[()]/g, '')
-      .replace(/&/g, 'and');
-  };
 
-  // Filter and sort products
   const filteredProducts = allProducts.filter(p => p.category === selectedCategory);
-
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortBy === "best-selling") {
       if (a.isBestSeller && !b.isBestSeller) return -1;
       if (!a.isBestSeller && b.isBestSeller) return 1;
-      return 0;
     }
     if (sortBy === "newest") {
       if (a.isNew && !b.isNew) return -1;
       if (!a.isNew && b.isNew) return 1;
-      return 0;
     }
     return 0;
   });
 
-  // Featured products (best sellers)
   const featuredProducts = allProducts.filter(p => p.isBestSeller).slice(0, 4);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Infinite scroll effect for categories carousel
-  useEffect(() => {
-    const carousel = categoriesCarouselRef.current;
-    if (!carousel) return;
-
-    let animationId: number;
-    let scrollPosition = 0;
-    const scrollSpeed = 0.5;
-    let isPaused = false;
-    let scrollTimeout: NodeJS.Timeout;
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    const animate = () => {
-      if (!isPaused) {
-        scrollPosition += scrollSpeed;
-        
-        const scrollWidth = carousel.scrollWidth / 3;
-        
-        if (scrollPosition >= scrollWidth) {
-          scrollPosition = 0;
-        }
-        
-        carousel.scrollLeft = scrollPosition;
-      }
-      animationId = requestAnimationFrame(animate);
-    };
-
-    // Detect scroll direction on touch start
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    };
-
-    // Only pause if horizontal scroll is intended
-    const handleTouchMove = (e: TouchEvent) => {
-      const touchX = e.touches[0].clientX;
-      const touchY = e.touches[0].clientY;
-      const deltaX = Math.abs(touchX - touchStartX);
-      const deltaY = Math.abs(touchY - touchStartY);
-      
-      // If horizontal movement is greater than vertical, pause auto-scroll
-      if (deltaX > deltaY && deltaX > 10) {
-        isPaused = true;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        isPaused = false;
-        scrollPosition = carousel.scrollLeft;
-      }, 1500);
-    };
-
-    animationId = requestAnimationFrame(animate);
-
-    const handleMouseEnter = () => {
-      isPaused = true;
-    };
-
-    const handleMouseLeave = () => {
-      isPaused = false;
-      scrollPosition = carousel.scrollLeft;
-    };
-
-    carousel.addEventListener('mouseenter', handleMouseEnter);
-    carousel.addEventListener('mouseleave', handleMouseLeave);
-    carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
-    carousel.addEventListener('touchmove', handleTouchMove, { passive: true });
-    carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      clearTimeout(scrollTimeout);
-      carousel.removeEventListener('mouseenter', handleMouseEnter);
-      carousel.removeEventListener('mouseleave', handleMouseLeave);
-      carousel.removeEventListener('touchstart', handleTouchStart);
-      carousel.removeEventListener('touchmove', handleTouchMove);
-      carousel.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [categories]);
 
   const seoData = {
     title: "Premium Products - Y7 Foods | Sauces, Condiments & Agro Products",
@@ -425,127 +338,10 @@ export default function Products() {
           </div>
         </section>
 
-        {/* CATEGORY EXPLORER - Infinite Auto-Scrolling Carousel */}
+        {/* CATEGORY EXPLORER - Live auto-scrolling carousel */}
         <section id="categories" className="py-12 px-4 bg-obsidian overflow-hidden">
           <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-8"
-            >
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-cream mb-3">
-                Explore by <span className="text-gold">Category</span>
-              </h2>
-              <p className="text-cream/60 text-base">Discover our premium product categories</p>
-            </motion.div>
-
-            {/* Infinite Auto-Scrolling Categories Carousel */}
-            <div className="relative">
-              {/* Gradient Overlays */}
-              <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-obsidian via-obsidian/80 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-obsidian via-obsidian/80 to-transparent z-10 pointer-events-none" />
-              
-              {/* Scrolling Container */}
-              <div 
-                ref={categoriesCarouselRef}
-                className="carousel-container overflow-x-auto scrollbar-hide"
-                style={{
-                  WebkitOverflowScrolling: 'touch'
-                }}
-              >
-                <div className="inline-flex gap-4">
-                  {/* Triple the categories for true infinite loop */}
-                  {[...categories, ...categories, ...categories].map((category, index) => {
-                    const categoryProducts = allProducts.filter(p => p.category === category);
-                    const firstProduct = categoryProducts[0];
-                    const categorySlug = categoryToSlug(category);
-                    const originalIndex = index % categories.length;
-
-                    return (
-                      <motion.div
-                        key={`${category}-${index}`}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.4, delay: originalIndex * 0.1 }}
-                        viewport={{ once: true }}
-                        className="flex-shrink-0 w-72"
-                      >
-                        <Link to={`/category/${categorySlug}`}>
-                          <Card className="bg-black border-gold/20 hover:border-gold hover:shadow-lg hover:shadow-gold/20 transition-all duration-300 overflow-hidden group cursor-pointer h-full">
-                            <div className="relative h-48 overflow-hidden">
-                              {firstProduct && (
-                                <OptimizedImage
-                                  src={firstProduct.image}
-                                  alt={category}
-                                  className="group-hover:scale-110 transition-transform duration-700"
-                                />
-                              )}
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                              
-                              {/* Best Category Badge */}
-                              {categoryProducts.some(p => p.isBestSeller) && (
-                                <div className="absolute top-3 right-3">
-                                  <Badge className="bg-gold text-black text-xs">
-                                    <Star className="w-3 h-3 mr-1" />
-                                    Top Category
-                                  </Badge>
-                                </div>
-                              )}
-                              
-                              <div className="absolute bottom-0 left-0 right-0 p-4">
-                                <h3 className="font-display text-xl font-bold text-cream mb-1">
-                                  {category}
-                                </h3>
-                                <p className="text-cream/60 text-sm mb-2">
-                                  {categoryProducts.length} Product{categoryProducts.length !== 1 ? 's' : ''}
-                                </p>
-                                <div className="flex items-center text-gold text-sm opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1">
-                                  <span>Explore Category</span>
-                                  <ArrowRight className="w-4 h-4 ml-1" />
-                                </div>
-                              </div>
-                            </div>
-                          </Card>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Interactive Scroll Hints */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 1 }}
-              className="flex items-center justify-center gap-6 mt-6"
-            >
-              <div className="flex items-center gap-2 text-cream/40 text-xs">
-                <motion.div
-                  animate={{ x: [-5, 5, -5] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="text-gold"
-                >
-                  ←
-                </motion.div>
-                <span>Seamless loop</span>
-                <motion.div
-                  animate={{ x: [-5, 5, -5] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="text-gold"
-                >
-                  →
-                </motion.div>
-              </div>
-              <div className="h-4 w-px bg-gold/20" />
-              <div className="flex items-center gap-2 text-cream/40 text-xs">
-                <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-                <span>Auto-scrolling</span>
-              </div>
-            </motion.div>
+            <CategoryCarousel showHeading={true} />
           </div>
         </section>
 
@@ -776,7 +572,7 @@ export default function Products() {
                     <div>
                       <h4 className="font-semibold text-cream mb-3">Category</h4>
                       <div className="grid grid-cols-2 gap-2">
-                        {categories.map((category) => (
+                        {categoryNames.map((category) => (
                           <button
                             key={category}
                             onClick={() => {

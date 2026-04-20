@@ -14,72 +14,27 @@ import {
   LogOut,
   User,
   Shield,
-  MessageSquare
+  MessageSquare,
+  Layers,
+  Database
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import logoImage from '@/assets/logo.png';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
-import Logo from '@/components/ui/Logo';
 
 const sidebarItems = [
-  { 
-    id: 'dashboard', 
-    label: 'Dashboard', 
-    icon: LayoutDashboard, 
-    path: '/admin',
-    badge: null
-  },
-  { 
-    id: 'products', 
-    label: 'Products', 
-    icon: Package, 
-    path: '/admin/products',
-    badge: null
-  },
-  { 
-    id: 'orders', 
-    label: 'Orders', 
-    icon: ShoppingCart, 
-    path: '/admin/orders',
-    badge: null
-  },
-  { 
-    id: 'users', 
-    label: 'Users', 
-    icon: Users, 
-    path: '/admin/users',
-    badge: null
-  },
-  { 
-    id: 'payments', 
-    label: 'Payments', 
-    icon: CreditCard, 
-    path: '/admin/payments',
-    badge: null
-  },
-  { 
-    id: 'contact-requests', 
-    label: 'Contact Requests', 
-    icon: Bell, 
-    path: '/admin/contact-requests',
-    badge: null
-  },
-  { 
-    id: 'chat-leads', 
-    label: 'Chat Leads', 
-    icon: MessageSquare, 
-    path: '/admin/chat-leads',
-    badge: null
-  },
-  { 
-    id: 'settings', 
-    label: 'Settings', 
-    icon: Settings, 
-    path: '/admin/settings',
-    badge: null
-  }
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin', badge: null },
+  { id: 'supabase-products', label: 'Products (Live)', icon: Database, path: '/admin/supabase-products', badge: 'New' },
+  { id: 'categories', label: 'Categories', icon: Layers, path: '/admin/categories', badge: null },
+  { id: 'products', label: 'Products (Legacy)', icon: Package, path: '/admin/products', badge: null },
+  { id: 'orders', label: 'Orders', icon: ShoppingCart, path: '/admin/orders', badge: null },
+  { id: 'users', label: 'Users', icon: Users, path: '/admin/users', badge: null },
+  { id: 'payments', label: 'Payments', icon: CreditCard, path: '/admin/payments', badge: null },
+  { id: 'contact-requests', label: 'Contact Requests', icon: Bell, path: '/admin/contact-requests', badge: null },
+  { id: 'chat-leads', label: 'Chat Leads', icon: MessageSquare, path: '/admin/chat-leads', badge: null },
+  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings', badge: null },
 ];
 
 const AdminLayout = () => {

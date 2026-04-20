@@ -1,573 +1,250 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Badge } from '../../components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { 
-  Search, 
-  Download, 
-  Eye, 
-  MessageSquare, 
-  Phone, 
-  Mail, 
-  Calendar,
-  TrendingUp,
-  Users,
-  Target,
-  BarChart3
-} from 'lucide-react';
-import { toast } from '../../components/ui/use-toast';
-import { getApiBaseUrl } from '../../lib/api';
-import Cookies from 'js-cookie';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Search, Download, Eye, MessageSquare, Phone, Mail, Calendar, Users, TrendingUp, RefreshCw } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/lib/supabase';
+import { cn } from '@/lib/utils';
 
-interface ChatLead {
-  _id: string;
-  name: string;
-  phone?: string;
-  email?: string;
-  country?: string;
-  interest: string;
-  message: string;
-  status: 'new' | 'contacted' | 'closed';
-  createdAt: string;
-  updatedAt: string;
-}
+// chat_leads table schema (add to Supabase if needed):
+// id, name, phone, email, country, interest, message, status, created_at, updated_at
 
-interface Analytics {
-  totalLeads: number;
-  totalMessages: number;
-  leadsByStatus: Record<string, number>;
-  leadsByInterest: Record<string, number>;
-  messagesByIntent: Record<string, number>;
-  dailyLeads: Array<{ _id: string; count: number }>;
-}
+const STATUS_COLORS: Record<string, string> = {
+  new:       'bg-blue-500/20 text-blue-400 border-blue-500/30',
+  contacted: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+  closed:    'bg-green-500/20 text-green-400 border-green-500/30',
+};
 
-const ChatLeads: React.FC = () => {
-  const [leads, setLeads] = useState<ChatLead[]>([]);
-  const [analytics, setAnalytics] = useState<Analytics | null>(null);
+export default function ChatLeads() {
+  const [leads, setLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLead, setSelectedLead] = useState<ChatLead | null>(null);
-  const [filters, setFilters] = useState({
-    search: '',
-    status: '',
-    interest: '',
-    page: 1,
-    limit: 10
-  });
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 10,
-    total: 0,
-    pages: 0
-  });
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [selected, setSelected] = useState<any | null>(null);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    fetchLeads();
-    fetchAnalytics();
-  }, [filters]);
-
-  const fetchLeads = async () => {
+  async function load() {
+    setLoading(true);
     try {
-      setLoading(true);
-      const queryParams = new URLSearchParams();
-      
-      if (filters.search) queryParams.append('search', filters.search);
-      if (filters.status && filters.status !== 'all') queryParams.append('status', filters.status);
-      if (filters.interest && filters.interest !== 'all') queryParams.append('interest', filters.interest);
-      queryParams.append('page', filters.page.toString());
-      queryParams.append('limit', filters.limit.toString());
-
-      const response = await fetch(`${getApiBaseUrl()}/admin/chat/leads?${queryParams}`, {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('accessToken')}`
-        }
-      });
-      
-      if (!response.ok) throw new Error('Failed to fetch leads');
-      
-      const data = await response.json();
-      setLeads(data.data.leads);
-      setPagination(data.data.pagination);
-    } catch (error) {
-      console.error('Error fetching leads:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch chat leads',
-        variant: 'destructive'
-      });
+      const { data, error } = await supabase
+        .from('chat_leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setLeads(data || []);
+    } catch {
+      setLeads([]);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const fetchAnalytics = async () => {
-    try {
-      const response = await fetch('/api/v1/admin/chat/analytics', {
-        credentials: 'include'
-      });
-      
-      if (!response.ok) throw new Error('Failed to fetch analytics');
-      
-      const data = await response.json();
-      setAnalytics(data.data);
-    } catch (error) {
-      console.error('Error fetching analytics:', error);
+  async function updateStatus(id: string, status: string) {
+    const { error } = await supabase
+      .from('chat_leads')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } else {
+      setLeads(prev => prev.map(l => l.id === id ? { ...l, status } : l));
     }
-  };
+  }
 
-  const updateLeadStatus = async (leadId: string, status: string) => {
-    try {
-      const response = await fetch(`${getApiBaseUrl()}/admin/chat/leads/${leadId}/status`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('accessToken')}`
-        },
-        body: JSON.stringify({ status })
-      });
+  function exportCSV() {
+    const rows = [
+      ['Name','Phone','Email','Country','Interest','Status','Message','Date'],
+      ...filtered.map(l => [l.name, l.phone, l.email, l.country, l.interest, l.status, l.message, new Date(l.created_at).toLocaleDateString()]),
+    ];
+    const blob = new Blob([rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `chat-leads-${Date.now()}.csv`;
+    a.click();
+    toast({ title: 'Exported' });
+  }
 
-      if (!response.ok) throw new Error('Failed to update status');
+  useEffect(() => { load(); }, []);
 
-      toast({
-        title: 'Success',
-        description: 'Lead status updated successfully'
-      });
+  const filtered = leads.filter(l => {
+    const matchSearch = !search ||
+      (l.name || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.email || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.phone || '').includes(search);
+    const matchStatus = statusFilter === 'all' || l.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
 
-      fetchLeads();
-    } catch (error) {
-      console.error('Error updating status:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to update lead status',
-        variant: 'destructive'
-      });
-    }
-  };
-
-  const exportLeads = async () => {
-    try {
-      const queryParams = new URLSearchParams();
-      if (filters.status && filters.status !== 'all') queryParams.append('status', filters.status);
-      if (filters.interest && filters.interest !== 'all') queryParams.append('interest', filters.interest);
-
-      const response = await fetch(`${getApiBaseUrl()}/admin/chat/export?${queryParams}`, {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Cookies.get('accessToken')}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to export leads');
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'chat-leads.csv';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast({
-        title: 'Success',
-        description: 'Leads exported successfully'
-      });
-    } catch (error) {
-      console.error('Error exporting leads:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to export leads',
-        variant: 'destructive'
-      });
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    const variants = {
-      new: 'bg-blue-500',
-      contacted: 'bg-yellow-500',
-      closed: 'bg-green-500'
-    };
-    return (
-      <Badge className={`${variants[status as keyof typeof variants]} text-white`}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
-  };
-
-  const getInterestBadge = (interest: string) => {
-    const colors = {
-      products: 'bg-purple-500',
-      bulk_orders: 'bg-orange-500',
-      private_labeling: 'bg-red-500',
-      shipping: 'bg-blue-500',
-      support: 'bg-gray-500',
-      other: 'bg-gray-400'
-    };
-    return (
-      <Badge className={`${colors[interest as keyof typeof colors]} text-white`}>
-        {interest.replace('_', ' ').toUpperCase()}
-      </Badge>
-    );
+  const stats = {
+    total: leads.length,
+    new: leads.filter(l => l.status === 'new').length,
+    contacted: leads.filter(l => l.status === 'contacted').length,
+    closed: leads.filter(l => l.status === 'closed').length,
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Chat Leads</h1>
-        <Button onClick={exportLeads} className="bg-green-600 hover:bg-green-700">
-          <Download className="w-4 h-4 mr-2" />
-          Export CSV
-        </Button>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-cream">Chat Leads</h1>
+          <p className="text-cream/60">Leads from chatbot conversations</p>
+        </div>
+        <div className="flex gap-2">
+          <Button onClick={exportCSV} variant="outline" size="sm" className="border-gold/30 text-cream hover:bg-gold/10">
+            <Download className="w-4 h-4 mr-2" /> Export CSV
+          </Button>
+          <Button onClick={load} variant="outline" size="sm" className="border-gold/30 text-cream hover:bg-gold/10">
+            <RefreshCw className="w-4 h-4 mr-2" /> Refresh
+          </Button>
+        </div>
       </div>
 
-      <Tabs defaultValue="leads" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="leads">Leads Management</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="analytics" className="space-y-6">
-          {analytics && (
-            <>
-              {/* Analytics Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Leads</CardTitle>
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{analytics.totalLeads}</div>
-                    <p className="text-xs text-muted-foreground">Last 30 days</p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Messages</CardTitle>
-                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{analytics.totalMessages}</div>
-                    <p className="text-xs text-muted-foreground">Chat interactions</p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">New Leads</CardTitle>
-                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{analytics.leadsByStatus.new || 0}</div>
-                    <p className="text-xs text-muted-foreground">Awaiting contact</p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Bulk Orders</CardTitle>
-                    <Target className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{analytics.leadsByInterest.bulk_orders || 0}</div>
-                    <p className="text-xs text-muted-foreground">High-value leads</p>
-                  </CardContent>
-                </Card>
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Total', value: stats.total, color: 'text-cream', icon: Users },
+          { label: 'New', value: stats.new, color: 'text-blue-400', icon: MessageSquare },
+          { label: 'Contacted', value: stats.contacted, color: 'text-yellow-400', icon: Phone },
+          { label: 'Closed', value: stats.closed, color: 'text-green-400', icon: TrendingUp },
+        ].map(s => (
+          <Card key={s.label} className="bg-charcoal border-gold/20">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <p className="text-cream/60 text-sm">{s.label}</p>
+                <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
               </div>
-
-              {/* Charts */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Leads by Status</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {Object.entries(analytics.leadsByStatus).map(([status, count]) => (
-                        <div key={status} className="flex items-center justify-between">
-                          <span className="capitalize">{status}</span>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-20 bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-blue-600 h-2 rounded-full" 
-                                style={{ width: `${(count / analytics.totalLeads) * 100}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-sm font-medium">{count}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Leads by Interest</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {Object.entries(analytics.leadsByInterest).map(([interest, count]) => (
-                        <div key={interest} className="flex items-center justify-between">
-                          <span className="capitalize">{interest.replace('_', ' ')}</span>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-20 bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-green-600 h-2 rounded-full" 
-                                style={{ width: `${(count / analytics.totalLeads) * 100}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-sm font-medium">{count}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </>
-          )}
-        </TabsContent>
-
-        <TabsContent value="leads" className="space-y-6">
-          {/* Filters */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      placeholder="Search leads..."
-                      value={filters.search}
-                      onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
-                <Select
-                  value={filters.status}
-                  onValueChange={(value) => setFilters({ ...filters, status: value, page: 1 })}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="All Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="new">New</SelectItem>
-                    <SelectItem value="contacted">Contacted</SelectItem>
-                    <SelectItem value="closed">Closed</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select
-                  value={filters.interest}
-                  onValueChange={(value) => setFilters({ ...filters, interest: value, page: 1 })}
-                >
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="All Interests" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Interests</SelectItem>
-                    <SelectItem value="products">Products</SelectItem>
-                    <SelectItem value="bulk_orders">Bulk Orders</SelectItem>
-                    <SelectItem value="private_labeling">Private Labeling</SelectItem>
-                    <SelectItem value="shipping">Shipping</SelectItem>
-                    <SelectItem value="support">Support</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <s.icon className={`w-6 h-6 ${s.color}`} />
             </CardContent>
           </Card>
+        ))}
+      </div>
 
-          {/* Leads Table */}
-          <Card>
-            <CardContent>
+      {/* Filters */}
+      <Card className="bg-charcoal border-gold/20">
+        <CardContent className="p-4 flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cream/40" />
+            <Input value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Search by name, email, phone..." className="pl-10 bg-obsidian border-gold/30 text-cream" />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-40 bg-obsidian border-gold/30 text-cream">
+              <SelectValue placeholder="All Status" />
+            </SelectTrigger>
+            <SelectContent className="bg-charcoal border-gold/30">
+              {['all','new','contacted','closed'].map(s => (
+                <SelectItem key={s} value={s}>{s === 'all' ? 'All Status' : s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
+
+      {/* Table */}
+      <Card className="bg-charcoal border-gold/20">
+        <CardHeader>
+          <CardTitle className="text-cream">Leads ({filtered.length})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="space-y-3">
+              {[1,2,3].map(i => <div key={i} className="h-12 bg-obsidian rounded animate-pulse" />)}
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-12">
+              <MessageSquare className="w-12 h-12 text-cream/20 mx-auto mb-3" />
+              <p className="text-cream/50">No leads found</p>
+              <p className="text-cream/30 text-sm mt-1">
+                {leads.length === 0
+                  ? 'Create a "chat_leads" table in Supabase to store chatbot leads.'
+                  : 'Try adjusting your filters.'}
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Interest</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Actions</TableHead>
+                  <TableRow className="border-gold/20">
+                    <TableHead className="text-cream/80">Name</TableHead>
+                    <TableHead className="text-cream/80">Contact</TableHead>
+                    <TableHead className="text-cream/80">Interest</TableHead>
+                    <TableHead className="text-cream/80">Status</TableHead>
+                    <TableHead className="text-cream/80">Date</TableHead>
+                    <TableHead className="text-cream/80">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8">
-                        Loading leads...
+                  {filtered.map(l => (
+                    <TableRow key={l.id} className="border-gold/10 hover:bg-gold/5">
+                      <TableCell className="text-cream font-medium">{l.name || '—'}</TableCell>
+                      <TableCell>
+                        {l.phone && <p className="text-cream/70 text-xs flex items-center gap-1"><Phone className="w-3 h-3" />{l.phone}</p>}
+                        {l.email && <p className="text-cream/70 text-xs flex items-center gap-1"><Mail className="w-3 h-3" />{l.email}</p>}
+                        {l.country && <p className="text-cream/40 text-xs">{l.country}</p>}
+                      </TableCell>
+                      <TableCell>
+                        <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 text-xs">
+                          {(l.interest || 'general').replace('_', ' ')}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Select value={l.status || 'new'} onValueChange={v => updateStatus(l.id, v)}>
+                          <SelectTrigger className="w-32 h-8 bg-obsidian border-gold/30 text-cream text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-charcoal border-gold/30">
+                            {['new','contacted','closed'].map(s => (
+                              <SelectItem key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell className="text-cream/60 text-sm">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {new Date(l.created_at).toLocaleDateString('en-IN')}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Button size="sm" variant="outline" onClick={() => setSelected(l)}
+                          className="border-gold/30 text-cream hover:bg-gold/10">
+                          <Eye className="w-3 h-3" />
+                        </Button>
                       </TableCell>
                     </TableRow>
-                  ) : leads.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8">
-                        No leads found
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    leads.map((lead) => (
-                      <TableRow key={lead._id}>
-                        <TableCell className="font-medium">{lead.name}</TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            {lead.phone && (
-                              <div className="flex items-center text-sm">
-                                <Phone className="w-3 h-3 mr-1" />
-                                {lead.phone}
-                              </div>
-                            )}
-                            {lead.email && (
-                              <div className="flex items-center text-sm">
-                                <Mail className="w-3 h-3 mr-1" />
-                                {lead.email}
-                              </div>
-                            )}
-                            {lead.country && (
-                              <div className="text-sm text-gray-500">{lead.country}</div>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>{getInterestBadge(lead.interest)}</TableCell>
-                        <TableCell>
-                          <Select
-                            value={lead.status}
-                            onValueChange={(value) => updateLeadStatus(lead._id, value)}
-                          >
-                            <SelectTrigger className="w-32">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="new">New</SelectItem>
-                              <SelectItem value="contacted">Contacted</SelectItem>
-                              <SelectItem value="closed">Closed</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center text-sm">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {new Date(lead.createdAt).toLocaleDateString()}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setSelectedLead(lead)}
-                              >
-                                <Eye className="w-4 h-4 mr-1" />
-                                View
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl">
-                              <DialogHeader>
-                                <DialogTitle>Lead Details</DialogTitle>
-                              </DialogHeader>
-                              {selectedLead && (
-                                <div className="space-y-4">
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                      <label className="text-sm font-medium">Name</label>
-                                      <p className="text-sm text-gray-600">{selectedLead.name}</p>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Status</label>
-                                      <div className="mt-1">{getStatusBadge(selectedLead.status)}</div>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Phone</label>
-                                      <p className="text-sm text-gray-600">{selectedLead.phone || 'Not provided'}</p>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Email</label>
-                                      <p className="text-sm text-gray-600">{selectedLead.email || 'Not provided'}</p>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Country</label>
-                                      <p className="text-sm text-gray-600">{selectedLead.country || 'Not provided'}</p>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Interest</label>
-                                      <div className="mt-1">{getInterestBadge(selectedLead.interest)}</div>
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <label className="text-sm font-medium">Message</label>
-                                    <p className="text-sm text-gray-600 mt-1 p-3 bg-gray-50 rounded-md">
-                                      {selectedLead.message}
-                                    </p>
-                                  </div>
-                                  <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
-                                    <div>
-                                      <label className="font-medium">Created</label>
-                                      <p>{new Date(selectedLead.createdAt).toLocaleString()}</p>
-                                    </div>
-                                    <div>
-                                      <label className="font-medium">Updated</label>
-                                      <p>{new Date(selectedLead.updatedAt).toLocaleString()}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </DialogContent>
-                          </Dialog>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                  ))}
                 </TableBody>
               </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-              {/* Pagination */}
-              {pagination.pages > 1 && (
-                <div className="flex items-center justify-between mt-4">
-                  <p className="text-sm text-gray-500">
-                    Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
-                    {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
-                    {pagination.total} results
-                  </p>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setFilters({ ...filters, page: pagination.page - 1 })}
-                      disabled={pagination.page === 1}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setFilters({ ...filters, page: pagination.page + 1 })}
-                      disabled={pagination.page === pagination.pages}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Detail Dialog */}
+      <Dialog open={!!selected} onOpenChange={v => !v && setSelected(null)}>
+        <DialogContent className="bg-charcoal border-gold/20 max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-cream">Lead Details</DialogTitle>
+          </DialogHeader>
+          {selected && (
+            <div className="space-y-3 text-sm">
+              {[['Name', selected.name], ['Phone', selected.phone], ['Email', selected.email], ['Country', selected.country], ['Interest', selected.interest]].map(([l, v]) => v ? (
+                <div key={l}><p className="text-cream/60">{l}</p><p className="text-cream font-medium">{v}</p></div>
+              ) : null)}
+              <div><p className="text-cream/60">Message</p><p className="text-cream whitespace-pre-wrap bg-obsidian p-3 rounded mt-1">{selected.message}</p></div>
+              <div className="flex gap-2">
+                <Badge className={cn(STATUS_COLORS[selected.status] || STATUS_COLORS.new)}>{selected.status}</Badge>
+                <span className="text-cream/40 text-xs self-center">{new Date(selected.created_at).toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
-};
-
-export default ChatLeads;
+}

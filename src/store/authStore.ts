@@ -1,18 +1,37 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User } from '@/types';
-import { authAPI } from '@/lib/api';
-import Cookies from 'js-cookie';
+import { supabase } from '@/lib/supabase';
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'customer';
+}
 
 interface AuthState {
-  user: User | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: { name: string; email: string; phone: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
-  updateUser: (user: User) => void;
+  updateUser: (user: AuthUser) => void;
+}
+
+// Fetch the user's role from the profiles table
+async function fetchUserRole(userId: string): Promise<'admin' | 'customer'> {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
+    if (error) return 'customer'; // table may not exist yet
+    return (data?.role as 'admin' | 'customer') || 'customer';
+  } catch {
+    return 'customer';
+  }
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -25,25 +44,32 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, password: string) => {
         set({ isLoading: true });
         try {
-          const response = await authAPI.login({ email, password });
-          if (response.data.success) {
-            const user = response.data.data.user;
-            set({ user, isAuthenticated: true, isLoading: false });
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) {
+            // Map Supabase error codes to friendly messages
+            if (error.message.includes('Invalid login credentials') || error.status === 400) {
+              throw new Error('Invalid email or password. Please check your credentials.');
+            }
+            if (error.message.includes('Email not confirmed')) {
+              throw new Error('Please confirm your email before logging in.');
+            }
+            throw new Error(error.message);
           }
-        } catch (error) {
-          set({ isLoading: false });
-          throw error;
-        }
-      },
 
-      register: async (data) => {
-        set({ isLoading: true });
-        try {
-          const response = await authAPI.register(data);
-          if (response.data.success) {
-            const user = response.data.data.user;
-            set({ user, isAuthenticated: true, isLoading: false });
-          }
+          const session = data.session;
+          const supaUser = data.user;
+          if (!session || !supaUser) throw new Error('Login failed');
+
+          const role = await fetchUserRole(supaUser.id);
+
+          const user: AuthUser = {
+            id: supaUser.id,
+            name: supaUser.user_metadata?.name || email.split('@')[0],
+            email: supaUser.email!,
+            role,
+          };
+
+          set({ user, isAuthenticated: true, isLoading: false });
         } catch (error) {
           set({ isLoading: false });
           throw error;
@@ -51,62 +77,42 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: async () => {
-        try {
-          await authAPI.logout();
-        } catch (error) {
-          // Silent error handling
-        } finally {
-          Cookies.remove('accessToken');
-          Cookies.remove('refreshToken');
-          set({ user: null, isAuthenticated: false });
-        }
+        await supabase.auth.signOut();
+        set({ user: null, isAuthenticated: false });
       },
 
       checkAuth: async () => {
-        // If already checking, don't check again
-        if (get().isLoading) {
-          return;
-        }
-        
-        const token = Cookies.get('accessToken');
-        
-        if (!token) {
-          set({ user: null, isAuthenticated: false, isLoading: false });
-          return;
-        }
+        if (get().isLoading) return;
 
-        // If we already have a user and are authenticated, don't check again unless forced
-        const currentState = get();
-        if (currentState.isAuthenticated && currentState.user) {
-          return;
-        }
+        // If already have a valid user, skip
+        if (get().isAuthenticated && get().user) return;
 
         set({ isLoading: true });
         try {
-          const response = await authAPI.getMe();
-          
-          if (response.data.success) {
-            const user = response.data.data.user;
-            set({ user, isAuthenticated: true, isLoading: false });
-          } else {
-            // Don't immediately log out, might be a temporary issue
-            set({ isLoading: false });
-          }
-        } catch (error: any) {
-          // Only log out if it's a 401 (unauthorized) error
-          if (error.response?.status === 401) {
+          const { data: { session } } = await supabase.auth.getSession();
+
+          if (!session?.user) {
             set({ user: null, isAuthenticated: false, isLoading: false });
-            Cookies.remove('accessToken');
-            Cookies.remove('refreshToken');
-          } else {
-            set({ isLoading: false });
+            return;
           }
+
+          const supaUser = session.user;
+          const role = await fetchUserRole(supaUser.id);
+
+          const user: AuthUser = {
+            id: supaUser.id,
+            name: supaUser.user_metadata?.name || supaUser.email!.split('@')[0],
+            email: supaUser.email!,
+            role,
+          };
+
+          set({ user, isAuthenticated: true, isLoading: false });
+        } catch {
+          set({ user: null, isAuthenticated: false, isLoading: false });
         }
       },
 
-      updateUser: (user: User) => {
-        set({ user });
-      },
+      updateUser: (user: AuthUser) => set({ user }),
     }),
     {
       name: 'auth-storage',

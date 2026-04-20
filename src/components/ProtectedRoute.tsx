@@ -9,56 +9,47 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin = false }) => {
   const { isAuthenticated, user, checkAuth, isLoading } = useAuthStore();
-  const [isChecking, setIsChecking] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
-    const initAuth = async () => {
-      console.log('ProtectedRoute: Starting auth check...', { isAuthenticated, user: !!user });
-      
-      // Only check auth if we're not already authenticated
+    const init = async () => {
       if (!isAuthenticated || !user) {
-        setIsChecking(true);
         await checkAuth();
-        setIsChecking(false);
       }
-      
-      console.log('ProtectedRoute: Auth check complete', { isAuthenticated, user, requireAdmin });
+      setIsChecking(false);
     };
-    initAuth();
-  }, [checkAuth, isAuthenticated, user]);
+    init();
+  }, []); // run once on mount
 
-  // Show loading while checking authentication
   if (isChecking || isLoading) {
-    console.log('ProtectedRoute: Loading...', { isChecking, isLoading });
     return (
       <div className="min-h-screen bg-obsidian flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-cream/60">Checking authentication...</p>
+          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-cream/60 text-sm">Checking authentication...</p>
         </div>
       </div>
     );
   }
 
-  console.log('ProtectedRoute: Final check', { isAuthenticated, user: user?.role, requireAdmin });
-
   if (!isAuthenticated || !user) {
-    console.log('ProtectedRoute: Not authenticated, redirecting to login');
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
-  if (requireAdmin && user?.role !== 'admin') {
-    console.log('ProtectedRoute: Not admin, access denied', { userRole: user?.role });
+  if (requireAdmin && user.role !== 'admin') {
     return (
-      <div className="min-h-screen bg-obsidian flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-cream mb-4">Access Denied</h1>
-          <p className="text-cream/60 mb-6">You don't have permission to access this area.</p>
-          <p className="text-cream/40 text-sm mb-6">Your role: {user?.role || 'Unknown'}</p>
-          <button 
+      <div className="min-h-screen bg-obsidian flex items-center justify-center px-4">
+        <div className="text-center max-w-sm">
+          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-3xl">🚫</span>
+          </div>
+          <h1 className="text-2xl font-bold text-cream mb-3">Access Denied</h1>
+          <p className="text-cream/60 mb-2">You need admin privileges to access this area.</p>
+          <p className="text-cream/40 text-sm mb-6">Your role: <span className="text-gold">{user.role}</span></p>
+          <button
             onClick={() => window.history.back()}
-            className="px-6 py-2 bg-gold text-obsidian rounded-lg hover:bg-gold/90 transition-colors"
+            className="px-6 py-2 bg-gold text-black rounded-lg hover:bg-gold/90 transition-colors font-medium"
           >
             Go Back
           </button>
@@ -67,7 +58,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin 
     );
   }
 
-  console.log('ProtectedRoute: Access granted');
   return <>{children}</>;
 };
 

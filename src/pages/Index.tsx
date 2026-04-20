@@ -14,6 +14,8 @@ import TestimonialsSection from "@/components/home/TestimonialsSection";
 import StatsSection from "@/components/home/StatsSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
+import { useCategories } from "@/hooks/useSupabaseProducts";
+import CategoryCarousel from "@/components/CategoryCarousel";
 
 const HeroSection = () => (
   <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20 pt-20">
@@ -233,94 +235,46 @@ const FounderSection = () => (
   </section>
 );
 
-const productRanges = [
-  {
-    name: "Classic Range",
-    description: "Timeless flavors perfected over generations",
-    image: sauceClassic,
-    items: "8 Products",
-  },
-  {
-    name: "Spicy Range",
-    description: "Bold heat for the adventurous palate",
-    image: sauceSpicy,
-    items: "6 Products",
-  },
-  {
-    name: "International Range",
-    description: "World cuisines in every bottle",
-    image: sauceInternational,
-    items: "10 Products",
-  },
-  {
-    name: "Creamy Range",
-    description: "Rich indulgence meets artisan craft",
-    image: sauceCreamy,
-    items: "5 Products",
-  },
-];
+// Static fallback images for category cards
+const categoryImages: Record<string, string> = {
+  'sauces-condiments':       sauceClassic,
+  'flakes-powders':          sauceSpicy,
+  'banana-powders':          sauceInternational,
+  'fruit-vegetable-powders': sauceCreamy,
+};
 
-const ProductRangeSection = () => (
-  <section className="py-12 lg:py-16 bg-obsidian">
-    <div className="container mx-auto px-6 lg:px-12">
-      <div className="text-center mb-10">
-        <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Our Collection</p>
-        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-4">
-          Curated <span className="text-gradient-gold">Excellence</span>
-        </h2>
-        <p className="text-cream/50 max-w-2xl mx-auto">
-          Explore our carefully crafted ranges, each designed to bring a unique 
-          flavor experience to your culinary creations.
-        </p>
-      </div>
+const ProductRangeSection = () => {
+  const { categories, loading } = useCategories();
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {productRanges.map((range, index) => (
-          <Link
-            to="/products"
-            key={range.name}
-            className="group relative overflow-hidden rounded-2xl bg-charcoal border border-gold/10 hover:border-gold/40 transition-all duration-500 transform hover:-translate-y-2"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className="aspect-square overflow-hidden">
-              <img
-                src={range.image}
-                alt={range.name}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-transparent" />
-            </div>
-            
-            {/* Content overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <span className="inline-block px-3 py-1 text-xs text-gold bg-gold/10 rounded-full mb-3">
-                {range.items}
-              </span>
-              <h3 className="font-display text-xl font-semibold text-cream mb-2 group-hover:text-gold transition-colors">
-                {range.name}
-              </h3>
-              <p className="text-cream/50 text-sm">{range.description}</p>
-            </div>
+  return (
+    <section className="py-12 lg:py-16 bg-obsidian overflow-hidden">
+      <div className="container mx-auto px-6 lg:px-12">
+        <div className="text-center mb-10">
+          <p className="text-gold text-sm tracking-[0.3em] uppercase mb-4">Our Collection</p>
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-cream mb-4">
+            Curated <span className="text-gradient-gold">Excellence</span>
+          </h2>
+          <p className="text-cream/50 max-w-2xl mx-auto">
+            Explore our carefully crafted ranges, each designed to bring a unique
+            flavor experience to your culinary creations.
+          </p>
+        </div>
 
-            {/* Hover arrow */}
-            <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gold/0 group-hover:bg-gold/20 flex items-center justify-center transition-all duration-300">
-              <ArrowRight className="w-5 h-5 text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
+        {/* Live auto-scrolling category carousel */}
+        <CategoryCarousel showHeading={false} />
+
+        <div className="text-center mt-8">
+          <Link to="/products">
+            <Button variant="gold" size="lg">
+              View All Products
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </Link>
-        ))}
+        </div>
       </div>
-
-      <div className="text-center mt-8">
-        <Link to="/products">
-          <Button variant="gold" size="lg">
-            View All Products
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </Link>
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const recipes = [
   { name: "Spicy Garlic Mayo", tag: "Quick & Easy", time: "5 min" },

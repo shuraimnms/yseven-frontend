@@ -1,35 +1,32 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { supabase } from '@/lib/supabase';
 
 // Get API base URL from environment or default to local development
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
 
-// Export the base URL for use in other files
 export const getApiBaseUrl = () => API_BASE_URL;
 
-// Create axios instance with production-ready configuration
 export const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
-  timeout: 30000, // 30 second timeout
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  timeout: 30000,
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor to add auth token and logging
+// ── Request interceptor: attach Supabase JWT ──────────────────
 api.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get('accessToken');
+  async (config) => {
+    // Get the live Supabase session token
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Log API requests in development
+
     if (import.meta.env.DEV) {
       console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
     }
-    
     return config;
   },
   (error) => {
@@ -38,62 +35,40 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle token refresh and errors
+// ── Response interceptor: handle 401 ─────────────────────────
 api.interceptors.response.use(
   (response) => {
-    // Log successful responses in development
     if (import.meta.env.DEV) {
       console.log(`API Response: ${response.status} ${response.config.url}`);
     }
     return response;
   },
   async (error) => {
-    const originalRequest = error.config;
-
-    // Handle network errors
     if (!error.response) {
       console.error('Network Error:', error.message);
       return Promise.reject(new Error('Network error. Please check your connection.'));
     }
 
-    // Handle 401 errors with token refresh
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
+    // On 401 try refreshing the Supabase session once
+    if (error.response?.status === 401 && !error.config._retry) {
+      error.config._retry = true;
       try {
-        const refreshToken = Cookies.get('refreshToken');
-        if (refreshToken) {
-          const response = await axios.post(
-            `${API_BASE_URL}/auth/refresh`,
-            {},
-            { 
-              withCredentials: true,
-              timeout: 10000 // 10 second timeout for refresh
-            }
-          );
-
-          if (response.data.success) {
-            return api(originalRequest);
-          }
+        const { data: { session } } = await supabase.auth.refreshSession();
+        if (session?.access_token) {
+          error.config.headers.Authorization = `Bearer ${session.access_token}`;
+          return api(error.config);
         }
-      } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
-        // Refresh failed, redirect to login
-        Cookies.remove('accessToken');
-        Cookies.remove('refreshToken');
-        
-        // Only redirect if we're not already on the login page or admin pages
+      } catch {
+        // refresh failed — redirect to login
         const currentPath = window.location.pathname;
-        if (currentPath !== '/auth/login' && !currentPath.startsWith('/admin')) {
+        if (!currentPath.startsWith('/auth/login')) {
           window.location.href = '/auth/login';
         }
       }
     }
 
-    // Handle other errors
     const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
     console.error('API Error:', errorMessage);
-    
     return Promise.reject(error);
   }
 );
