@@ -30,7 +30,13 @@ const PRIORITY_COLORS: Record<string, string> = {
 const TYPE_ICONS: Record<string, any> = {
   general: MessageSquare, bulk: Package, partnership: Users,
   support: AlertCircle, media: Newspaper, export: Globe,
-  press: FileText, chat: MessageSquare,
+  press: FileText, chat: MessageSquare, quote: FileText,
+};
+
+const TYPE_LABELS: Record<string, string> = {
+  general: 'General', bulk: 'Bulk / Wholesale', partnership: 'Partnership',
+  support: 'Support', media: 'Media', export: 'Export', press: 'Press',
+  chat: 'Chat Lead', quote: 'Quote Request',
 };
 
 export default function ContactRequests() {
@@ -157,8 +163,8 @@ export default function ContactRequests() {
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent className="bg-charcoal border-gold/30">
-              {['all','general','bulk','partnership','support','media','export','press'].map(t => (
-                <SelectItem key={t} value={t}>{t === 'all' ? 'All Types' : t.charAt(0).toUpperCase() + t.slice(1)}</SelectItem>
+              {['all','general','bulk','quote','partnership','support','media','export','press'].map(t => (
+                <SelectItem key={t} value={t}>{t === 'all' ? 'All Types' : (TYPE_LABELS[t] || t.charAt(0).toUpperCase() + t.slice(1))}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -202,6 +208,9 @@ export default function ContactRequests() {
                             </Badge>
                             <Badge className={cn(PRIORITY_COLORS[c.priority] || PRIORITY_COLORS.medium)}>
                               {c.priority || 'medium'}
+                            </Badge>
+                            <Badge variant="outline" className="border-gold/30 text-gold/80 text-xs">
+                              {TYPE_LABELS[c.type] || c.type || 'general'}
                             </Badge>
                           </div>
                           <p className="text-cream/60 text-sm">{c.email}</p>
@@ -250,12 +259,48 @@ export default function ContactRequests() {
               {[['Name', selected.full_name], ['Email', selected.email], ['Phone', selected.phone], ['Subject', selected.subject]].map(([l, v]) => v ? (
                 <div key={l}><p className="text-cream/60">{l}</p><p className="text-cream font-medium">{v}</p></div>
               ) : null)}
-              <div><p className="text-cream/60">Message</p><p className="text-cream whitespace-pre-wrap">{selected.message}</p></div>
+              <div>
+                <p className="text-cream/60 mb-1">Message</p>
+                {/* Parse structured fields from message */}
+                {selected.message && (() => {
+                  const lines = selected.message.split('\n');
+                  const structuredLines: string[] = [];
+                  const messageLines: string[] = [];
+                  let inMessage = false;
+                  lines.forEach((line: string) => {
+                    if (inMessage || (!line.match(/^(Company|Product Interest|Quantity|Country):/))) {
+                      if (!inMessage && line.trim() === '') return;
+                      inMessage = true;
+                      messageLines.push(line);
+                    } else {
+                      structuredLines.push(line);
+                    }
+                  });
+                  return (
+                    <>
+                      {structuredLines.length > 0 && (
+                        <div className="bg-obsidian rounded-lg p-3 mb-2 space-y-1">
+                          {structuredLines.map((line: string, i: number) => {
+                            const [key, ...rest] = line.split(':');
+                            return (
+                              <div key={i} className="flex gap-2">
+                                <span className="text-cream/50 min-w-[120px]">{key}:</span>
+                                <span className="text-cream">{rest.join(':').trim()}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                      <p className="text-cream whitespace-pre-wrap">{messageLines.join('\n').trim()}</p>
+                    </>
+                  );
+                })()}
+              </div>
               {selected.notes && <div><p className="text-cream/60">Notes</p><p className="text-cream">{selected.notes}</p></div>}
               <div className="flex gap-2 flex-wrap">
                 <Badge className={cn(STATUS_COLORS[selected.status])}>{selected.status}</Badge>
                 <Badge className={cn(PRIORITY_COLORS[selected.priority])}>{selected.priority}</Badge>
-                <Badge variant="outline" className="border-gold/30 text-cream/70">{selected.type}</Badge>
+                <Badge variant="outline" className="border-gold/30 text-cream/70">{TYPE_LABELS[selected.type] || selected.type}</Badge>
               </div>
             </div>
           )}

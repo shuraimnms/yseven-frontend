@@ -5,8 +5,7 @@
 import { useRef, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { ArrowRight, Star } from 'lucide-react';import { Badge } from '@/components/ui/badge';
 import { useCategories, useAllProducts } from '@/hooks/useSupabaseProducts';
 import type { NormalizedCategory } from '@/types/supabase';
 
@@ -39,18 +38,12 @@ const CategoryCard = memo(({ cat, productCount, hasBestSeller, index }: CardProp
   const vid = cat.cover_video;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4, delay: (index % 6) * 0.06 }}
-      viewport={{ once: true }}
-      className="flex-shrink-0 w-72"
-    >
+    <div className="flex-shrink-0 w-72">
       <Link to={getCategoryUrl(cat.slug)}>
         <div className="group relative overflow-hidden rounded-2xl bg-charcoal border border-gold/20
                         hover:border-gold hover:shadow-lg hover:shadow-gold/20
                         transition-all duration-300 cursor-pointer h-full">
-          {/* Media — video takes priority over image */}
+          {/* Media */}
           <div className="relative h-48 overflow-hidden">
             {vid ? (
               <video
@@ -67,9 +60,8 @@ const CategoryCard = memo(({ cat, productCount, hasBestSeller, index }: CardProp
                 loading="lazy"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-            {/* Video badge */}
             {vid && (
               <div className="absolute top-2 left-2">
                 <span className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/70 text-white rounded text-xs">
@@ -105,7 +97,7 @@ const CategoryCard = memo(({ cat, productCount, hasBestSeller, index }: CardProp
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 });
 CategoryCard.displayName = 'CategoryCard';
@@ -211,15 +203,15 @@ export default function CategoryCarousel({ showHeading = true, className = '' }:
         </div>
       ) : (
         <div className="relative">
-          {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+          {/* Fade edges — matches parent bg */}
+          <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-obsidian to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-obsidian to-transparent z-10 pointer-events-none" />
 
           {/* Scrolling strip */}
           <div
             ref={carouselRef}
-            className="overflow-x-auto scrollbar-hide"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            className="overflow-x-auto overflow-y-hidden scrollbar-hide"
+            style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}
           >
             <div className="inline-flex gap-4 pb-2">
               {tripled.map((cat, i) => {

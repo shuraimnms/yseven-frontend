@@ -64,7 +64,7 @@ const AdminLayout = () => {
     <div className="min-h-screen bg-obsidian text-cream">
       {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-72 bg-charcoal border-r border-gold/20 transform transition-transform duration-300 ease-in-out",
+        "fixed inset-y-0 left-0 z-50 w-72 bg-charcoal border-r border-gold/20 transform transition-transform duration-300 ease-in-out flex flex-col",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Sidebar Header */}
@@ -107,7 +107,7 @@ const AdminLayout = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto min-h-0">
           {sidebarItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);

@@ -237,25 +237,38 @@ const QuickPreviewModal = ({ product, onClose }: { product: NormalizedProduct; o
   );
 };
 
+// Shuffle array helper
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // Main Products Component
 export default function Products() {
   const { products: allProducts, loading } = useAllProducts();
 
   const categoryNames = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>("best-selling");
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>("random");
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<NormalizedProduct | null>(null);
+  const [shuffledProducts, setShuffledProducts] = useState<NormalizedProduct[]>([]);
 
-  // Set default category once products load
+  // Shuffle once when products load
   useEffect(() => {
-    if (categoryNames.length > 0 && !selectedCategory) {
-      setSelectedCategory(categoryNames[0]);
+    if (allProducts.length > 0) {
+      setShuffledProducts(shuffleArray(allProducts));
     }
-  }, [categoryNames.length]);
+  }, [allProducts.length]);
 
+  const filteredProducts = selectedCategory === 'all'
+    ? shuffledProducts
+    : shuffledProducts.filter(p => p.category === selectedCategory);
 
-  const filteredProducts = allProducts.filter(p => p.category === selectedCategory);
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortBy === "best-selling") {
       if (a.isBestSeller && !b.isBestSeller) return -1;
@@ -265,6 +278,7 @@ export default function Products() {
       if (a.isNew && !b.isNew) return -1;
       if (!a.isNew && b.isNew) return 1;
     }
+    // "random" — keep shuffle order
     return 0;
   });
 
@@ -396,9 +410,9 @@ export default function Products() {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="bg-black border border-gold/30 text-gold rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-gold h-10"
               >
+                <option value="random">Random</option>
                 <option value="best-selling">Best Selling</option>
                 <option value="newest">Newest</option>
-                <option value="popular">Popular</option>
               </select>
             </div>
 
@@ -572,6 +586,19 @@ export default function Products() {
                     <div>
                       <h4 className="font-semibold text-cream mb-3">Category</h4>
                       <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => {
+                            setSelectedCategory('all');
+                            setShowFilterModal(false);
+                          }}
+                          className={`px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                            selectedCategory === 'all'
+                              ? 'bg-gold text-black'
+                              : 'bg-black border border-gold/30 text-gold hover:bg-gold/10'
+                          }`}
+                        >
+                          All Products
+                        </button>
                         {categoryNames.map((category) => (
                           <button
                             key={category}
