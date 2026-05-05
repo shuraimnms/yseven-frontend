@@ -16,7 +16,8 @@ import {
   Shield,
   MessageSquare,
   Layers,
-  Database
+  Database,
+  Activity
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,6 +35,7 @@ const sidebarItems = [
   { id: 'payments', label: 'Payments', icon: CreditCard, path: '/admin/payments', badge: null },
   { id: 'contact-requests', label: 'Contact Requests', icon: Bell, path: '/admin/contact-requests', badge: null },
   { id: 'chat-leads', label: 'Chat Leads', icon: MessageSquare, path: '/admin/chat-leads', badge: null },
+  { id: 'seo', label: 'SEO Dashboard', icon: Activity, path: '/admin/seo', badge: 'AI' },
   { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings', badge: null },
 ];
 

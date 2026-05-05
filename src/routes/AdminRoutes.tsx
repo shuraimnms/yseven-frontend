@@ -9,6 +9,7 @@ import ChatLeadsPage from '@/pages/admin/ChatLeads';
 import SettingsPage from '@/pages/admin/Settings';
 import CategoriesAdmin from '@/pages/admin/Categories';
 import SupabaseProductsAdmin from '@/pages/admin/SupabaseProducts';
+import SEODashboard from '@/pages/admin/SEODashboard';
 
 const AdminRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AdminRoutes = () => {
       <Route path="payments" element={<PaymentsPage />} />
       <Route path="contact-requests" element={<ContactRequestsPage />} />
       <Route path="chat-leads" element={<ChatLeadsPage />} />
+      <Route path="seo" element={<SEODashboard />} />
       <Route path="settings" element={<SettingsPage />} />
     </Routes>
   );

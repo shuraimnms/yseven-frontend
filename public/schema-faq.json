@@ -1,0 +1,70 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What makes Y7 sauces different from other brands?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Y7 Sauces are crafted with premium, globally-sourced ingredients and authentic recipes. We use no artificial preservatives, colors, or flavors. Each sauce is developed by culinary experts to deliver restaurant-quality flavor for home kitchens."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Y7 sauces suitable for vegetarians and vegans?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most Y7 sauces are vegetarian-friendly. Our mayonnaise contains eggs, but we offer vegan alternatives. All products are clearly labeled with dietary information. Check individual product pages for specific dietary details."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I buy Y7 sauces in India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Y7 sauces are available online through our website with delivery across India. We also partner with premium retailers, gourmet stores, and select supermarkets in major cities including Mumbai, Delhi, Bangalore, and Hyderabad."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the shelf life of Y7 sauces?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unopened Y7 sauces have a shelf life of 12-18 months when stored in a cool, dry place. Once opened, refrigerate and consume within 3-6 months for optimal flavor. Each bottle has a best-before date printed on the label."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you offer bulk orders for restaurants and businesses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we offer wholesale pricing and bulk orders for restaurants, hotels, catering services, and food businesses. Contact our B2B team at ysevenfoods@gmail.com or visit our bulk orders page for custom quotes and volume discounts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Y7 products certified and tested for quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All Y7 products are manufactured in FSSAI-certified facilities and undergo rigorous quality testing. We maintain ISO 22000 food safety standards and conduct regular third-party lab testing for safety and quality assurance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is your return and refund policy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We offer a 100% satisfaction guarantee. If you're not satisfied with your purchase, contact us within 7 days of delivery for a full refund or replacement. Products must be unopened and in original packaging for returns."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you ship internationally?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we ship to select international markets including UAE, USA, UK, Singapore, and Australia. International shipping costs and delivery times vary by location. Check our shipping page or contact us for specific country availability."
+      }
+    }
+  ]
+}

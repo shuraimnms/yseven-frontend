@@ -1,0 +1,1185 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Y7 Premium Sauces Product Catalog",
+  "description": "Complete range of premium international sauces and condiments",
+  "numberOfItems": 42,
+  "itemListElement": [
+    {
+      "@type": "Product",
+      "position": 1,
+      "name": "Cheese Blend",
+      "description": "Creamy cheese-flavored sauce for rich, savory dishes.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776695579218-liqrjjruqb.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/cheese-blend",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 58
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 2,
+      "name": "G9 Banana Powder",
+      "description": "Powder made from export-grade Grand Naine bananas.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694350971-y2ooxzhoanh.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/g9-banana-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 145
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 3,
+      "name": "Rasabale Banana Powder",
+      "description": "Powdered aromatic bananas from Cauvery river belt.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694505205-ibhw9ojdxc.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/rasabale-banana-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 65
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 4,
+      "name": "Yelkahi Banana Powder",
+      "description": "Made from premium Yelkahi bananas grown near Tungabhadra River.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694655125-uxuduvowi68.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/yelkahi-banana-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 88
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 5,
+      "name": "Green Chilli Flakes",
+      "description": "Dried green chilies crushed into flakes for bold heat and aroma.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694805137-mf7ov3jc6mr.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/green-chilli-flakes",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 136
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 6,
+      "name": "Green Chilli Powder",
+      "description": "Finely ground green chili powder with intense flavor.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694957730-t33civ1w9vn.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/green-chilli-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 140
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 7,
+      "name": "Green Chilli Sauce",
+      "description": "Spicy sauce made from fresh green chilies, delivering sharp heat and bold aroma.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776695031898-sbifscn2do.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/green-chilli-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 122
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 8,
+      "name": "Red Chilli Sauce",
+      "description": "Fiery red chili sauce with rich color and intense flavor for spicy food lovers.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776695195751-5waijy96l3.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/red-chilli-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 58
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 9,
+      "name": "Vinegar",
+      "description": "Naturally fermented vinegar for culinary and health applications.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776695297012-m2dqkjt3skr.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/vinegar",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 59
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 10,
+      "name": "Classic Mayonnaise",
+      "description": "Rich and creamy mayonnaise made from premium quality oils and fresh eggs.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776695424104-4xx9hhaaxou.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/classic-mayonnaise",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 113
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 11,
+      "name": "Raw Papaya Powder",
+      "description": "Unripe papaya powder rich in papain enzyme.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694175485-mhp7zbzr0z.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/raw-papaya-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 52
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 12,
+      "name": "Romesco Sauce",
+      "description": "Spanish-style nutty tomato-based sauce with rich smoky flavor.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776696446443-wfclf62bjro.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/romesco-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 89
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 13,
+      "name": "Garlic Sauce",
+      "description": "Creamy garlic-based sauce with bold aroma and savory richness.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776696554006-kxkysgmp1jb.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/garlic-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 146
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 14,
+      "name": "Peri Peri Sauce",
+      "description": "Tangy, spicy African-style sauce made with bird's eye chilies.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776696751507-8xpt95peex4.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/peri-peri-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 125
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 15,
+      "name": "Tomato Sauce",
+      "description": "A tangy, mildly spiced tomato-based sauce ideal for continental dishes and fusion recipes.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776696778900-jwfr38arz6l.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/tomato-sauce-continental",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 146
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 16,
+      "name": "Lite Mayonnaise",
+      "description": "Low-fat creamy mayonnaise with smooth texture and mild flavor.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776696706790-vbl4prxsyo.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/lite-mayonnaise",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 75
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 17,
+      "name": "Chikoo (Sapota) Powder",
+      "description": "Sweet, nutrient-rich sapota powder.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776693684156-cmyceg6o95.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/chikoo-sapota-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 104
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 18,
+      "name": "Guava Powder",
+      "description": "Powdered guava rich in fiber and antioxidants.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776693773070-vcyfxbpmj9k.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/guava-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 84
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 19,
+      "name": "Sweet Potato Powder",
+      "description": "Naturally sweet powder made from dried sweet potatoes.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776693879014-xj2u6368jg.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/sweet-potato-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 106
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 20,
+      "name": "Mango Powder",
+      "description": "Naturally sweet mango powder from ripe mangoes.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776693986260-zznm383e3hp.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/mango-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 108
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 21,
+      "name": "Snack Sauce",
+      "description": "A bold, tangy, spicy sauce crafted for Indian snacks and street food flavors.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694467076-t4pjnv9ksta.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/snack-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 72
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 22,
+      "name": "Tomato Ketchup",
+      "description": "Classic tomato ketchup made from ripe, high-quality tomatoes, blended with a balanced mix of spices for rich flavor and smooth texture.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776694835500-4w0jiawkcs5.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/tomato-ketchup",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 57
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 23,
+      "name": "Hot & Spicy Sauce",
+      "description": "A powerful blend of chilies and spices for intense heat lovers.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776695223136-kwpnmw6fiw.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/hot-spicy-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 147
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 24,
+      "name": "Sambal Sauce",
+      "description": "Indonesian-style chili sauce with bold spice and tangy notes.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776695700816-ed0djo3ii6h.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/sambal-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 136
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 25,
+      "name": "Soya Sauce",
+      "description": "Fermented soy-based sauce delivering deep umami flavor for Asian cuisines.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776696509723-h85hj20kilg.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/soya-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 143
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 26,
+      "name": "Schezwan Sauce",
+      "description": "Authentic Schezwan sauce made with red chilies, garlic, and aromatic spices.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Sauces & Condiments",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776696650728-7b3z0xyuf7d.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/schezwan-sauce",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 99
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 27,
+      "name": "HORSE GRAM",
+      "description": "Indulge in the wholesome goodness of Y7 Foods' HORSE GRAM Vermicelli, carefully crafted from premium quality horse gram and millets. Rich in protein and fibre, this nutritious staple is perfect for a guilt-free meal. Sourced from the finest farms, our horse gram vermicelli is a delicious and healthy twist to your favourite dish.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776712942002-r74dkg99z9j.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/horse-gram",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 60
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 28,
+      "name": "BARNYARD",
+      "description": "Experience the wholesome goodness of our Barnyard Vermicelli, crafted from premium quality grains and millets, carefully selected to bring you a delicious and nutritious meal. Rich in fiber, our vermicelli is a perfect blend of taste and health. Enjoy a guilt-free meal with our Barnyard Vermicelli, perfect for a quick and easy breakfast or snack.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776713923914-8xw2qpx48p5.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/barnyard",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 142
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 29,
+      "name": "SUJI",
+      "description": "Made from premium quality grains and millets, Y7 Foods SUJI is a delicious and nutritious addition to your daily meals. Rich in fiber and protein, it's perfect for a healthy breakfast or snack. Our SUJI is carefully crafted to retain its natural goodness and flavor.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714026445-4ph1gs6962i.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/suji",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 121
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 30,
+      "name": "FOXTAIL",
+      "description": "Indulge in the goodness of premium quality grains and millets with our Healthy Staples Range Vermicelli, made from wholesome foxtail millets and carefully crafted to provide a perfect blend of taste and nutrition. Rich in fiber and protein, our vermicelli is an excellent choice for a healthy and satisfying meal. Perfect for those seeking a nutritious and delicious breakfast or snack option.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714217233-tmrw4azh54.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/foxtail",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 77
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 31,
+      "name": "Wheat",
+      "description": "Y7 Foods' Wheat Vermicelli is made from premium quality grains & millets, carefully crafted to bring you a delicious and nutritious meal option. Rich in fiber and protein, it's perfect for a healthy lifestyle. Savor the wholesome taste of our wheat vermicelli in your favorite dishes.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714418374-324fsk2g6r3.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/wheat",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 51
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 32,
+      "name": "LITTLE MILLET",
+      "description": "Indulge in the wholesome goodness of our Little Millet Vermicelli, made from premium quality grains and millets. Rich in fibre and nutrients, it's a delicious and healthy twist on traditional vermicelli. Perfect for those looking for a nutritious meal option.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714503582-qtzavg50a8.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/little-millet",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 119
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 33,
+      "name": "RED RICE",
+      "description": "Indulge in the goodness of our RED RICE Vermicelli, made from premium quality grains and millets. Rich in fiber and nutrients, our vermicelli is a perfect blend of taste and health. Enjoy a guilt-free meal with our nutritious and wholesome vermicelli.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714554565-l253dpr3ke.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/red-rice",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 96
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 34,
+      "name": "BAJRA",
+      "description": "BAJRA is a premium pearl millet staple, carefully crafted to provide you with a delicious and wholesome experience. Made from high-quality grains, our BAJRA is rich in fiber, protein, and essential minerals. Perfect for those looking for a healthier alternative to traditional staples.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714635396-fk3o02gzh3.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/bajra",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 141
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 35,
+      "name": "RAGI",
+      "description": "Indulge in the wholesome goodness of Y7 Foods RAGI Healthy Staples Range Vermicelli, made from premium quality ragi grains and millets. Rich in fiber and nutrients, our ragi vermicelli is a perfect blend of taste and health. Enjoy a guilt-free meal with every bite.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714704154-oxpvp6hjpmp.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/ragi",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 82
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 36,
+      "name": "BROWNTOP",
+      "description": "Indulge in our BROWNTOP Vermicelli, crafted from premium quality grains and millets, offering a delightful blend of nutrition and taste. Perfect for those seeking a healthier twist on traditional staples. Our wholesome vermicelli is carefully made to retain its natural goodness.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Healthy Staples Range Vermicelli",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776714927426-pxrq5ss3ki.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/browntop",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 118
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 37,
+      "name": "ARTISANAL AMNESTY COOKIES",
+      "description": "Indulge in the rich, wholesome flavor of our artisan cookies, crafted from premium banana powder and carefully selected ingredients, delivering a perfect balance of natural sweetness and crisp texture. Each bite offers a smooth banana finish, making it an indulgent yet refined snack. Perfect with coffee or tea.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Signature Gourmet Cookies",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776715502741-3p5d37pmdub.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/artisanal-amnesty-cookies",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 60
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 38,
+      "name": "GOURMET ASSORTMENT",
+      "description": "Experience the perfect harmony of natural sweetness and crisp texture in our artisan cookies, crafted from premium banana powder and carefully selected ingredients. Each bite offers a rich, wholesome flavor with a smooth banana finish. A refined snack for any time of the day.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Signature Gourmet Cookies",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776715732745-xgd1tvfvdxf.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/gourmet-assortment",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 93
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 39,
+      "name": "SIGNATURE SQUARE BISCUITS",
+      "description": "Crafted from premium banana powder and carefully selected ingredients, these artisan cookies deliver a perfect balance of natural sweetness and crisp texture. Each bite offers a rich, wholesome flavor with a smooth banana finish. Perfect for a refined snack any time of the day.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Signature Gourmet Cookies",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776715866315-aoqp4h3oebh.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/signature-square-biscuits",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 69
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 40,
+      "name": "RUSTIC ELEGANCE",
+      "description": "Experience the perfect balance of natural sweetness and crisp texture in our artisan cookies, crafted from premium banana powder and carefully selected ingredients. Rich, wholesome flavor with a smooth banana finish in every bite. A refined snack for any time of the day.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Signature Gourmet Cookies",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776715940352-a43uwygy6j.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/rustic-elegance",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 138
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 41,
+      "name": "Spinach Leaf Powder (Palak)",
+      "description": "Experience the rich flavor and nutritional benefits of farm-fresh spinach in our premium Spinach Leaf Powder (Palak). Made from carefully selected leaves, this powder is crafted using advanced low-temperature processing to preserve natural color, aroma, and essential nutrients. Enjoy unmatched purity and versatility in every scoop.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776716437559-r9hamzee77e.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/spinach-leaf-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 140
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 42,
+      "name": "Tulsi Leaf Powder",
+      "description": "Our premium Tulsi Leaf Powder is crafted from carefully selected farm-fresh ingredients, delivering concentrated nutrition and rich flavor. Advanced low-temperature processing preserves natural color, aroma, and essential nutrients without additives or preservatives. Enjoy unmatched purity and versatility in every scoop.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Y7 Sauces"
+      },
+      "category": "Fruit & Vegetable Powders",
+      "image": "https://jegiuiwyykhptzhmuiab.supabase.co/storage/v1/object/public/product-images/products/1776716639255-z5lursjj1u8.webp",
+      "offers": {
+        "@type": "Offer",
+        "url": "https://ysevenfoods.com/products/tulsi-leaf-powder",
+        "priceCurrency": "INR",
+        "price": "299",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Y7 Sauces"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": 93
+      }
+    }
+  ]
+}
